@@ -1,0 +1,32 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main, feature/thesis-analysis]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Compile source
+        run: python -m py_compile src/thesis_analysis.py
+
+      - name: Validate repository structure
+        run: |
+          test -f README.md
+          test -f requirements.txt
+          test -f src/thesis_analysis.py
+          test -f validation/validation_report.md
