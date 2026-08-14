@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local data / generated outputs
+data/*.csv
+results/
+figures/
+thesis_outputs/
+*.xlsx
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
