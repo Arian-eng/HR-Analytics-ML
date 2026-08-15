@@ -22,11 +22,15 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Compile source
-        run: python -m py_compile src/thesis_analysis.py
+        run: |
+          python -m py_compile src/thesis_analysis.py
+          python -m py_compile src/green_hrm_analysis.py
 
       - name: Validate repository structure
         run: |
           test -f README.md
           test -f requirements.txt
           test -f src/thesis_analysis.py
+          test -f src/green_hrm_analysis.py
           test -f validation/validation_report.md
+          test -f validation/green_hrm_validation.md
