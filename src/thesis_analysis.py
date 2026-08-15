@@ -6,6 +6,10 @@ Datasets:
 - HR Analytics: Job Change of Data Scientists -> target
 - Employee Performance -> KPIs_met_more_than_80
 
+The loader accepts the original Kaggle filenames as well as the renamed
+filenames supplied for this thesis. Raw CSV files remain local and are not
+committed to the repository.
+
 Outputs: model metrics, confusion matrices, K-Means diagnostics, and
 permutation feature importance.
 
@@ -43,21 +47,33 @@ FIG_DIR.mkdir(exist_ok=True)
 
 DATASETS = {
     "IBM_HR_Attrition": {
-        "file": DATA_DIR / "WA_Fn-UseC_-HR-Employee-Attrition.csv",
+        "files": [
+            "WA_Fn-UseC_-HR-Employee-Attrition.csv",
+            "WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv",
+        ],
         "target": "Attrition",
         "id_columns": ["EmployeeNumber", "EmployeeCount", "StandardHours"],
     },
     "Job_Change": {
-        "file": DATA_DIR / "aug_train.csv",
+        "files": ["aug_train.csv", "aug_train(4).csv"],
         "target": "target",
         "id_columns": ["enrollee_id"],
     },
     "Employee_Performance": {
-        "file": DATA_DIR / "Uncleaned_employees_final_dataset.csv",
+        "files": ["Uncleaned_employees_final_dataset.csv", "Uncleaned_employees_final_dataset (1)(2).csv"],
         "target": "KPIs_met_more_than_80",
         "id_columns": ["employee_id"],
     },
 }
+
+
+def resolve_dataset_file(file_candidates):
+    for name in file_candidates:
+        path = DATA_DIR / name
+        if path.exists():
+            return path
+    expected = ", ".join(file_candidates)
+    raise FileNotFoundError(f"Dataset not found. Expected one of: {expected}")
 
 
 def encode_target(y):
@@ -121,58 +137,108 @@ def run_kmeans(df, name, excluded):
         plt.plot(ks, values, marker="o")
         plt.xlabel("Number of clusters (k)")
         plt.ylabel(ylabel)
-        plt.title(f"{ylabel} - {name}")
+        plt.title(f"{name} - {ylabel}")
         plt.tight_layout()
         plt.savefig(FIG_DIR / f"{name}_{suffix}.png", dpi=300, bbox_inches="tight")
         plt.close()
-    labels = KMeans(n_clusters=best_k, random_state=42, n_init=20).fit_predict(Z)
-    metrics = pd.DataFrame({"k": ks, "SSE": inertias, "Silhouette": silhouettes})
-    metrics.to_csv(OUTPUT_DIR / f"{name}_kmeans_metrics.csv", index=False, encoding="utf-8-sig")
-    pd.DataFrame({"Cluster": pd.Series(labels).value_counts().sort_index().index, "Number_of_records": pd.Series(labels).value_counts().sort_index().values}).to_csv(OUTPUT_DIR / f"{name}_cluster_sizes.csv", index=False, encoding="utf-8-sig")
-    return best_k
+    return {"best_k": best_k, "metrics": pd.DataFrame({"k": ks, "inertia": inertias, "silhouette": silhouettes})}
 
 
-def main():
-    all_results, all_cms = [], []
-    for name, info in DATASETS.items():
-        if not info["file"].exists():
-            raise FileNotFoundError(f"Dataset not found: {info['file']}")
-        df = pd.read_csv(info["file"])
-        X, y, preprocessor, _ = prepare_xy(df, info["target"], info["id_columns"])
-        valid = y.notna()
-        X, y = X.loc[valid], y.loc[valid]
-        stratify = y if y.nunique() > 1 and y.value_counts().min() >= 2 else None
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=stratify)
-        specs = {
-            "Random Forest": (RandomForestClassifier(random_state=42, n_jobs=-1, class_weight="balanced"), {"model__n_estimators": [100, 200], "model__max_depth": [None, 10, 20], "model__min_samples_split": [2, 5]}),
-            "Decision Tree": (DecisionTreeClassifier(random_state=42, class_weight="balanced"), {"model__max_depth": [None, 5, 10, 20], "model__min_samples_split": [2, 5, 10]}),
-            "SVM": (SVC(probability=True, class_weight="balanced", random_state=42), {"model__C": [0.1, 1, 10], "model__kernel": ["rbf"], "model__gamma": ["scale", "auto"]}),
-            "Neural Network": (MLPClassifier(max_iter=500, random_state=42, early_stopping=True), {"model__hidden_layer_sizes": [(50,), (100,), (100, 50)], "model__alpha": [0.0001, 0.001], "model__learning_rate_init": [0.001, 0.01]}),
-        }
-        best_rf = None
-        for model_name, (base, params) in specs.items():
-            pipe = Pipeline([("preprocessor", preprocessor), ("model", base)])
-            cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
-            search = GridSearchCV(pipe, params, scoring="f1_weighted", cv=cv, n_jobs=-1, refit=True)
-            search.fit(X_train, y_train)
-            pred = search.best_estimator_.predict(X_test)
-            result = {"Dataset": name, "Model": model_name, "Accuracy": accuracy_score(y_test, pred), "Precision": precision_score(y_test, pred, average="weighted", zero_division=0), "Recall": recall_score(y_test, pred, average="weighted", zero_division=0), "F1": f1_score(y_test, pred, average="weighted", zero_division=0), "CV_Best_F1": search.best_score_, "Best_Params": str(search.best_params_)}
-            all_results.append(result)
-            cm = confusion_matrix(y_test, pred)
-            all_cms.append({"Dataset": name, "Model": model_name, "Confusion_Matrix": str(cm.tolist())})
-            save_confusion_matrix(cm, f"Confusion Matrix - {name} - {model_name}", f"{name}_{model_name.replace(' ', '_')}_confusion_matrix.png")
-            if model_name == "Random Forest":
-                best_rf = search.best_estimator_
-        if best_rf is not None:
-            perm = permutation_importance(best_rf, X_test, y_test, scoring="f1_weighted", n_repeats=10, random_state=42, n_jobs=-1)
-            fi = pd.DataFrame({"Feature": best_rf.named_steps["preprocessor"].get_feature_names_out(), "Importance": perm.importances_mean}).sort_values("Importance", ascending=False)
-            fi.to_csv(OUTPUT_DIR / f"{name}_feature_importance.csv", index=False, encoding="utf-8-sig")
-        run_kmeans(df, name, [info["target"]] + info["id_columns"])
-    results = pd.DataFrame(all_results)
-    results.to_csv(OUTPUT_DIR / "model_comparison.csv", index=False, encoding="utf-8-sig")
-    pd.DataFrame(all_cms).to_csv(OUTPUT_DIR / "confusion_matrices.csv", index=False, encoding="utf-8-sig")
-    print(results[["Dataset", "Model", "Accuracy", "Precision", "Recall", "F1"]].round(4).to_string(index=False))
+def evaluate_model(name, model, X_train, X_test, y_train, y_test):
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)
+    result = {
+        "Model": name,
+        "Accuracy": accuracy_score(y_test, pred),
+        "Precision": precision_score(y_test, pred, average="weighted", zero_division=0),
+        "Recall": recall_score(y_test, pred, average="weighted", zero_division=0),
+        "F1": f1_score(y_test, pred, average="weighted", zero_division=0),
+    }
+    return result, confusion_matrix(y_test, pred), model
 
 
-if __name__ == "__main__":
-    main()
+def feature_importance_plot(model, X_test, y_test, dataset_name):
+    perm = permutation_importance(model, X_test, y_test, n_repeats=5, random_state=42, n_jobs=-1, scoring="f1_weighted")
+    fi = pd.DataFrame({"feature": X_test.columns, "importance_mean": perm.importances_mean, "importance_std": perm.importances_std}).sort_values("importance_mean", ascending=False)
+    return fi
+
+
+# ============================================================
+# Main analysis
+# ============================================================
+all_model_results = []
+all_confusion_matrices = {}
+all_feature_importance = {}
+all_kmeans = {}
+
+for dataset_name, info in DATASETS.items():
+    file_path = resolve_dataset_file(info["files"])
+    print(f"\n{'=' * 80}\n{dataset_name}: {file_path.name}\n{'=' * 80}")
+    df = pd.read_csv(file_path)
+    print(f"Shape: {df.shape}")
+    print(df.isnull().sum().sort_values(ascending=False).head(10))
+
+    X, y, preprocessor, target_mapping = prepare_xy(df, info["target"], info["id_columns"])
+    valid = y.notna()
+    X, y = X.loc[valid], y.loc[valid]
+    class_counts = y.value_counts()
+    stratify = y if y.nunique() > 1 and class_counts.min() >= 2 else None
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=stratify)
+
+    model_specs = {
+        "Random Forest": (RandomForestClassifier(random_state=42, n_jobs=-1, class_weight="balanced"), {
+            "model__n_estimators": [100, 200], "model__max_depth": [None, 10, 20], "model__min_samples_split": [2, 5]}),
+        "Decision Tree": (DecisionTreeClassifier(random_state=42, class_weight="balanced"), {
+            "model__max_depth": [None, 5, 10, 20], "model__min_samples_split": [2, 5, 10]}),
+        "SVM": (SVC(probability=True, class_weight="balanced", random_state=42), {
+            "model__C": [0.1, 1, 10], "model__kernel": ["rbf"], "model__gamma": ["scale", "auto"]}),
+        "Neural Network": (MLPClassifier(max_iter=500, random_state=42, early_stopping=True), {
+            "model__hidden_layer_sizes": [(50,), (100,), (100, 50)], "model__alpha": [0.0001, 0.001], "model__learning_rate_init": [0.001, 0.01]}),
+    }
+
+    best_rf = None
+    for model_name, (base_model, param_grid) in model_specs.items():
+        pipe = Pipeline([("preprocessor", preprocessor), ("model", base_model)])
+        cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+        search = GridSearchCV(pipe, param_grid=param_grid, scoring="f1_weighted", cv=cv, n_jobs=-1, refit=True)
+        search.fit(X_train, y_train)
+        result, cm, fitted_model = evaluate_model(model_name, search.best_estimator_, X_train, X_test, y_train, y_test)
+        result.update({"Dataset": dataset_name, "Best_Params": str(search.best_params_), "CV_Best_F1": search.best_score_})
+        all_model_results.append(result)
+        all_confusion_matrices[(dataset_name, model_name)] = cm
+        save_confusion_matrix(cm, f"Confusion Matrix - {dataset_name} - {model_name}", f"{dataset_name}_{model_name.replace(' ', '_')}_confusion_matrix.png")
+        if model_name == "Random Forest":
+            best_rf = fitted_model
+        print(f"{model_name}: Accuracy={result['Accuracy']:.4f}, Precision={result['Precision']:.4f}, Recall={result['Recall']:.4f}, F1={result['F1']:.4f}")
+
+    if best_rf is not None:
+        fi = feature_importance_plot(best_rf, X_test, y_test, dataset_name)
+        fi.to_csv(OUTPUT_DIR / f"{dataset_name}_feature_importance.csv", index=False, encoding="utf-8-sig")
+        all_feature_importance[dataset_name] = fi
+
+    all_kmeans[dataset_name] = run_kmeans(df, dataset_name, [info["target"]] + info["id_columns"])
+
+results_df = pd.DataFrame(all_model_results)[["Dataset", "Model", "Accuracy", "Precision", "Recall", "F1", "CV_Best_F1", "Best_Params"]]
+results_df.to_csv(OUTPUT_DIR / "model_comparison.csv", index=False, encoding="utf-8-sig")
+
+cm_rows = [{"Dataset": d, "Model": m, "Confusion_Matrix": str(cm.tolist())} for (d, m), cm in all_confusion_matrices.items()]
+pd.DataFrame(cm_rows).to_csv(OUTPUT_DIR / "confusion_matrices.csv", index=False, encoding="utf-8-sig")
+
+excel_file = OUTPUT_DIR / "chapter_4_results.xlsx"
+with pd.ExcelWriter(excel_file, engine="openpyxl") as writer:
+    results_df.to_excel(writer, index=False, sheet_name="Model Results")
+    pd.DataFrame(cm_rows).to_excel(writer, index=False, sheet_name="Confusion Matrices")
+    for dataset_name, fi in all_feature_importance.items():
+        fi.head(20).to_excel(writer, index=False, sheet_name=f"FI_{dataset_name}"[:31])
+    for dataset_name, result in all_kmeans.items():
+        if result is not None:
+            result["metrics"].to_excel(writer, index=False, sheet_name=f"KMeans_{dataset_name}"[:31])
+
+print("\nFINAL RESULTS")
+print(results_df[["Dataset", "Model", "Accuracy", "Precision", "Recall", "F1"]].round(4).to_string(index=False))
+print("\nOptimal K based on highest Silhouette Score:")
+for dataset_name, result in all_kmeans.items():
+    if result is not None:
+        print(f"{dataset_name}: k = {result['best_k']}")
+print(f"\nOutput directory: {OUTPUT_DIR}")
