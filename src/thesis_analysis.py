@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Reproducible Chapter 4 HR machine-learning analysis.
 
-The raw CSV files stay local. The script accepts the exact filenames supplied
+Raw CSV files stay local. The script accepts the exact filenames supplied
 for this thesis and writes model metrics, confusion matrices, K-Means
 validation, feature importance, and an Excel workbook under results/.
 """
@@ -53,7 +53,8 @@ def resolve_file(candidates):
 
 
 def prepare(df, target, ids):
-    y = LabelEncoder().fit_transform(df[target].astype(str))
+    encoder = LabelEncoder()
+    y = encoder.fit_transform(df[target].astype(str))
     X = df.drop(columns=[target] + ids, errors="ignore").copy()
     X = X.replace([np.inf, -np.inf], np.nan)
     X = X.drop(columns=[c for c in X if X[c].nunique(dropna=False) <= 1])
@@ -65,17 +66,21 @@ def prepare(df, target, ids):
         ("cat", Pipeline([("impute", SimpleImputer(strategy="most_frequent")),
                           ("onehot", OneHotEncoder(handle_unknown="ignore"))]), cat),
     ])
-    return X, y, prep
+    return X, y, prep, encoder
 
 
 def save_cm(cm, title, filename):
     plt.figure(figsize=(5, 4))
     plt.imshow(cm, interpolation="nearest")
-    plt.title(title); plt.xlabel("Predicted class"); plt.ylabel("Actual class")
+    plt.title(title)
+    plt.xlabel("Predicted class")
+    plt.ylabel("Actual class")
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
             plt.text(j, i, str(cm[i, j]), ha="center", va="center")
-    plt.tight_layout(); plt.savefig(FIG_DIR / filename, dpi=300, bbox_inches="tight"); plt.close()
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / filename, dpi=300, bbox_inches="tight")
+    plt.close()
 
 
 def kmeans_analysis(df, name, target, ids):
@@ -97,8 +102,8 @@ def kmeans_analysis(df, name, target, ids):
     return best_k, metrics
 
 
-# The original full SVC RBF search was computationally excessive for 19k rows.
-# LinearSVC is still an SVM classifier and makes the experiment reproducible.
+# Full RBF SVC is computationally excessive for the 19k-row dataset.
+# LinearSVC remains an SVM classifier and keeps the experiment reproducible.
 MODEL_SPECS = {
     "Random Forest": (RandomForestClassifier(random_state=42, n_jobs=-1, class_weight="balanced"),
                       {"n_estimators": [100, 200], "max_depth": [None, 10]}),
@@ -116,12 +121,10 @@ cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
 for dataset_name, info in DATASETS.items():
     path = resolve_file(info["files"])
     df = pd.read_csv(path)
-    X, y, prep = prepare(df, info["target"], info["ids"])
+    X, y, prep, label_encoder = prepare(df, info["target"], info["ids"])
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.20, random_state=42, stratify=y)
 
-    # Fit preprocessing once on training data, then cross-validate models on
-    # the transformed training matrix. This avoids repeating one-hot encoding.
     X_train_t = prep.fit_transform(X_train)
     X_test_t = prep.transform(X_test)
 
@@ -129,17 +132,25 @@ for dataset_name, info in DATASETS.items():
         search = GridSearchCV(model, grid, scoring="f1_weighted", cv=cv, n_jobs=-1, refit=True)
         search.fit(X_train_t, y_train)
         pred = search.predict(X_test_t)
+
         row = {
-            "Dataset": dataset_name, "Model": model_name,
+            "Dataset": dataset_name,
+            "Model": model_name,
             "Accuracy": accuracy_score(y_test, pred),
-            "Precision": precision_score(y_test, pred, average="weighted", zero_division=0),
-            "Recall": recall_score(y_test, pred, average="weighted", zero_division=0),
-            "F1": f1_score(y_test, pred, average="weighted", zero_division=0),
-            "CV_Best_F1": search.best_score_, "Best_Params": str(search.best_params_),
+            "Precision_weighted": precision_score(y_test, pred, average="weighted", zero_division=0),
+            "Recall_weighted": recall_score(y_test, pred, average="weighted", zero_division=0),
+            "F1_weighted": f1_score(y_test, pred, average="weighted", zero_division=0),
+            "CV_Best_F1_weighted": search.best_score_,
+            "Best_Params": str(search.best_params_),
         }
-        if dataset_name == "IBM_HR_Attrition":
-            row["Attrition_Yes_Recall"] = recall_score(y_test, pred, pos_label=1, zero_division=0)
-            row["Attrition_Yes_F1"] = f1_score(y_test, pred, pos_label=1, zero_division=0)
+
+        # For binary targets, report positive-class metrics explicitly.
+        if len(label_encoder.classes_) == 2:
+            row["Positive_Class"] = str(label_encoder.classes_[1])
+            row["Positive_Precision"] = precision_score(y_test, pred, pos_label=1, zero_division=0)
+            row["Positive_Recall"] = recall_score(y_test, pred, pos_label=1, zero_division=0)
+            row["Positive_F1"] = f1_score(y_test, pred, pos_label=1, zero_division=0)
+
         all_results.append(row)
         cms[(dataset_name, model_name)] = confusion_matrix(y_test, pred)
         save_cm(cms[(dataset_name, model_name)], f"{dataset_name} - {model_name}",
@@ -149,10 +160,13 @@ for dataset_name, info in DATASETS.items():
             perm = permutation_importance(search.best_estimator_, X_test_t, y_test,
                                           n_repeats=5, random_state=42, n_jobs=-1,
                                           scoring="f1_weighted")
-            fi = pd.DataFrame({"feature_index": np.arange(X_test_t.shape[1]),
-                               "importance_mean": perm.importances_mean,
-                               "importance_std": perm.importances_std}).sort_values("importance_mean", ascending=False)
-            fi.to_csv(OUTPUT_DIR / f"{dataset_name}_feature_importance.csv", index=False)
+            feature_names = np.asarray(prep.get_feature_names_out())
+            fi = pd.DataFrame({
+                "feature": feature_names,
+                "importance_mean": perm.importances_mean,
+                "importance_std": perm.importances_std,
+            }).sort_values("importance_mean", ascending=False)
+            fi.to_csv(OUTPUT_DIR / f"{dataset_name}_feature_importance.csv", index=False, encoding="utf-8-sig")
             feature_tables[dataset_name] = fi
 
     km = kmeans_analysis(df, dataset_name, info["target"], info["ids"])
@@ -162,12 +176,14 @@ for dataset_name, info in DATASETS.items():
 results_df = pd.DataFrame(all_results)
 results_df.to_csv(OUTPUT_DIR / "model_comparison.csv", index=False, encoding="utf-8-sig")
 pd.DataFrame([{"Dataset": d, "Model": m, "Confusion_Matrix": str(cm.tolist())}
-               for (d, m), cm in cms.items()]).to_csv(OUTPUT_DIR / "confusion_matrices.csv", index=False, encoding="utf-8-sig")
+               for (d, m), cm in cms.items()]).to_csv(
+                   OUTPUT_DIR / "confusion_matrices.csv", index=False, encoding="utf-8-sig")
 
 with pd.ExcelWriter(OUTPUT_DIR / "chapter_4_results.xlsx", engine="openpyxl") as writer:
     results_df.to_excel(writer, index=False, sheet_name="Model Results")
     for (d, m), cm in cms.items():
-        pd.DataFrame(cm).to_excel(writer, index=False, header=False, sheet_name=f"CM_{d[:12]}_{m[:10]}"[:31])
+        pd.DataFrame(cm).to_excel(writer, index=False, header=False,
+                                  sheet_name=f"CM_{d[:12]}_{m[:10]}"[:31])
     for d, fi in feature_tables.items():
         fi.head(20).to_excel(writer, index=False, sheet_name=f"FI_{d}"[:31])
     for d, (_, metrics) in kmeans_tables.items():
