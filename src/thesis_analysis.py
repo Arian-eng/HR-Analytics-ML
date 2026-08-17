@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Reproducible Chapter 4 HR machine-learning analysis.
 
-Raw CSV files stay local. The script accepts the exact filenames supplied
-for this thesis and writes model metrics, confusion matrices, K-Means
-validation, feature importance, and an Excel workbook under results/.
+Classification models required by Chapter 3:
+Random Forest, Decision Tree, SVM, Neural Network, Logistic Regression,
+Gradient Boosting, KNN, and XGBoost. K-Means is evaluated separately.
+Raw CSV files stay local; results are written under results/ and figures/.
 """
 from pathlib import Path
 import warnings
@@ -17,14 +18,17 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import LinearSVC
 from sklearn.neural_network import MLPClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
 from sklearn.metrics import (accuracy_score, precision_score, recall_score,
                              f1_score, confusion_matrix, silhouette_score)
 from sklearn.inspection import permutation_importance
+from xgboost import XGBClassifier
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR, OUTPUT_DIR, FIG_DIR = ROOT / "data", ROOT / "results", ROOT / "figures"
@@ -32,15 +36,9 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 FIG_DIR.mkdir(exist_ok=True)
 
 DATASETS = {
-    "IBM_HR_Attrition": {
-        "files": ["WA_Fn-UseC_-HR-Employee-Attrition.csv", "WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv"],
-        "target": "Attrition", "ids": ["EmployeeNumber", "EmployeeCount", "StandardHours"]},
-    "Job_Change": {
-        "files": ["aug_train.csv", "aug_train(4).csv"],
-        "target": "target", "ids": ["enrollee_id"]},
-    "Employee_Performance": {
-        "files": ["Uncleaned_employees_final_dataset.csv", "Uncleaned_employees_final_dataset (1)(2).csv"],
-        "target": "KPIs_met_more_than_80", "ids": ["employee_id"]},
+    "IBM_HR_Attrition": {"files": ["WA_Fn-UseC_-HR-Employee-Attrition.csv", "WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv"], "target": "Attrition", "ids": ["EmployeeNumber", "EmployeeCount", "StandardHours"]},
+    "Job_Change": {"files": ["aug_train.csv", "aug_train(4).csv"], "target": "target", "ids": ["enrollee_id"]},
+    "Employee_Performance": {"files": ["Uncleaned_employees_final_dataset.csv", "Uncleaned_employees_final_dataset (1)(2).csv"], "target": "KPIs_met_more_than_80", "ids": ["employee_id"]},
 }
 
 
@@ -53,20 +51,18 @@ def resolve_file(candidates):
 
 
 def prepare(df, target, ids):
-    encoder = LabelEncoder()
-    y = encoder.fit_transform(df[target].astype(str))
+    enc = LabelEncoder()
+    y = enc.fit_transform(df[target].astype(str))
     X = df.drop(columns=[target] + ids, errors="ignore").copy()
     X = X.replace([np.inf, -np.inf], np.nan)
     X = X.drop(columns=[c for c in X if X[c].nunique(dropna=False) <= 1])
     cat = X.select_dtypes(include=["object", "category", "bool"]).columns.tolist()
     num = [c for c in X.columns if c not in cat]
     prep = ColumnTransformer([
-        ("num", Pipeline([("impute", SimpleImputer(strategy="median")),
-                          ("scale", StandardScaler())]), num),
-        ("cat", Pipeline([("impute", SimpleImputer(strategy="most_frequent")),
-                          ("onehot", OneHotEncoder(handle_unknown="ignore"))]), cat),
+        ("num", Pipeline([("impute", SimpleImputer(strategy="median")), ("scale", StandardScaler())]), num),
+        ("cat", Pipeline([("impute", SimpleImputer(strategy="most_frequent")), ("onehot", OneHotEncoder(handle_unknown="ignore"))]), cat),
     ])
-    return X, y, prep, encoder
+    return X, y, prep, enc
 
 
 def save_cm(cm, title, filename):
@@ -90,20 +86,19 @@ def kmeans_analysis(df, name, target, ids):
     if numeric.shape[1] < 2:
         return None
     Z = StandardScaler().fit_transform(numeric)
-    ks = range(2, min(7, len(Z) - 1) + 1)
     rows = []
-    for k in ks:
-        model = KMeans(n_clusters=k, random_state=42, n_init=20)
-        labels = model.fit_predict(Z)
-        rows.append({"k": k, "inertia": model.inertia_, "silhouette": silhouette_score(Z, labels)})
+    for k in range(2, min(7, len(Z) - 1) + 1):
+        km = KMeans(n_clusters=k, random_state=42, n_init=20)
+        labels = km.fit_predict(Z)
+        rows.append({"k": k, "inertia": km.inertia_, "silhouette": silhouette_score(Z, labels)})
     metrics = pd.DataFrame(rows)
     best_k = int(metrics.loc[metrics.silhouette.idxmax(), "k"])
     metrics.to_csv(OUTPUT_DIR / f"{name}_kmeans.csv", index=False, encoding="utf-8-sig")
     return best_k, metrics
 
 
-# Full RBF SVC is computationally excessive for the 19k-row dataset.
-# LinearSVC remains an SVM classifier and keeps the experiment reproducible.
+# All classifiers explicitly required by the thesis methodology are included.
+# SVM uses LinearSVC for reproducibility on the large Job Change dataset.
 MODEL_SPECS = {
     "Random Forest": (RandomForestClassifier(random_state=42, n_jobs=-1, class_weight="balanced"),
                       {"n_estimators": [100, 200], "max_depth": [None, 10]}),
@@ -113,6 +108,16 @@ MODEL_SPECS = {
             {"C": [0.1, 1, 10]}),
     "Neural Network": (MLPClassifier(max_iter=250, early_stopping=True, random_state=42),
                        {"hidden_layer_sizes": [(50,), (100,)], "alpha": [0.0001, 0.001]}),
+    "Logistic Regression": (LogisticRegression(max_iter=1000, class_weight="balanced", random_state=42),
+                             {"C": [0.1, 1, 10]}),
+    "Gradient Boosting": (GradientBoostingClassifier(random_state=42),
+                          {"n_estimators": [100, 200], "learning_rate": [0.05, 0.1], "max_depth": [2, 3]}),
+    "KNN": (KNeighborsClassifier(),
+            {"n_neighbors": [3, 5, 7], "weights": ["uniform", "distance"]}),
+    "XGBoost": (XGBClassifier(n_estimators=200, learning_rate=0.05, max_depth=4,
+                               subsample=0.9, colsample_bytree=0.9, eval_metric="logloss",
+                               random_state=42, n_jobs=-1, tree_method="hist"),
+                {"n_estimators": [100, 200], "max_depth": [3, 5], "learning_rate": [0.05, 0.1]}),
 }
 
 all_results, cms, feature_tables, kmeans_tables = [], {}, {}, {}
@@ -122,9 +127,7 @@ for dataset_name, info in DATASETS.items():
     path = resolve_file(info["files"])
     df = pd.read_csv(path)
     X, y, prep, label_encoder = prepare(df, info["target"], info["ids"])
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.20, random_state=42, stratify=y)
-
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
     X_train_t = prep.fit_transform(X_train)
     X_test_t = prep.transform(X_test)
 
@@ -132,40 +135,27 @@ for dataset_name, info in DATASETS.items():
         search = GridSearchCV(model, grid, scoring="f1_weighted", cv=cv, n_jobs=-1, refit=True)
         search.fit(X_train_t, y_train)
         pred = search.predict(X_test_t)
-
         row = {
-            "Dataset": dataset_name,
-            "Model": model_name,
+            "Dataset": dataset_name, "Model": model_name,
             "Accuracy": accuracy_score(y_test, pred),
             "Precision_weighted": precision_score(y_test, pred, average="weighted", zero_division=0),
             "Recall_weighted": recall_score(y_test, pred, average="weighted", zero_division=0),
             "F1_weighted": f1_score(y_test, pred, average="weighted", zero_division=0),
-            "CV_Best_F1_weighted": search.best_score_,
-            "Best_Params": str(search.best_params_),
+            "CV_Best_F1_weighted": search.best_score_, "Best_Params": str(search.best_params_),
         }
-
-        # For binary targets, report positive-class metrics explicitly.
         if len(label_encoder.classes_) == 2:
             row["Positive_Class"] = str(label_encoder.classes_[1])
             row["Positive_Precision"] = precision_score(y_test, pred, pos_label=1, zero_division=0)
             row["Positive_Recall"] = recall_score(y_test, pred, pos_label=1, zero_division=0)
             row["Positive_F1"] = f1_score(y_test, pred, pos_label=1, zero_division=0)
-
         all_results.append(row)
         cms[(dataset_name, model_name)] = confusion_matrix(y_test, pred)
-        save_cm(cms[(dataset_name, model_name)], f"{dataset_name} - {model_name}",
-                f"{dataset_name}_{model_name.replace(' ', '_')}_confusion_matrix.png")
+        save_cm(cms[(dataset_name, model_name)], f"{dataset_name} - {model_name}", f"{dataset_name}_{model_name.replace(' ', '_')}_confusion_matrix.png")
 
         if model_name == "Random Forest":
-            perm = permutation_importance(search.best_estimator_, X_test_t, y_test,
-                                          n_repeats=5, random_state=42, n_jobs=-1,
-                                          scoring="f1_weighted")
-            feature_names = np.asarray(prep.get_feature_names_out())
-            fi = pd.DataFrame({
-                "feature": feature_names,
-                "importance_mean": perm.importances_mean,
-                "importance_std": perm.importances_std,
-            }).sort_values("importance_mean", ascending=False)
+            perm = permutation_importance(search.best_estimator_, X_test_t, y_test, n_repeats=5, random_state=42, n_jobs=-1, scoring="f1_weighted")
+            names = np.asarray(prep.get_feature_names_out())
+            fi = pd.DataFrame({"feature": names, "importance_mean": perm.importances_mean, "importance_std": perm.importances_std}).sort_values("importance_mean", ascending=False)
             fi.to_csv(OUTPUT_DIR / f"{dataset_name}_feature_importance.csv", index=False, encoding="utf-8-sig")
             feature_tables[dataset_name] = fi
 
@@ -175,15 +165,12 @@ for dataset_name, info in DATASETS.items():
 
 results_df = pd.DataFrame(all_results)
 results_df.to_csv(OUTPUT_DIR / "model_comparison.csv", index=False, encoding="utf-8-sig")
-pd.DataFrame([{"Dataset": d, "Model": m, "Confusion_Matrix": str(cm.tolist())}
-               for (d, m), cm in cms.items()]).to_csv(
-                   OUTPUT_DIR / "confusion_matrices.csv", index=False, encoding="utf-8-sig")
+pd.DataFrame([{"Dataset": d, "Model": m, "Confusion_Matrix": str(cm.tolist())} for (d, m), cm in cms.items()]).to_csv(OUTPUT_DIR / "confusion_matrices.csv", index=False, encoding="utf-8-sig")
 
 with pd.ExcelWriter(OUTPUT_DIR / "chapter_4_results.xlsx", engine="openpyxl") as writer:
     results_df.to_excel(writer, index=False, sheet_name="Model Results")
     for (d, m), cm in cms.items():
-        pd.DataFrame(cm).to_excel(writer, index=False, header=False,
-                                  sheet_name=f"CM_{d[:12]}_{m[:10]}"[:31])
+        pd.DataFrame(cm).to_excel(writer, index=False, header=False, sheet_name=f"CM_{d[:12]}_{m[:10]}"[:31])
     for d, fi in feature_tables.items():
         fi.head(20).to_excel(writer, index=False, sheet_name=f"FI_{d}"[:31])
     for d, (_, metrics) in kmeans_tables.items():
