@@ -10,7 +10,22 @@ The project analyzes three public HR datasets:
 2. HR Analytics: Job Change of Data Scientists — target: `target`
 3. Employee Performance and Productivity — target: `KPIs_met_more_than_80`
 
-The analysis includes preprocessing, K-Means clustering, Random Forest, Decision Tree, SVM, Neural Network, cross-validation, model metrics, confusion matrices, and permutation feature importance.
+### Classification algorithms
+
+The Chapter 3 classification benchmark includes eight algorithms:
+
+1. Random Forest
+2. Decision Tree
+3. Linear SVM (`LinearSVC`)
+4. Neural Network (`MLPClassifier`)
+5. Logistic Regression
+6. Gradient Boosting
+7. K-Nearest Neighbors (KNN)
+8. XGBoost
+
+K-Means is evaluated separately for clustering. The Green HRM-specific regression analysis additionally uses Linear Regression and Random Forest Regressor.
+
+The analysis includes preprocessing, train/test evaluation, 3-fold stratified cross-validation with GridSearchCV, Accuracy, weighted Precision/Recall/F1, positive-class metrics for binary targets, confusion matrices, K-Means/Silhouette evaluation, and permutation feature importance.
 
 > **Methodological note:** the three general HR datasets do not directly measure Green HRM practices. Their outputs are therefore interpreted as HR-performance/behavioral proxy indicators rather than direct measures of green behavior.
 
@@ -31,6 +46,8 @@ HR-Analytics-ML/
 ## Reproducibility
 
 Create a Python environment and install the dependencies listed in `requirements.txt`. Place the required CSV files under `data/`, then run the analysis script from the project root.
+
+The script resolves the supplied filename variants for the three datasets and writes `results/model_comparison.csv`, confusion-matrix outputs, K-Means metrics, feature-importance tables, and `results/chapter_4_results.xlsx`.
 
 ## Data
 
