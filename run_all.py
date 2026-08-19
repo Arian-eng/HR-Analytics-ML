@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import confusion_matrix
 from src.preprocessing import DATASETS, load_dataset, split_xy, make_preprocessor
 from src.classification import MODELS, build_search
 from src.clustering import run_kmeans
@@ -29,28 +30,46 @@ for name, info in DATASETS.items():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     for model_name in MODELS:
-        # RF/DT do not require scaling; SVM/MLP do.
         scaled = model_name in {"Linear SVM", "MLP"}
         prep = make_preprocessor(X_train, scale_numeric=scaled)
         search = build_search(model_name, MODELS[model_name][0], prep, cv)
         search.fit(X_train, y_train)
         pred = search.predict(X_test)
-        row = {"Dataset": name, "Model": model_name, **classification_metrics(y_test, pred),
-               "Best_Params": json.dumps(search.best_params_, default=str),
-               "CV_Best_F1": float(search.best_score_)}
+        row = {
+            "Dataset": name,
+            "Model": model_name,
+            **classification_metrics(y_test, pred),
+            "Best_Params": json.dumps(search.best_params_, default=str),
+            "CV_Best_F1": float(search.best_score_)
+        }
         all_rows.append(row)
         predictions[(name, model_name)] = (y_test, pred)
         pd.DataFrame({"y_true": y_test, "y_pred": pred}).to_csv(
-            out_dir / f"{model_name.replace(' ', '_')}_test_predictions.csv", index=False
+            out_dir / f"{model_name.replace(' ', '_')}_test_predictions.csv",
+            index=False
+        )
+        cm = confusion_matrix(y_test, pred)
+        pd.DataFrame(cm).to_csv(
+            out_dir / f"{model_name.replace(' ', '_')}_confusion_matrix.csv",
+            index=False, header=False
         )
 
-    # McNemar comparisons on the identical held-out test set.
-    pairs = [("Random Forest", "Decision Tree"), ("Random Forest", "Linear SVM"), ("Random Forest", "MLP")]
+    pairs = [
+        ("Random Forest", "Decision Tree"),
+        ("Random Forest", "Linear SVM"),
+        ("Random Forest", "MLP")
+    ]
     mrows = []
     for a, b in pairs:
-        _, pa = predictions[(name, a)]; _, pb = predictions[(name, b)]
-        mrows.append({"Dataset": name, "Model_A": a, "Model_B": b, **mcnemar_pair(y_test, pa, pb)})
-    pd.DataFrame(mrows).to_csv(out_dir / "mcnemar.csv", index=False, encoding="utf-8-sig")
+        _, pa = predictions[(name, a)]
+        _, pb = predictions[(name, b)]
+        mrows.append({
+            "Dataset": name, "Model_A": a, "Model_B": b,
+            **mcnemar_pair(y_test, pa, pb)
+        })
+    pd.DataFrame(mrows).to_csv(
+        out_dir / "mcnemar.csv", index=False, encoding="utf-8-sig"
+    )
 
     run_kmeans(df, info["target"], info["ids"], out_dir, FIGURES, name)
 
