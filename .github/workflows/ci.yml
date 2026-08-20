@@ -17,20 +17,29 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
 
       - name: Compile source
         run: |
-          python -m py_compile src/thesis_analysis.py
+          python -m py_compile run_all.py
+          python -m py_compile src/preprocessing.py
+          python -m py_compile src/classification.py
+          python -m py_compile src/clustering.py
+          python -m py_compile src/evaluation.py
           python -m py_compile src/green_hrm_analysis.py
 
       - name: Validate repository structure
         run: |
           test -f README.md
           test -f requirements.txt
-          test -f src/thesis_analysis.py
+          test -f run_all.py
+          test -f src/preprocessing.py
+          test -f src/classification.py
+          test -f src/clustering.py
+          test -f src/evaluation.py
           test -f src/green_hrm_analysis.py
-          test -f validation/validation_report.md
-          test -f validation/green_hrm_validation.md
+          test -d outputs
+          test -d figures
