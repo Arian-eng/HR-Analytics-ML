@@ -4,14 +4,15 @@ from sklearn.svm import LinearSVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
+# Limited search spaces keep the 3-fold Chapter 3 protocol computationally reproducible.
 MODELS = {
     "Random Forest": (RandomForestClassifier(random_state=42, n_jobs=-1, class_weight="balanced"), {
-        "model__n_estimators": [100, 200], "model__max_depth": [None, 10, 20],
-        "model__max_features": ["sqrt", "log2"], "model__min_samples_split": [2, 5]
+        "model__n_estimators": [100, 200], "model__max_depth": [None, 20],
+        "model__max_features": ["sqrt"], "model__min_samples_split": [2, 5]
     }),
     "Decision Tree": (DecisionTreeClassifier(random_state=42, class_weight="balanced"), {
-        "model__max_depth": [5, 10, 15, None], "model__criterion": ["gini", "entropy"],
-        "model__min_samples_split": [2, 5], "model__min_samples_leaf": [1, 2]
+        "model__max_depth": [5, 10, None], "model__criterion": ["gini", "entropy"],
+        "model__min_samples_split": [2, 5]
     }),
     "Linear SVM": (LinearSVC(random_state=42, class_weight="balanced", max_iter=10000), {
         "model__C": [0.1, 1, 10]
