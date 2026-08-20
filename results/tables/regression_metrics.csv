@@ -1,0 +1,9 @@
+﻿Variant,Model,R2,MAE,RMSE,CV_RMSE,Best_Params
+Base,Random Forest Regressor,0.3797529135312089,0.3937736505700946,0.5113856784196017,0.5562545825918973,"{'model__max_depth': None, 'model__max_features': 'sqrt', 'model__min_samples_split': 5, 'model__n_estimators': 200}"
+Base,Decision Tree Regressor,0.3697620381411665,0.3941817963405135,0.5154878984702632,0.5892116872882992,"{'model__max_depth': 5, 'model__min_samples_leaf': 2, 'model__min_samples_split': 5}"
+Base,LinearSVR,0.4170955703494726,0.385902074226881,0.4957524539596815,0.5312221393623319,"{'model__C': 10, 'model__epsilon': 0.1}"
+Base,MLPRegressor,0.3533622686860496,0.4172040361741841,0.5221517235040034,0.592755595909822,"{'model__learning_rate_init': 0.001, 'model__hidden_layer_sizes': (100,), 'model__alpha': 0.0001}"
+GEE+,Random Forest Regressor,0.3868461650064726,0.393876653059837,0.508453123087466,0.5555588340692691,"{'model__max_depth': 10, 'model__max_features': 'sqrt', 'model__min_samples_split': 5, 'model__n_estimators': 200}"
+GEE+,Decision Tree Regressor,0.413351220374507,0.384849320434744,0.4973421650180001,0.6072849797987634,"{'model__max_depth': 5, 'model__min_samples_leaf': 1, 'model__min_samples_split': 5}"
+GEE+,LinearSVR,0.4177592901249691,0.3846963656591918,0.4954701311559752,0.535040486640847,"{'model__C': 1, 'model__epsilon': 0.1}"
+GEE+,MLPRegressor,0.3711981442755763,0.3966595688115468,0.5149002493742681,0.5700040167344915,"{'model__learning_rate_init': 0.001, 'model__hidden_layer_sizes': (100,), 'model__alpha': 0.0001}"

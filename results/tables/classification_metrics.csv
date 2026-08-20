@@ -1,0 +1,13 @@
+﻿Dataset,Model,Accuracy,Precision,Recall,F1,CV_Best_F1,Best_Params
+IBM HR Attrition,Random Forest,0.8401360544217688,0.5,0.1276595744680851,0.2033898305084746,0.3384023950466081,"{""model__max_depth"": null, ""model__max_features"": ""sqrt"", ""model__min_samples_split"": 5, ""model__n_estimators"": 100}"
+IBM HR Attrition,Decision Tree,0.7857142857142857,0.3787878787878788,0.5319148936170213,0.4424778761061947,0.365334744656872,"{""model__criterion"": ""gini"", ""model__max_depth"": 5, ""model__min_samples_split"": 2}"
+IBM HR Attrition,Linear SVM,0.7517006802721088,0.3488372093023256,0.6382978723404256,0.4511278195488721,0.4861606303766355,"{""model__C"": 0.1}"
+IBM HR Attrition,MLP,0.8673469387755102,0.6176470588235294,0.4468085106382978,0.5185185185185185,0.5488803331499961,"{""model__learning_rate_init"": 0.01, ""model__hidden_layer_sizes"": [50, 50], ""model__alpha"": 0.001, ""model__activation"": ""tanh""}"
+Job Change,Random Forest,0.7630480167014614,0.517709118311982,0.7193717277486911,0.6021034180543383,0.5770442417048414,"{""model__max_depth"": 20, ""model__max_features"": ""sqrt"", ""model__min_samples_split"": 5, ""model__n_estimators"": 200}"
+Job Change,Decision Tree,0.7348643006263048,0.4793220338983051,0.7403141361256544,0.5818930041152264,0.5641921700640423,"{""model__criterion"": ""entropy"", ""model__max_depth"": 10, ""model__min_samples_split"": 5}"
+Job Change,Linear SVM,0.7437369519832986,0.4905792044661549,0.7361256544502618,0.5887772194304858,0.5712381829463177,"{""model__C"": 0.1}"
+Job Change,MLP,0.7867954070981211,0.5915119363395226,0.4670157068062827,0.5219426565242832,0.4889559453151731,"{""model__learning_rate_init"": 0.001, ""model__hidden_layer_sizes"": [50], ""model__alpha"": 0.001, ""model__activation"": ""relu""}"
+Employee Promotion,Random Forest,0.9282065316548076,0.6467065868263473,0.3468950749464668,0.4515679442508711,0.447745668954429,"{""model__max_depth"": null, ""model__max_features"": ""sqrt"", ""model__min_samples_split"": 5, ""model__n_estimators"": 100}"
+Employee Promotion,Decision Tree,0.8977376391169495,0.4089581304771178,0.449678800856531,0.4283528811830698,0.4371965014769459,"{""model__criterion"": ""entropy"", ""model__max_depth"": null, ""model__min_samples_split"": 2}"
+Employee Promotion,Linear SVM,0.7584382411968619,0.2387195121951219,0.8383297644539615,0.3716184148077835,0.3694078067429638,"{""model__C"": 0.1}"
+Employee Promotion,MLP,0.9423462871738734,0.9217877094972068,0.3533190578158458,0.5108359133126935,0.498342579628805,"{""model__learning_rate_init"": 0.001, ""model__hidden_layer_sizes"": [100, 100], ""model__alpha"": 0.001, ""model__activation"": ""tanh""}"

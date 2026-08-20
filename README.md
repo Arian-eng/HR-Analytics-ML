@@ -1,28 +1,128 @@
 # HR Analytics ML
 
-Machine-learning analysis for the master's thesis on Green HRM and HR analytics.
+Reproducible machine-learning analysis for the master's thesis on Green HRM and HR analytics.
 
-## Scope
+## Study design
 
-The project analyzes three public HR datasets:
+The thesis uses **four independent public datasets**. They are never merged and their row counts are not treated as one sample:
 
-1. IBM HR Employee Attrition & Performance — target: `Attrition`
-2. HR Analytics: Job Change of Data Scientists — target: `target`
-3. Employee Performance and Productivity — target: `KPIs_met_more_than_80`
+1. **IBM HR Analytics Employee Attrition & Performance** — target: `Attrition` — binary classification
+2. **HR Analytics: Job Change of Data Scientists** — target: `target` — binary classification
+3. **Employee Promotion Prediction** — target: `is_promoted` — binary classification
+4. **GHRM–Environmental Performance** (`HRM DATASETS(2).csv`) — target: continuous `FEP` — regression and exploratory clustering
 
-The analysis includes preprocessing, K-Means clustering, Random Forest, Decision Tree, SVM, Neural Network, cross-validation, model metrics, confusion matrices, and permutation feature importance.
+The older UCI dataset is not part of the final pipeline.
 
-> **Methodological note:** the three general HR datasets do not directly measure Green HRM practices. Their outputs are therefore interpreted as HR-performance/behavioral proxy indicators rather than direct measures of green behavior.
+## Final Chapter 3 algorithms
+
+### Exploratory clustering
+- `KMeans`
+- evaluated independently for **each of the four datasets** with `k=2...7`
+- Inertia / SSE
+- Silhouette Score
+- Davies-Bouldin Index
+- for datasets above 5,000 rows, Silhouette is computed on a deterministic 5,000-row sample to avoid quadratic memory growth
+- the target and identifier fields are excluded; for GHRM, `FEP` is excluded from cluster formation
+- clusters are reported only as `Cluster 0`, `Cluster 1`, etc.; no cluster is labelled green/non-green
+
+### Binary classification
+For IBM HR, Job Change and Employee Promotion:
+- `RandomForestClassifier`
+- `DecisionTreeClassifier`
+- `LinearSVC`
+- `MLPClassifier`
+
+### GHRM regression
+For continuous `FEP`:
+- `RandomForestRegressor`
+- `DecisionTreeRegressor`
+- `LinearSVR`
+- `MLPRegressor`
+
+The base GHRM regression uses `GRS`, `GTD`, `GPA` and `GCM`. A supplementary run adds `GEE` to assess its predictive contribution. This is predictive analysis, not a test of mediation or causality.
+
+## Experimental design
+
+### Classification
+- 80% train / 20% test
+- stratified split
+- `random_state=42`
+- 3-fold `StratifiedKFold` cross-validation on training data only
+- `GridSearchCV` for Random Forest, Decision Tree and Linear SVM
+- `RandomizedSearchCV` for MLP
+- F1 score of the positive class is used for hyperparameter selection
+- preprocessing is fitted inside the model pipeline using training data only
+- identifier columns are removed before modelling
+- categorical variables use `OneHotEncoder(handle_unknown="ignore")`
+- missing values are imputed from training data only
+- numeric features are standardized for Linear SVM and MLP
+
+### GHRM regression
+- 80% train / 20% test without stratification
+- 3-fold `KFold` cross-validation on training data only
+- preprocessing remains inside the model pipeline
+- RMSE is the tuning objective
+- final test metrics: `R²`, `RMSE`, `MAE`
+
+## Classification evaluation
+
+For every classifier and dataset the held-out test set is used once for:
+
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- Confusion Matrix
+
+McNemar's test compares the same held-out predictions for:
+- Random Forest vs Decision Tree
+- Random Forest vs Linear SVM
+- Random Forest vs MLP
+
+No model is assumed to be best before evaluation.
+
+## Outputs
+
+`run_all.py` generates:
+
+```text
+outputs/
+├── ibm/
+├── job_change/
+├── promotion/
+├── ghrm/
+├── model_metrics.csv
+└── model_metrics.xlsx
+```
+
+The dataset-specific folders contain label mappings, test predictions, confusion matrices, K-Means metrics, cluster sizes and McNemar comparisons. The GHRM folder also contains regression metrics, predictions and cluster profiles. `figures/` contains the K-Means diagnostic plots.
+
+The same run also publishes the curated thesis results to GitHub-friendly files:
+
+```text
+results/
+├── chapter4_results.md     # Persian Chapter 4 results and interpretation
+├── tables/                 # Machine-readable result tables
+└── figures/                # Model, confusion-matrix, regression and K-Means figures
+```
+
+Start with **[the reproducible Chapter 4 results](results/chapter4_results.md)**.
 
 ## Project structure
 
 ```text
 HR-Analytics-ML/
-├── data/                  # Local datasets (not committed by default)
-├── src/                   # Analysis source code
-├── notebooks/             # Exploratory analysis
-├── results/               # Generated tables and reports
-├── figures/               # Generated charts
+├── data/                  # Local datasets; not committed by default
+├── src/
+│   ├── preprocessing.py
+│   ├── clustering.py
+│   ├── classification.py
+│   ├── evaluation.py
+│   ├── green_hrm_analysis.py
+│   └── reporting.py
+├── outputs/               # Generated results
+├── figures/               # Generated figures
+├── run_all.py
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -30,8 +130,32 @@ HR-Analytics-ML/
 
 ## Reproducibility
 
-Create a Python environment and install the dependencies listed in `requirements.txt`. Place the required CSV files under `data/`, then run the analysis script from the project root.
+Place these four current files in `data/`:
 
-## Data
+```text
+WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv
+aug_train(2).csv
+train_LZdllcl(2).csv
+HRM DATASETS(2).csv
+```
 
-The repository intentionally does not include raw datasets unless their redistribution license permits it. Dataset filenames and expected targets are documented in the analysis code.
+The loader also accepts the previously documented aliases `aug_train(5).csv`, `train_LZdllcl.csv`, and `HRM DATASETS.csv`.
+
+Then install `requirements.txt` and run:
+
+```bash
+python run_all.py
+```
+
+The CI checks do not require raw datasets. Run them locally with:
+
+```bash
+python -m compileall -q run_all.py src tests
+python -m unittest discover -s tests -v
+```
+
+Raw datasets are intentionally not committed unless their redistribution licenses permit it.
+
+## GHRM interpretation
+
+The three general HR datasets do not directly measure Green HRM or environmental behaviour. Their HR variables are therefore interpreted as theoretically related proxy/predictive features only. The fourth GHRM dataset contains direct GHRM dimensions (`GRS`, `GTD`, `GPA`, `GCM`, `GEE`) and continuous environmental performance (`FEP`). The machine-learning analysis does not establish causal or mediation effects.
