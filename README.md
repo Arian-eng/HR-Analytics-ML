@@ -9,7 +9,7 @@ The thesis uses **four independent public datasets**. They are never merged and 
 1. **IBM HR Analytics Employee Attrition & Performance** — target: `Attrition` — binary classification
 2. **HR Analytics: Job Change of Data Scientists** — target: `target` — binary classification
 3. **Employee Promotion Prediction** — target: `is_promoted` — binary classification
-4. **GHRM–Environmental Performance** (`HRM DATASETS.csv`) — target: continuous `FEP` — regression and exploratory clustering
+4. **GHRM–Environmental Performance** (`HRM DATASETS(2).csv`) — target: continuous `FEP` — regression and exploratory clustering
 
 The older UCI dataset is not part of the final pipeline.
 
@@ -21,6 +21,7 @@ The older UCI dataset is not part of the final pipeline.
 - Inertia / SSE
 - Silhouette Score
 - Davies-Bouldin Index
+- for datasets above 5,000 rows, Silhouette is computed on a deterministic 5,000-row sample to avoid quadratic memory growth
 - the target and identifier fields are excluded; for GHRM, `FEP` is excluded from cluster formation
 - clusters are reported only as `Cluster 0`, `Cluster 1`, etc.; no cluster is labelled green/non-green
 
@@ -90,10 +91,22 @@ outputs/
 ├── job_change/
 ├── promotion/
 ├── ghrm/
-└── model_metrics.csv
+├── model_metrics.csv
+└── model_metrics.xlsx
 ```
 
-The dataset-specific folders contain test predictions, confusion matrices, K-Means metrics, cluster sizes and McNemar comparisons. The GHRM folder also contains regression metrics, predictions and cluster profiles. `figures/` contains the K-Means diagnostic plots.
+The dataset-specific folders contain label mappings, test predictions, confusion matrices, K-Means metrics, cluster sizes and McNemar comparisons. The GHRM folder also contains regression metrics, predictions and cluster profiles. `figures/` contains the K-Means diagnostic plots.
+
+The same run also publishes the curated thesis results to GitHub-friendly files:
+
+```text
+results/
+├── chapter4_results.md     # Persian Chapter 4 results and interpretation
+├── tables/                 # Machine-readable result tables
+└── figures/                # Model, confusion-matrix, regression and K-Means figures
+```
+
+Start with **[the reproducible Chapter 4 results](results/chapter4_results.md)**.
 
 ## Project structure
 
@@ -105,7 +118,8 @@ HR-Analytics-ML/
 │   ├── clustering.py
 │   ├── classification.py
 │   ├── evaluation.py
-│   └── green_hrm_analysis.py
+│   ├── green_hrm_analysis.py
+│   └── reporting.py
 ├── outputs/               # Generated results
 ├── figures/               # Generated figures
 ├── run_all.py
@@ -120,15 +134,24 @@ Place these four current files in `data/`:
 
 ```text
 WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv
-aug_train(5).csv
-train_LZdllcl.csv
-HRM DATASETS.csv
+aug_train(2).csv
+train_LZdllcl(2).csv
+HRM DATASETS(2).csv
 ```
+
+The loader also accepts the previously documented aliases `aug_train(5).csv`, `train_LZdllcl.csv`, and `HRM DATASETS.csv`.
 
 Then install `requirements.txt` and run:
 
 ```bash
 python run_all.py
+```
+
+The CI checks do not require raw datasets. Run them locally with:
+
+```bash
+python -m compileall -q run_all.py src tests
+python -m unittest discover -s tests -v
 ```
 
 Raw datasets are intentionally not committed unless their redistribution licenses permit it.

@@ -11,8 +11,20 @@ env/
 
 # Local data / generated outputs
 data/*.csv
-results/
-figures/
+outputs/*
+!outputs/.gitkeep
+!outputs/README.md
+results/*
+!results/README.md
+!results/chapter4_replacement_rules.md
+!results/chapter4_results.md
+!results/tables/
+!results/tables/*.csv
+!results/figures/
+!results/figures/*.png
+figures/*
+!figures/.gitkeep
+!figures/README.md
 thesis_outputs/
 *.xlsx
 

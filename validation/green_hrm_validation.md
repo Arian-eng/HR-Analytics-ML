@@ -1,33 +1,36 @@
-# Dedicated Green HRM validation
+# GHRM–Environmental Performance validation
 
-The dedicated datasets contain continuous composite constructs, so regression is used instead of forcing them into binary classification. Results below were revalidated against the exact CSV files currently available for the thesis.
+The current Green HRM analysis uses `HRM DATASETS(2).csv` (and also accepts the alias `HRM DATASETS.csv`), not the superseded Green Innovation or Sustainable Performance datasets.
 
-## Green Innovation dataset
+## Construct preparation
 
-- 422 observations, 34 variables.
-- Predictors: `MGHRM`, `MGWE`, `MGTFL`.
-- Target: `MGI` (green innovation composite).
-- 80/20 holdout, `random_state=42`.
-- Linear Regression: R² = **0.4735**, MAE = **0.4657**, RMSE ≈ **0.6719**.
-- Random Forest Regressor: R² = **0.3413**, MAE = **0.4655**, RMSE ≈ **0.7515**.
-- Random Forest feature importance: MGWE **0.7356**, MGTFL **0.1340**, MGHRM **0.1304**.
-- Reproducible K-Means using the current script's standardized `MGHRM`, `MGWE`, `MGTFL`, and `MGI` features: best among k=2..5 is **k=4**, silhouette ≈ **0.4117**.
+The loader checks all item columns before analysis and constructs row means for:
 
-## Sustainable Performance dataset
+- `GRS`: green recruitment and selection
+- `GTD`: green training and development
+- `GPA`: green performance appraisal
+- `GCM`: green compensation management
+- `GEE`: green employee empowerment/engagement
+- `FEP`: firm environmental performance
 
-- 409 observations, 32 variables.
-- Predictors: `MGHRM`, `MPEI`, `MPES`.
-- Target: `MSP` (sustainable performance composite).
-- 80/20 holdout, `random_state=42`.
-- Linear Regression: R² = **0.5938**, MAE = **0.4576**, RMSE ≈ **0.6271**.
-- Random Forest Regressor: R² = **0.5592**, MAE = **0.4655**, RMSE ≈ **0.6533**.
-- Random Forest feature importance: MPEI **0.8022**, MGHRM **0.1060**, MPES **0.0918**.
-- Reproducible K-Means using the current script's standardized `MGHRM`, `MPEI`, `MPES`, and `MSP` features: best among k=2..5 is **k=4**, silhouette ≈ **0.3977**.
+The source file uses the column name `GDT3` for the third training/development item; the mapping preserves that exact source spelling.
 
-## Important correction
+## Regression protocol
 
-Earlier draft notes reported higher silhouette values for these two datasets. Those values are not reproduced by the current committed clustering specification. They have therefore been removed from the validated results rather than retained without reproducibility.
+- continuous target: `FEP`
+- base predictors: `GRS`, `GTD`, `GPA`, `GCM`
+- supplementary predictors: base plus `GEE`
+- 80/20 holdout with `random_state=42`
+- three-fold shuffled KFold on training data only
+- RMSE tuning objective
+- held-out R², RMSE, and MAE
+
+Rows without a computable `FEP` composite are excluded from regression. Predictor missingness is median-imputed inside the model pipeline.
+
+## Clustering protocol
+
+K-Means uses the five GHRM predictor composites and excludes `FEP` from cluster formation. Missing predictor composites are median-imputed before standardization. The analysis evaluates `k=2..7` with Inertia/SSE, Silhouette, and Davies-Bouldin, then writes cluster sizes and descriptive `FEP` profiles.
 
 ## Interpretation boundary
 
-These results establish predictive associations in the public datasets. They do **not** establish causal effects. The Green HRM composite should be described as an explanatory/predictive feature, while green innovation and sustainable performance are continuous outcomes.
+The outputs are predictive and exploratory. They do not establish causal effects, mediation, or a substantively “green” versus “non-green” cluster label.

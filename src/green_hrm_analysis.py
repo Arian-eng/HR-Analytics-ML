@@ -1,4 +1,5 @@
 from pathlib import Path
+import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
@@ -16,6 +17,7 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score
 RANDOM_STATE = 42
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
+GHRM_FILES = ["HRM DATASETS(2).csv", "HRM DATASETS.csv"]
 OUT = ROOT / "outputs" / "ghrm"
 FIG = ROOT / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -32,7 +34,19 @@ ITEMS = {
 
 
 def load():
-    df = pd.read_csv(DATA_DIR / "HRM DATASETS.csv")
+    path = next(
+        (DATA_DIR / name for name in GHRM_FILES if (DATA_DIR / name).exists()),
+        None,
+    )
+    if path is None:
+        raise FileNotFoundError(
+            "GHRM dataset not found: " + ", ".join(GHRM_FILES)
+        )
+    df = pd.read_csv(path)
+    required = {column for columns in ITEMS.values() for column in columns}
+    missing = sorted(required.difference(df.columns))
+    if missing:
+        raise ValueError(f"GHRM dataset is missing required columns: {missing}")
     for name, cols in ITEMS.items():
         df[name] = df[cols].apply(pd.to_numeric, errors="coerce").mean(axis=1)
     return df
@@ -40,7 +54,10 @@ def load():
 
 def run_regression(df, gee_plus=False):
     features = ["GRS", "GTD", "GPA", "GCM"] + (["GEE"] if gee_plus else [])
-    X, y = df[features], df["FEP"]
+    valid_target = df["FEP"].notna()
+    X, y = df.loc[valid_target, features], df.loc[valid_target, "FEP"]
+    if len(y) < 4:
+        raise ValueError("GHRM regression requires at least four non-missing FEP rows")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=RANDOM_STATE)
     prep = ColumnTransformer([("num", Pipeline([("impute", SimpleImputer(strategy="median")), ("scale", StandardScaler())]), features)])
     models = {
@@ -74,13 +91,34 @@ def run_regression(df, gee_plus=False):
 
 def run_kmeans(df):
     features = ["GRS", "GTD", "GPA", "GCM", "GEE"]
-    Z = StandardScaler().fit_transform(df[features])
+    Z = Pipeline([
+        ("impute", SimpleImputer(strategy="median")),
+        ("scale", StandardScaler()),
+    ]).fit_transform(df[features])
     rows = []
     for k in range(2, 8):
         km = KMeans(n_clusters=k, n_init=20, random_state=42).fit(Z)
         rows.append({"k": k, "Inertia_SSE": km.inertia_, "Silhouette": silhouette_score(Z, km.labels_), "Davies_Bouldin": davies_bouldin_score(Z, km.labels_)})
     metrics = pd.DataFrame(rows)
     metrics.to_csv(OUT / "kmeans_metrics.csv", index=False, encoding="utf-8-sig")
+    plots = [
+        ("Inertia_SSE", "GHRM K-Means Elbow", "Inertia / SSE"),
+        ("Silhouette", "GHRM K-Means Silhouette", "Silhouette Score"),
+        (
+            "Davies_Bouldin",
+            "GHRM K-Means Davies-Bouldin",
+            "Davies-Bouldin Index",
+        ),
+    ]
+    for column, title, ylabel in plots:
+        figure, axis = plt.subplots()
+        axis.plot(metrics["k"], metrics[column], marker="o")
+        axis.set_title(title)
+        axis.set_xlabel("k")
+        axis.set_ylabel(ylabel)
+        figure.tight_layout()
+        figure.savefig(FIG / f"ghrm_{column}.png", dpi=180)
+        plt.close(figure)
     best_k = int(metrics.loc[metrics.Silhouette.idxmax(), "k"])
     labels = KMeans(n_clusters=best_k, n_init=20, random_state=42).fit_predict(Z)
     profiles = pd.DataFrame({"Cluster": labels, "FEP": df["FEP"]}).groupby("Cluster").agg(Size=("FEP", "size"), Mean_FEP=("FEP", "mean"), SD_FEP=("FEP", "std"))

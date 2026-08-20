@@ -11,10 +11,9 @@ DATA_DIR = ROOT / "data"
 
 DATASETS = {
     "ibm": {"files": ["WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv"], "target": "Attrition", "ids": ["EmployeeNumber", "EmployeeCount", "StandardHours"]},
-    "job_change": {"files": ["aug_train(5).csv"], "target": "target", "ids": ["enrollee_id"]},
-    "promotion": {"files": ["train_LZdllcl.csv"], "target": "is_promoted", "ids": ["employee_id"]},
+    "job_change": {"files": ["aug_train(2).csv", "aug_train(5).csv"], "target": "target", "ids": ["enrollee_id"]},
+    "promotion": {"files": ["train_LZdllcl(2).csv", "train_LZdllcl.csv"], "target": "is_promoted", "ids": ["employee_id"]},
 }
-GHRM_FILE = "HRM DATASETS.csv"
 
 def resolve_file(candidates):
     for name in candidates:

@@ -1,19 +1,7 @@
-# Reproducible Chapter 4 Results
+# Chapter 4 results
 
-This directory contains thesis-ready result specifications and generated-result placeholders.
+The current executable pipeline is `run_all.py`. It analyzes three binary HR datasets and the separate GHRM–Environmental Performance dataset.
 
-## Important
+The Persian, GitHub-ready result narrative is in [`chapter4_results.md`](chapter4_results.md). Its committed CSV tables live under [`tables/`](tables/) and its figures under [`figures/`](figures/). All of these files are regenerated from the same model outputs by `src/reporting.py`.
 
-Raw CSV datasets are intentionally not committed to the repository. Put the three supplied CSV files under `data/` locally and run `python src/thesis_analysis_full.py`.
-
-The script writes:
-
-- `results/model_comparison.csv`
-- `results/confusion_matrices.csv`
-- `results/*_kmeans.csv`
-- `results/*_feature_importance.csv`
-- `results/green_hrm_regression_results.csv` (when Green HRM files are present)
-- `results/green_hrm_kmeans_results.csv` (when Green HRM files are present)
-- `results/chapter_4_results.xlsx`
-
-Only results reproduced from the supplied raw data should be copied into the final thesis. Values from older Word drafts are provisional until reproduced.
+Detailed predictions, tuning parameters, confusion-matrix CSV files and intermediate outputs remain under the ignored local `outputs/` directory. Historical fixed-configuration tables that used Employee Performance and Green Innovation/Sustainable Performance must not be mixed with the current Employee Promotion and continuous-`FEP` methodology.

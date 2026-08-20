@@ -24,12 +24,10 @@ jobs:
 
       - name: Compile source
         run: |
-          python -m py_compile run_all.py
-          python -m py_compile src/preprocessing.py
-          python -m py_compile src/classification.py
-          python -m py_compile src/clustering.py
-          python -m py_compile src/evaluation.py
-          python -m py_compile src/green_hrm_analysis.py
+          python -m compileall -q run_all.py src tests
+
+      - name: Run data-free unit tests
+        run: python -m unittest discover -s tests -v
 
       - name: Validate repository structure
         run: |
@@ -41,5 +39,10 @@ jobs:
           test -f src/clustering.py
           test -f src/evaluation.py
           test -f src/green_hrm_analysis.py
+          test -f src/reporting.py
+          test -f tests/test_pipeline.py
+          test -f results/chapter4_results.md
+          test -f results/tables/classification_metrics.csv
+          test -f results/figures/classification_f1.png
           test -d outputs
           test -d figures
