@@ -2,54 +2,70 @@
 
 Reproducible machine-learning analysis for the master's thesis on Green HRM and HR analytics.
 
-## Scope
+## Study design
 
-The project analyzes three **independent** public HR datasets. They are never merged and their row counts are not treated as one sample:
+The thesis uses **four independent public datasets**. They are never merged and their row counts are not treated as one sample:
 
-1. IBM HR Analytics Employee Attrition & Performance — target: `Attrition`
-2. HR Analytics: Job Change of Data Scientists — target: `target`
-3. Employee Promotion Prediction — target: `is_promoted`
+1. **IBM HR Analytics Employee Attrition & Performance** — target: `Attrition` — binary classification
+2. **HR Analytics: Job Change of Data Scientists** — target: `target` — binary classification
+3. **Employee Promotion Prediction** — target: `is_promoted` — binary classification
+4. **GHRM–Environmental Performance** (`HRM DATASETS.csv`) — target: continuous `FEP` — regression and exploratory clustering
 
-The older UCI dataset and regression analysis are excluded from the final Chapter 4 pipeline.
+The older UCI dataset is not part of the final pipeline.
 
-## Final Chapter 4 algorithms
+## Final Chapter 3 algorithms
 
 ### Exploratory clustering
-- K-Means, evaluated independently for each dataset with `k=2...7`
+- `KMeans`
+- evaluated independently for **each of the four datasets** with `k=2...7`
 - Inertia / SSE
 - Silhouette Score
 - Davies-Bouldin Index
-
-Clusters are reported only as `Cluster 0`, `Cluster 1`, etc. No cluster is labelled green/non-green.
+- the target and identifier fields are excluded; for GHRM, `FEP` is excluded from cluster formation
+- clusters are reported only as `Cluster 0`, `Cluster 1`, etc.; no cluster is labelled green/non-green
 
 ### Binary classification
-- Random Forest (`RandomForestClassifier`)
-- Decision Tree (`DecisionTreeClassifier`)
-- Linear SVM (`LinearSVC`)
-- Multilayer Perceptron (`MLPClassifier`)
+For IBM HR, Job Change and Employee Promotion:
+- `RandomForestClassifier`
+- `DecisionTreeClassifier`
+- `LinearSVC`
+- `MLPClassifier`
 
-XGBoost, GMM, Logistic Regression, Gradient Boosting, KNN and Linear Regression are not part of the final executable Chapter 4 pipeline.
+### GHRM regression
+For continuous `FEP`:
+- `RandomForestRegressor`
+- `DecisionTreeRegressor`
+- `LinearSVR`
+- `MLPRegressor`
+
+The base GHRM regression uses `GRS`, `GTD`, `GPA` and `GCM`. A supplementary run adds `GEE` to assess its predictive contribution. This is predictive analysis, not a test of mediation or causality.
 
 ## Experimental design
 
-Each dataset is processed independently using:
-
-- 80% train / 20% test split
-- `stratify=y`
+### Classification
+- 80% train / 20% test
+- stratified split
 - `random_state=42`
-- 3-fold `StratifiedKFold` cross-validation on **training data only**
+- 3-fold `StratifiedKFold` cross-validation on training data only
 - `GridSearchCV` for Random Forest, Decision Tree and Linear SVM
 - `RandomizedSearchCV` for MLP
-- F1 score of the positive class as the hyperparameter-selection criterion
-- Preprocessing is fitted inside the model pipeline using training data only
-- Identifier columns are removed before modelling
-- Categorical variables use `OneHotEncoder(handle_unknown="ignore")`
-- Missing values are imputed using training-fold statistics
-- Numeric features are standardized for Linear SVM and MLP; RF and DT do not require scaling
+- F1 score of the positive class is used for hyperparameter selection
+- preprocessing is fitted inside the model pipeline using training data only
+- identifier columns are removed before modelling
+- categorical variables use `OneHotEncoder(handle_unknown="ignore")`
+- missing values are imputed from training data only
+- numeric features are standardized for Linear SVM and MLP
 
-## Evaluation
+### GHRM regression
+- 80% train / 20% test without stratification
+- 3-fold `KFold` cross-validation on training data only
+- preprocessing remains inside the model pipeline
+- RMSE is the tuning objective
+- final test metrics: `R²`, `RMSE`, `MAE`
 
-For every model and dataset the final held-out test set is used once for:
+## Classification evaluation
+
+For every classifier and dataset the held-out test set is used once for:
 
 - Accuracy
 - Precision
@@ -57,21 +73,27 @@ For every model and dataset the final held-out test set is used once for:
 - F1-Score
 - Confusion Matrix
 
-For each dataset, McNemar's exact test compares RF against DT, Linear SVM and MLP using the same held-out test predictions.
+McNemar's test compares the same held-out predictions for:
+- Random Forest vs Decision Tree
+- Random Forest vs Linear SVM
+- Random Forest vs MLP
+
+No model is assumed to be best before evaluation.
 
 ## Outputs
 
-`run_all.py` writes:
+`run_all.py` generates:
 
 ```text
 outputs/
 ├── ibm/
 ├── job_change/
 ├── promotion/
+├── ghrm/
 └── model_metrics.csv
 ```
 
-Each dataset directory contains model test predictions, McNemar comparisons, K-Means metrics, cluster sizes and cluster summaries. `figures/` contains Elbow, Silhouette and Davies-Bouldin plots.
+The dataset-specific folders contain test predictions, confusion matrices, K-Means metrics, cluster sizes and McNemar comparisons. The GHRM folder also contains regression metrics, predictions and cluster profiles. `figures/` contains the K-Means diagnostic plots.
 
 ## Project structure
 
@@ -82,8 +104,9 @@ HR-Analytics-ML/
 │   ├── preprocessing.py
 │   ├── clustering.py
 │   ├── classification.py
-│   └── evaluation.py
-├── outputs/               # Generated results; local unless explicitly committed
+│   ├── evaluation.py
+│   └── green_hrm_analysis.py
+├── outputs/               # Generated results
 ├── figures/               # Generated figures
 ├── run_all.py
 ├── requirements.txt
@@ -93,7 +116,16 @@ HR-Analytics-ML/
 
 ## Reproducibility
 
-Install `requirements.txt`, place the three current CSV files in `data/`, and run:
+Place these four current files in `data/`:
+
+```text
+WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv
+aug_train(5).csv
+train_LZdllcl.csv
+HRM DATASETS.csv
+```
+
+Then install `requirements.txt` and run:
 
 ```bash
 python run_all.py
@@ -103,4 +135,4 @@ Raw datasets are intentionally not committed unless their redistribution license
 
 ## GHRM interpretation
 
-The three current HR datasets do not directly measure Green HRM or environmental behaviour. Any relationship to GHRM is therefore interpreted theoretically and must not be presented as a direct measured GHRM variable.
+The three general HR datasets do not directly measure Green HRM or environmental behaviour. Their HR variables are therefore interpreted as theoretically related proxy/predictive features only. The fourth GHRM dataset contains direct GHRM dimensions (`GRS`, `GTD`, `GPA`, `GCM`, `GEE`) and continuous environmental performance (`FEP`). The machine-learning analysis does not establish causal or mediation effects.
