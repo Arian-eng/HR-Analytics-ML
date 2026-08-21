@@ -4,7 +4,7 @@ The current Green HRM analysis uses `HRM DATASETS(2).csv` (and also accepts the 
 
 ## Construct preparation
 
-The loader checks all item columns before analysis and constructs row means for:
+The loader checks all item columns before analysis and constructs complete-case row means for:
 
 - `GRS`: green recruitment and selection
 - `GTD`: green training and development
@@ -25,7 +25,14 @@ The source file uses the column name `GDT3` for the third training/development i
 - RMSE tuning objective
 - held-out R², RMSE, and MAE
 
-Rows without a computable `FEP` composite are excluded from regression. Predictor missingness is median-imputed inside the model pipeline.
+If any declared item is missing, that row's construct score is missing rather
+than being calculated from a different subset of items. Rows without a complete
+`FEP` composite are excluded from regression. Predictor missingness is
+median-imputed inside the model pipeline.
+
+Held-out R², RMSE, and MAE include 95% bootstrap intervals. Base and `GEE+`
+predictions use the same held-out rows and their metric differences are assessed
+with paired bootstrap resampling.
 
 ## Clustering protocol
 

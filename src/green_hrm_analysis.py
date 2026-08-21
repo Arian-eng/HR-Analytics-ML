@@ -48,7 +48,13 @@ def load():
     if missing:
         raise ValueError(f"GHRM dataset is missing required columns: {missing}")
     for name, cols in ITEMS.items():
-        df[name] = df[cols].apply(pd.to_numeric, errors="coerce").mean(axis=1)
+        # A construct score is valid only when all of its stated items exist.
+        # This avoids silently changing the construct definition row by row.
+        df[name] = (
+            df[cols]
+            .apply(pd.to_numeric, errors="coerce")
+            .mean(axis=1, skipna=False)
+        )
     return df
 
 
@@ -121,6 +127,16 @@ def run_kmeans(df):
         plt.close(figure)
     best_k = int(metrics.loc[metrics.Silhouette.idxmax(), "k"])
     labels = KMeans(n_clusters=best_k, n_init=20, random_state=42).fit_predict(Z)
+    cluster_sizes = (
+        pd.Series(labels)
+        .value_counts()
+        .sort_index()
+        .rename_axis("Cluster")
+        .reset_index(name="Size")
+    )
+    cluster_sizes.to_csv(
+        OUT / "cluster_sizes.csv", index=False, encoding="utf-8-sig"
+    )
     profiles = pd.DataFrame({"Cluster": labels, "FEP": df["FEP"]}).groupby("Cluster").agg(Size=("FEP", "size"), Mean_FEP=("FEP", "mean"), SD_FEP=("FEP", "std"))
     profiles.to_csv(OUT / "cluster_profiles.csv", encoding="utf-8-sig")
 

@@ -1,0 +1,12 @@
+﻿Dataset,Cluster,Size
+IBM HR Attrition,0,995
+IBM HR Attrition,1,475
+Job Change,0,13496
+Job Change,1,5662
+Employee Promotion,0,7227
+Employee Promotion,1,22568
+Employee Promotion,2,1270
+Employee Promotion,3,7586
+Employee Promotion,4,16157
+GHRM–Environmental Performance,0,198
+GHRM–Environmental Performance,1,122

@@ -1,46 +1,44 @@
 # نتایج بازتولیدپذیر فصل چهارم
 
-این صفحه نسخه GitHub نتایج فصل چهارم پایان‌نامه است. همه اعداد از اجرای کامل `python run_all.py` روی چهار مجموعه‌داده مستقل تولید شده‌اند؛ بنابراین جدول‌ها و نمودارها دستی وارد نشده‌اند و با اجرای مجدد کد قابل بازتولید هستند.
+این صفحه از آرتیفکت‌های اجرای کامل `python run_all.py` ساخته شده است. جدول‌ها، نمودارها و متن نتیجه‌گیری همگی برنامه‌وار به‌روز می‌شوند. همه اعداد این گزارش فارسی هستند و نشان اعشار به‌صورت `.` نوشته شده است.
 
-## طرح تحلیل و داده‌ها
+## طرح تحلیل و کیفیت داده
 
 | مجموعه‌داده | تعداد رکورد | ستون خام | متغیر هدف | نوع مسئله | سهم کلاس مثبت |
 | --- | --- | --- | --- | --- | --- |
-| IBM HR Attrition | 1470 | 35 | Attrition | Binary classification | 16.12% |
-| Job Change | 19158 | 14 | target | Binary classification | 24.93% |
-| Employee Promotion | 54808 | 14 | is_promoted | Binary classification | 8.52% |
-| GHRM–Environmental Performance | 320 | 33 | FEP (derived mean score) | Regression | — |
+| IBM HR Attrition | ۱,۴۷۰ | ۳۵ | Attrition | Binary classification | ۱۶.۱۲% |
+| Job Change | ۱۹,۱۵۸ | ۱۴ | target | Binary classification | ۲۴.۹۳% |
+| Employee Promotion | ۵۴,۸۰۸ | ۱۴ | is_promoted | Binary classification | ۸.۵۲% |
+| GHRM–Environmental Performance | ۳۲۰ | ۳۳ | FEP (derived mean score) | Regression | — |
 
-سه مجموعه‌داده عمومی منابع انسانی برای طبقه‌بندی دودویی و خوشه‌بندی اکتشافی استفاده شدند. مجموعه‌داده GHRM برای رگرسیون `FEP` و خوشه‌بندی مستقل ابعاد مستقیم مدیریت منابع انسانی سبز استفاده شد. رکوردهای چهار منبع با یکدیگر ادغام نشده‌اند.
-
-کنترل کیفیت داده، نبود ردیف تکراری کامل، نبود هدف گمشده و نبود شناسه تکراری یا گمشده در سه مجموعه‌داده دارای شناسه را تأیید کرد. مهم‌ترین محدودیت داده‌ای، گمشده‌بودن `company_type` (۳۲٫۰۵٪)، `company_size` (۳۱٫۰۰٪)، `gender` (۲۳٫۵۳٪) و `major_discipline` (۱۴٫۶۸٪) در Job Change است. جایگذاری داده‌های گمشده داخل هر fold آموزشی انجام می‌شود.
+چهار منبع داده مستقل اند و هیچ رکوردی میان آن‌ها ادغام نشده است. کنترل کیفیت شامل ردیف تکراری، هدف گمشده و شناسه تکراری/گمشده بود. بیشترین نسبت‌های گمشدگی: `company_type` در Job Change (۳۲.۰۴۹۳٪)، `company_size` در Job Change (۳۰.۹۹۴۹٪)، `gender` در Job Change (۲۳.۵۳۰۶٪)، `major_discipline` در Job Change (۱۴.۶۸۳۲٪). جایگذاری فقط داخل fold آموزشی انجام شد.
 
 ![سهم کلاس مثبت](figures/class_balance.png)
 
 ## نتایج طبقه‌بندی
 
-تمام Precision، Recall و F1 جدول زیر مربوط به کلاس مثبت هستند. این نکته برای IBM و Employee Promotion ضروری است، زیرا سهم کلاس مثبت به‌ترتیب ۱۶٫۱۲٪ و ۸٫۵۲٪ است و Accuracy به‌تنهایی می‌تواند گمراه‌کننده باشد.
+Precision، Recall و F1 مربوط به کلاس مثبت هستند. سهم کلاس مثبت IBM برابر ۱۶.۱۲۲۴٪ و Employee Promotion برابر ۸.۵۱۷۰٪ است؛ پس Accuracy به‌تنهایی ملاک مناسبی نیست. بازه‌های اطمینان ۹۵٪ با ۲٬۰۰۰ بازنمونه‌گیری bootstrap از مجموعه آزمون محاسبه شدند.
 
-| مجموعه‌داده | مدل | Accuracy | Precision مثبت | Recall مثبت | F1 مثبت | بهترین F1 در CV |
-| --- | --- | --- | --- | --- | --- | --- |
-| IBM HR Attrition | Random Forest | 0.8401 | 0.5000 | 0.1277 | 0.2034 | 0.3384 |
-| IBM HR Attrition | Decision Tree | 0.7857 | 0.3788 | 0.5319 | 0.4425 | 0.3653 |
-| IBM HR Attrition | Linear SVM | 0.7517 | 0.3488 | 0.6383 | 0.4511 | 0.4862 |
-| IBM HR Attrition | MLP | 0.8673 | 0.6176 | 0.4468 | 0.5185 | 0.5489 |
-| Job Change | Random Forest | 0.7630 | 0.5177 | 0.7194 | 0.6021 | 0.5770 |
-| Job Change | Decision Tree | 0.7349 | 0.4793 | 0.7403 | 0.5819 | 0.5642 |
-| Job Change | Linear SVM | 0.7437 | 0.4906 | 0.7361 | 0.5888 | 0.5712 |
-| Job Change | MLP | 0.7868 | 0.5915 | 0.4670 | 0.5219 | 0.4890 |
-| Employee Promotion | Random Forest | 0.9282 | 0.6467 | 0.3469 | 0.4516 | 0.4477 |
-| Employee Promotion | Decision Tree | 0.8977 | 0.4090 | 0.4497 | 0.4284 | 0.4372 |
-| Employee Promotion | Linear SVM | 0.7584 | 0.2387 | 0.8383 | 0.3716 | 0.3694 |
-| Employee Promotion | MLP | 0.9423 | 0.9218 | 0.3533 | 0.5108 | 0.4983 |
+| مجموعه‌داده | مدل | Accuracy | Precision مثبت | Recall مثبت | F1 مثبت | حد پایین F1 | حد بالای F1 | بهترین F1 در CV |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| IBM HR Attrition | Random Forest | ۰.۸۴۰۱ | ۰.۵۰۰۰ | ۰.۱۲۷۷ | ۰.۲۰۳۴ | ۰.۰۶۸۹ | ۰.۳۳۹۶ | ۰.۳۳۸۴ |
+| IBM HR Attrition | Decision Tree | ۰.۷۸۵۷ | ۰.۳۷۸۸ | ۰.۵۳۱۹ | ۰.۴۴۲۵ | ۰.۳۲۴۳ | ۰.۵۵۶۵ | ۰.۳۶۵۳ |
+| IBM HR Attrition | Linear SVM | ۰.۷۵۱۷ | ۰.۳۴۸۸ | ۰.۶۳۸۳ | ۰.۴۵۱۱ | ۰.۳۳۸۷ | ۰.۵۵۱۷ | ۰.۴۸۶۲ |
+| IBM HR Attrition | MLP | ۰.۸۶۷۳ | ۰.۶۱۷۶ | ۰.۴۴۶۸ | ۰.۵۱۸۵ | ۰.۳۷۶۴ | ۰.۶۴۴۵ | ۰.۵۴۸۹ |
+| Job Change | Random Forest | ۰.۷۶۳۰ | ۰.۵۱۷۷ | ۰.۷۱۹۴ | ۰.۶۰۲۱ | ۰.۵۷۸۰ | ۰.۶۲۴۷ | ۰.۵۷۷۰ |
+| Job Change | Decision Tree | ۰.۷۳۴۹ | ۰.۴۷۹۳ | ۰.۷۴۰۳ | ۰.۵۸۱۹ | ۰.۵۵۹۵ | ۰.۶۰۴۸ | ۰.۵۶۴۲ |
+| Job Change | Linear SVM | ۰.۷۴۳۷ | ۰.۴۹۰۶ | ۰.۷۳۶۱ | ۰.۵۸۸۸ | ۰.۵۶۵۷ | ۰.۶۱۲۳ | ۰.۵۷۱۲ |
+| Job Change | MLP | ۰.۷۸۶۸ | ۰.۵۹۱۵ | ۰.۴۶۷۰ | ۰.۵۲۱۹ | ۰.۴۹۲۶ | ۰.۵۵۰۹ | ۰.۴۸۹۰ |
+| Employee Promotion | Random Forest | ۰.۹۲۸۲ | ۰.۶۴۶۷ | ۰.۳۴۶۹ | ۰.۴۵۱۶ | ۰.۴۲۰۸ | ۰.۴۸۲۲ | ۰.۴۴۷۷ |
+| Employee Promotion | Decision Tree | ۰.۸۹۷۷ | ۰.۴۰۹۰ | ۰.۴۴۹۷ | ۰.۴۲۸۴ | ۰.۴۰۱۹ | ۰.۴۵۵۹ | ۰.۴۳۷۲ |
+| Employee Promotion | Linear SVM | ۰.۷۵۸۴ | ۰.۲۳۸۷ | ۰.۸۳۸۳ | ۰.۳۷۱۶ | ۰.۳۵۳۱ | ۰.۳۹۰۱ | ۰.۳۶۹۴ |
+| Employee Promotion | MLP | ۰.۹۴۲۳ | ۰.۹۲۱۸ | ۰.۳۵۳۳ | ۰.۵۱۰۸ | ۰.۴۷۷۱ | ۰.۵۴۳۳ | ۰.۴۹۸۳ |
 
-در IBM، مدل MLP بالاترین F1 کلاس مثبت را با مقدار **۰٫۵۱۸۵** به دست آورد، در حالی که Linear SVM بیشترین Recall را با مقدار **۰٫۶۳۸۳** ثبت کرد. Random Forest با وجود Accuracy برابر ۰٫۸۴۰۱، F1 مثبت ۰٫۲۰۳۴ داشت و نمونه روشنی از محدودیت Accuracy در داده نامتوازن است.
+در IBM HR Attrition، **MLP** با F1 مثبت **۰.۵۱۸۵** (بازه اطمینان ۹۵٪: ۰.۳۷۶۴ تا ۰.۶۴۴۵) بهترین F1 را داشت؛ بیشترین Recall مثبت نیز مربوط به Linear SVM با مقدار ۰.۶۳۸۳ بود.
 
-در Job Change، Random Forest بالاترین F1 مثبت را با مقدار **۰٫۶۰۲۱** ثبت کرد. Decision Tree بیشترین Recall را با مقدار ۰٫۷۴۰۳ داشت، اما Precision پایین‌تر آن باعث شد F1 آن به ۰٫۵۸۱۹ برسد. MLP بیشترین Accuracy را با مقدار ۰٫۷۸۶۸ ثبت کرد، ولی F1 مثبت آن ۰٫۵۲۱۹ بود.
+در Job Change، **Random Forest** با F1 مثبت **۰.۶۰۲۱** (بازه اطمینان ۹۵٪: ۰.۵۷۸۰ تا ۰.۶۲۴۷) بهترین F1 را داشت؛ بیشترین Recall مثبت نیز مربوط به Decision Tree با مقدار ۰.۷۴۰۳ بود.
 
-در Employee Promotion، MLP بالاترین F1 مثبت را با مقدار **۰٫۵۱۰۸** و Precision برابر ۰٫۹۲۱۸ به دست آورد. Linear SVM بیشترین Recall را با مقدار **۰٫۸۳۸۳** ثبت کرد، اما Precision آن فقط ۰٫۲۳۸۷ بود؛ بنابراین انتخاب مدل به هزینه خطاهای مثبت کاذب و منفی کاذب وابسته است.
+در Employee Promotion، **MLP** با F1 مثبت **۰.۵۱۰۸** (بازه اطمینان ۹۵٪: ۰.۴۷۷۱ تا ۰.۵۴۳۳) بهترین F1 را داشت؛ بیشترین Recall مثبت نیز مربوط به Linear SVM با مقدار ۰.۸۳۸۳ بود.
 
 ![مقایسه F1 مدل‌های طبقه‌بندی](figures/classification_f1.png)
 
@@ -50,34 +48,45 @@
 
 | مجموعه‌داده | مدل A | مدل B | b01 | b10 | p-value |
 | --- | --- | --- | --- | --- | --- |
-| IBM HR Attrition | Random Forest | Decision Tree | 37 | 21 | 0.0489 |
-| IBM HR Attrition | Random Forest | Linear SVM | 52 | 26 | 0.0046 |
-| IBM HR Attrition | Random Forest | MLP | 11 | 19 | 0.2012 |
-| Job Change | Random Forest | Decision Tree | 211 | 103 | <0.0001 |
-| Job Change | Random Forest | Linear SVM | 214 | 140 | 0.0001 |
-| Job Change | Random Forest | MLP | 244 | 335 | 0.0002 |
-| Employee Promotion | Random Forest | Decision Tree | 543 | 209 | <0.0001 |
-| Employee Promotion | Random Forest | Linear SVM | 2347 | 486 | <0.0001 |
-| Employee Promotion | Random Forest | MLP | 67 | 222 | <0.0001 |
+| IBM HR Attrition | Random Forest | Decision Tree | ۳۷ | ۲۱ | ۰.۰۴۸۹ |
+| IBM HR Attrition | Random Forest | Linear SVM | ۵۲ | ۲۶ | ۰.۰۰۴۶ |
+| IBM HR Attrition | Random Forest | MLP | ۱۱ | ۱۹ | ۰.۲۰۱۲ |
+| Job Change | Random Forest | Decision Tree | ۲۱۱ | ۱۰۳ | <۰.۰۰۰۱ |
+| Job Change | Random Forest | Linear SVM | ۲۱۴ | ۱۴۰ | ۰.۰۰۰۱ |
+| Job Change | Random Forest | MLP | ۲۴۴ | ۳۳۵ | ۰.۰۰۰۲ |
+| Employee Promotion | Random Forest | Decision Tree | ۵۴۳ | ۲۰۹ | <۰.۰۰۰۱ |
+| Employee Promotion | Random Forest | Linear SVM | ۲,۳۴۷ | ۴۸۶ | <۰.۰۰۰۱ |
+| Employee Promotion | Random Forest | MLP | ۶۷ | ۲۲۲ | <۰.۰۰۰۱ |
 
-آزمون McNemar تفاوت الگوی درست/نادرست بودن پیش‌بینی‌های جفت‌شده را می‌سنجد و مستقیماً اختلاف F1 را آزمون نمی‌کند. در IBM، تفاوت Random Forest و MLP در سطح ۰٫۰۵ معنادار نبود (`p=0.2012`)، اما سایر مقایسه‌های گزارش‌شده معنادار بودند.
+این آزمون الگوی درست/نادرست پیش‌بینی‌های جفت‌شده را می‌سنجد و آزمون مستقیم اختلاف F1 نیست. مقایسه‌های نامعنادار در سطح ۰.۰۵: IBM HR Attrition: Random Forest در برابر MLP (p=۰.۲۰۱۲).
 
 ## نتایج رگرسیون GHRM
 
-در نسخه پایه، `GRS`، `GTD`، `GPA` و `GCM` پیش‌بین‌های `FEP` هستند. در نسخه `GEE+`، متغیر `GEE` نیز اضافه می‌شود.
+نسخه پایه از `GRS`، `GTD`، `GPA` و `GCM` و نسخه `GEE+` از متغیر اضافی `GEE` نیز استفاده می‌کند. بازه‌های اطمینان با ۴٬۰۰۰ بازنمونه‌گیری محاسبه شدند.
 
-| نسخه | مدل | R² | MAE | RMSE | CV RMSE |
-| --- | --- | --- | --- | --- | --- |
-| Base | Random Forest Regressor | 0.3798 | 0.3938 | 0.5114 | 0.5563 |
-| Base | Decision Tree Regressor | 0.3698 | 0.3942 | 0.5155 | 0.5892 |
-| Base | LinearSVR | 0.4171 | 0.3859 | 0.4958 | 0.5312 |
-| Base | MLPRegressor | 0.3534 | 0.4172 | 0.5222 | 0.5928 |
-| GEE+ | Random Forest Regressor | 0.3868 | 0.3939 | 0.5085 | 0.5556 |
-| GEE+ | Decision Tree Regressor | 0.4134 | 0.3848 | 0.4973 | 0.6073 |
-| GEE+ | LinearSVR | 0.4178 | 0.3847 | 0.4955 | 0.5350 |
-| GEE+ | MLPRegressor | 0.3712 | 0.3967 | 0.5149 | 0.5700 |
+| نسخه | مدل | R² | حد پایین R² | حد بالای R² | MAE | RMSE | حد پایین RMSE | حد بالای RMSE | CV RMSE |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Base | Random Forest Regressor | ۰.۳۷۹۸ | ۰.۰۲۴۵ | ۰.۶۰۱۶ | ۰.۳۹۳۸ | ۰.۵۱۱۴ | ۰.۴۱۲۷ | ۰.۶۰۴۲ | ۰.۵۵۶۳ |
+| Base | Decision Tree Regressor | ۰.۳۶۹۸ | -۰.۰۴۶۶ | ۰.۶۲۴۶ | ۰.۳۹۴۲ | ۰.۵۱۵۵ | ۰.۴۲۲۳ | ۰.۵۹۹۴ | ۰.۵۸۹۲ |
+| Base | LinearSVR | ۰.۴۱۷۱ | ۰.۱۱۹۳ | ۰.۵۸۸۸ | ۰.۳۸۵۹ | ۰.۴۹۵۸ | ۰.۴۰۹۵ | ۰.۵۷۶۱ | ۰.۵۳۱۲ |
+| Base | MLPRegressor | ۰.۳۵۳۴ | ۰.۰۳۰۹ | ۰.۵۲۹۶ | ۰.۴۱۷۲ | ۰.۵۲۲۲ | ۰.۴۳۰۸ | ۰.۶۱۱۵ | ۰.۵۹۲۸ |
+| GEE+ | Random Forest Regressor | ۰.۳۸۶۸ | ۰.۰۴۱۷ | ۰.۶۰۰۹ | ۰.۳۹۳۹ | ۰.۵۰۸۵ | ۰.۴۱۰۰ | ۰.۶۰۲۶ | ۰.۵۵۵۶ |
+| GEE+ | Decision Tree Regressor | ۰.۴۱۳۴ | ۰.۰۳۴۳ | ۰.۶۴۳۹ | ۰.۳۸۴۸ | ۰.۴۹۷۳ | ۰.۴۰۶۷ | ۰.۵۸۳۴ | ۰.۶۰۷۳ |
+| GEE+ | LinearSVR | ۰.۴۱۷۸ | ۰.۱۰۹۲ | ۰.۵۹۵۹ | ۰.۳۸۴۷ | ۰.۴۹۵۵ | ۰.۴۰۹۱ | ۰.۵۷۵۶ | ۰.۵۳۵۰ |
+| GEE+ | MLPRegressor | ۰.۳۷۱۲ | ۰.۰۹۶۱ | ۰.۵۳۷۴ | ۰.۳۹۶۷ | ۰.۵۱۴۹ | ۰.۴۰۸۹ | ۰.۶۲۸۴ | ۰.۵۷۰۰ |
 
-LinearSVR در هر دو نسخه بهترین عملکرد مجموعه آزمون را داشت. در نسخه پایه، R² برابر **۰٫۴۱۷۱** و RMSE برابر **۰٫۴۹۵۸** بود. با افزودن GEE، R² به **۰٫۴۱۷۸** و RMSE به **۰٫۴۹۵۵** رسید. افزایش R² فقط حدود ۰٫۰۰۰۷ است؛ بنابراین این نتیجه شواهدی برای اثر علّی یا میانجی‌گری GEE محسوب نمی‌شود.
+بهترین مدل پایه **LinearSVR** با R²=۰.۴۱۷۱ و RMSE=۰.۴۹۵۸ بود. بهترین مدل GEE+ نیز **LinearSVR** با R²=۰.۴۱۷۸ و RMSE=۰.۴۹۵۵ بود.
+
+### مقایسه جفت‌شده افزودن GEE
+
+| مدل | تغییر R² | حد پایین تغییر R² | حد بالای تغییر R² | تغییر RMSE | حد پایین تغییر RMSE | حد بالای تغییر RMSE |
+| --- | --- | --- | --- | --- | --- | --- |
+| Random Forest Regressor | ۰.۰۰۷۱ | -۰.۰۴۴۰ | ۰.۰۶۴۴ | -۰.۰۰۲۹ | -۰.۰۲۳۶ | ۰.۰۱۷۰ |
+| Decision Tree Regressor | ۰.۰۴۳۶ | -۰.۰۳۵۵ | ۰.۱۶۱۳ | -۰.۰۱۸۱ | -۰.۰۵۵۵ | ۰.۰۱۴۲ |
+| LinearSVR | ۰.۰۰۰۷ | -۰.۰۱۷۸ | ۰.۰۱۴۱ | -۰.۰۰۰۳ | -۰.۰۰۶۹ | ۰.۰۰۵۹ |
+| MLPRegressor | ۰.۰۱۷۸ | -۰.۰۸۰۶ | ۰.۱۵۲۶ | -۰.۰۰۷۳ | -۰.۰۵۰۸ | ۰.۰۳۸۱ |
+
+برای LinearSVR، تغییر R² برابر ۰.۰۰۰۷ و بازه اطمینان آن -۰.۰۱۷۸ تا ۰.۰۱۴۱ است. این بازه شامل صفر است؛ بنابراین برتری پایدار GEE تأیید نمی‌شود. این تحلیل پیش‌بینانه است و میانجی‌گری یا علیت را آزمون نمی‌کند.
 
 ![مقایسه RMSE مدل‌های رگرسیون](figures/ghrm_regression_rmse.png)
 
@@ -85,16 +94,38 @@ LinearSVR در هر دو نسخه بهترین عملکرد مجموعه آزم�
 
 ## نتایج خوشه‌بندی K-Means
 
-متغیر هدف و شناسه‌ها در خوشه‌بندی سه مجموعه‌داده عمومی وارد نشده‌اند. در GHRM نیز `FEP` از تشکیل خوشه‌ها کنار گذاشته شد. برای Job Change و Employee Promotion، Silhouette روی نمونه قطعی ۵٬۰۰۰ رکوردی با `random_state=42` محاسبه شد؛ SSE و Davies–Bouldin از کل داده استفاده می‌کنند.
+هدف و شناسه‌ها در سه داده عمومی و `FEP` در GHRM از تشکیل خوشه حذف شدند. چون K-Means فاصله اقلیدسی را روی اعداد استاندارد و متغیرهای رده‌ای one-hot اعمال می‌کند، خوشه‌ها صرفاً اکتشافی هستند.
 
 | مجموعه‌داده | k منتخب | Silhouette | Davies–Bouldin | n برای Silhouette | تفسیر |
 | --- | --- | --- | --- | --- | --- |
-| IBM HR Attrition | 2 | 0.1313 | 2.6054 | 1470 | تفکیک ضعیف |
-| Job Change | 2 | 0.1513 | 2.2778 | 5000 | تفکیک ضعیف |
-| Employee Promotion | 5 | 0.1473 | 1.7902 | 5000 | تفکیک ضعیف |
-| GHRM–Environmental Performance | 2 | 0.4363 | 0.8611 | 320 | تفکیک اکتشافی متوسط |
+| IBM HR Attrition | ۲ | ۰.۱۳۱۳ | ۲.۶۰۵۴ | ۱,۴۷۰ | تفکیک اکتشافی ضعیف |
+| Job Change | ۲ | ۰.۱۵۱۳ | ۲.۲۷۷۸ | ۵,۰۰۰ | تفکیک اکتشافی ضعیف |
+| Employee Promotion | ۵ | ۰.۱۴۷۳ | ۱.۷۹۰۲ | ۵,۰۰۰ | تفکیک اکتشافی ضعیف |
+| GHRM–Environmental Performance | ۲ | ۰.۴۳۶۳ | ۰.۸۶۱۱ | ۳۲۰ | تفکیک اکتشافی متوسط |
 
-مقادیر Silhouette سه مجموعه‌داده عمومی پایین است و جدایی طبیعی خوشه‌ها را ضعیف نشان می‌دهد؛ بنابراین خوشه‌های آن‌ها نباید به‌صورت «سبز/غیرسبز» یا گروه‌های قطعی کارکنان نام‌گذاری شوند. ساختار دوخوشه‌ای GHRM با Silhouette برابر ۰٫۴۳۶۳ و Davies–Bouldin برابر ۰٫۸۶۱۱ تفکیک اکتشافی متوسطی دارد.
+برای IBM HR Attrition، k=۲ با Silhouette=۰.۱۳۱۳ و Davies–Bouldin=۲.۶۰۵۴ منتخب شد؛ Silhouette روی ۱,۴۷۰ رکورد محاسبه شد.
+
+برای Job Change، k=۲ با Silhouette=۰.۱۵۱۳ و Davies–Bouldin=۲.۲۷۷۸ منتخب شد؛ Silhouette روی ۵,۰۰۰ رکورد محاسبه شد.
+
+برای Employee Promotion، k=۵ با Silhouette=۰.۱۴۷۳ و Davies–Bouldin=۱.۷۹۰۲ منتخب شد؛ Silhouette روی ۵,۰۰۰ رکورد محاسبه شد.
+
+برای GHRM–Environmental Performance، k=۲ با Silhouette=۰.۴۳۶۳ و Davies–Bouldin=۰.۸۶۱۱ منتخب شد؛ Silhouette روی ۳۲۰ رکورد محاسبه شد.
+
+### اندازه همه خوشه‌ها
+
+| مجموعه‌داده | خوشه | تعداد |
+| --- | --- | --- |
+| IBM HR Attrition | ۰ | ۹۹۵ |
+| IBM HR Attrition | ۱ | ۴۷۵ |
+| Job Change | ۰ | ۱۳,۴۹۶ |
+| Job Change | ۱ | ۵,۶۶۲ |
+| Employee Promotion | ۰ | ۷,۲۲۷ |
+| Employee Promotion | ۱ | ۲۲,۵۶۸ |
+| Employee Promotion | ۲ | ۱,۲۷۰ |
+| Employee Promotion | ۳ | ۷,۵۸۶ |
+| Employee Promotion | ۴ | ۱۶,۱۵۷ |
+| GHRM–Environmental Performance | ۰ | ۱۹۸ |
+| GHRM–Environmental Performance | ۱ | ۱۲۲ |
 
 ![کیفیت خوشه‌بندی در k منتخب](figures/kmeans_selected_quality.png)
 
@@ -102,39 +133,29 @@ LinearSVR در هر دو نسخه بهترین عملکرد مجموعه آزم�
 
 | خوشه | تعداد | میانگین FEP | انحراف معیار FEP |
 | --- | --- | --- | --- |
-| 0 | 198 | 3.8510 | 0.5472 |
-| 1 | 122 | 3.0410 | 0.7037 |
+| ۰ | ۱۹۸ | ۳.۸۵۱۰ | ۰.۵۴۷۲ |
+| ۱ | ۱۲۲ | ۳.۰۴۱۰ | ۰.۷۰۳۷ |
 
-خوشه ۰ شامل ۱۹۸ مشاهده با میانگین FEP برابر ۳٫۸۵۱۰ و خوشه ۱ شامل ۱۲۲ مشاهده با میانگین FEP برابر ۳٫۰۴۱۰ است. چون FEP در تشکیل خوشه‌ها وارد نشده، این مقایسه یک پروفایل توصیفی پس از خوشه‌بندی است و اثر علّی را نشان نمی‌دهد.
+خوشه ۰ با ۱۹۸ مشاهده و میانگین FEP=۳.۸۵۱۰، خوشه ۱ با ۱۲۲ مشاهده و میانگین FEP=۳.۰۴۱۰. چون FEP در تشکیل خوشه وارد نشد، این مقایسه فقط پروفایل پس از خوشه‌بندی است.
 
 ![پروفایل FEP خوشه‌های GHRM](figures/ghrm_cluster_fep.png)
 
-نمودارهای تشخیصی کامل انتخاب k:
+نمودارهای تشخیصی: [IBM](figures/kmeans_ibm_diagnostics.png)، [Job Change](figures/kmeans_job_change_diagnostics.png)، [Employee Promotion](figures/kmeans_promotion_diagnostics.png)، [GHRM](figures/kmeans_ghrm_diagnostics.png).
 
-- [IBM HR](figures/kmeans_ibm_diagnostics.png)
-- [Job Change](figures/kmeans_job_change_diagnostics.png)
-- [Employee Promotion](figures/kmeans_promotion_diagnostics.png)
-- [GHRM](figures/kmeans_ghrm_diagnostics.png)
+## محدودیت‌ها
 
-## جمع‌بندی فصل
+1. یک تفکیک ثابت ۸۰/۲۰ نماینده همه تفکیک‌های ممکن نیست؛ بازه‌های bootstrap عدم‌قطعیت مجموعه آزمون را نشان می‌دهند، نه اعتبارسنجی بیرونی را.
+2. سه داده عمومی سنجه مستقیم GHRM ندارند و نباید خوشه‌های آن‌ها را سبز/غیرسبز نامگذاری کرد.
+3. نتایج ماهیت پیش‌بینانه یا اکتشافی دارند و علیت یا میانجی‌گری را اثبات نمی‌کنند.
+4. تعمیم به سازمان، صنعت یا کشور دیگر به اعتبارسنجی بیرونی نیاز دارد.
 
-یک الگوریتم واحد در همه مسائل بهترین نبود. MLP بر اساس F1 مثبت در IBM و Employee Promotion برتر بود، در حالی که Random Forest در Job Change بالاترین F1 مثبت را ثبت کرد. در GHRM، LinearSVR بهترین نتیجه مجموعه آزمون را به دست آورد و افزودن GEE بهبود بسیار محدودی ایجاد کرد. خوشه‌بندی سه مجموعه‌داده عمومی ساختار ضعیفی نشان داد و فقط خوشه‌بندی GHRM به سطح تفکیک اکتشافی متوسط رسید.
-
-## محدودیت‌های الزامی در تفسیر
-
-1. نتایج ماهیت پیش‌بینانه یا اکتشافی دارند و رابطه علّی یا میانجی‌گری را اثبات نمی‌کنند.
-2. Accuracy در IBM و Employee Promotion باید همراه Precision، Recall، F1 و ماتریس درهم‌ریختگی گزارش شود.
-3. گمشده‌بودن برخی متغیرهای Job Change و روش جایگذاری داخل fold باید افشا شود.
-4. Silhouette نمونه‌ای Job Change و Employee Promotion باید با `n=5,000` گزارش شود.
-5. سه مجموعه‌داده عمومی، سنجه مستقیم GHRM یا رفتار محیط‌زیستی ندارند و فقط مسائل عمومی منابع انسانی را پوشش می‌دهند.
-6. تعمیم نتایج به سازمان، صنعت یا کشور دیگر به اعتبارسنجی بیرونی نیاز دارد.
-
-## بازتولید
+## بازتولید و اعتبارسنجی
 
 ```bash
 python -m pip install -r requirements.txt
 python run_all.py
 python -m unittest discover -s tests -v
+python scripts/validate_published_results.py
 ```
 
-جدول‌های ماشین‌خوان در پوشه [`results/tables`](tables/) و نمودارهای آماده GitHub در پوشه [`results/figures`](figures/) قرار دارند. جزئیات کنترل روش‌شناسی و بازمحاسبه معیارها در [`validation/validation_report.md`](../validation/validation_report.md) ثبت شده است.
+جدول‌های ماشین‌خوان در [`results/tables`](tables/) و نمودارها در [`results/figures`](figures/) قرار دارند.

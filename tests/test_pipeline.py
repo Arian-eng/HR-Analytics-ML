@@ -7,9 +7,22 @@ import numpy as np
 import pandas as pd
 
 from src.clustering import run_kmeans
-from src.evaluation import classification_metrics, mcnemar_pair
+from src.evaluation import (
+    bootstrap_classification_metrics,
+    bootstrap_regression_difference,
+    bootstrap_regression_metrics,
+    classification_metrics,
+    mcnemar_pair,
+    regression_metrics,
+)
+from src.green_hrm_analysis import ITEMS, load as load_ghrm
 from src.preprocessing import make_preprocessor, split_xy
-from src.reporting import markdown_table, select_kmeans_row
+from src.reporting import (
+    interpret_silhouette,
+    markdown_table,
+    select_kmeans_row,
+    to_persian_digits,
+)
 
 
 class EvaluationTests(unittest.TestCase):
@@ -32,6 +45,40 @@ class EvaluationTests(unittest.TestCase):
 
         self.assertEqual(result["b01"], 1)
         self.assertEqual(result["b10"], 1)
+
+    def test_bootstrap_intervals_are_deterministic_and_contain_points(self):
+        y_true = np.array([0, 0, 0, 1, 1, 1, 1, 0])
+        y_pred = np.array([0, 0, 1, 1, 0, 1, 1, 0])
+        first = bootstrap_classification_metrics(
+            y_true, y_pred, n_resamples=200, random_state=7
+        )
+        second = bootstrap_classification_metrics(
+            y_true, y_pred, n_resamples=200, random_state=7
+        )
+
+        self.assertEqual(first, second)
+        point = classification_metrics(y_true, y_pred)
+        for metric, value in point.items():
+            self.assertLessEqual(first[f"{metric}_CI_Lower"], value)
+            self.assertGreaterEqual(first[f"{metric}_CI_Upper"], value)
+
+    def test_regression_bootstrap_and_paired_difference(self):
+        y_true = np.arange(1.0, 11.0)
+        base = y_true + np.array([0.4, -0.3] * 5)
+        plus = y_true + np.array([0.2, -0.1] * 5)
+
+        intervals = bootstrap_regression_metrics(
+            y_true, plus, n_resamples=200, random_state=11
+        )
+        difference = bootstrap_regression_difference(
+            y_true, base, plus, n_resamples=200, random_state=11
+        )
+
+        point_rmse = regression_metrics(y_true, plus)["RMSE"]
+        self.assertLessEqual(intervals["RMSE_CI_Lower"], point_rmse)
+        self.assertGreaterEqual(intervals["RMSE_CI_Upper"], point_rmse)
+        self.assertGreater(difference["Delta_R2"], 0)
+        self.assertLess(difference["Delta_RMSE"], 0)
 
 
 class PreprocessingTests(unittest.TestCase):
@@ -110,7 +157,40 @@ class ReportingTests(unittest.TestCase):
         )
 
         self.assertIn("A\\|B", table)
-        self.assertIn("0.1235", table)
+        self.assertIn("۰.۱۲۳۵", table)
+        self.assertNotIn("٫", table)
+
+    def test_persian_digits_preserve_ascii_decimal_point(self):
+        self.assertEqual(to_persian_digits("12.50"), "۱۲.۵۰")
+
+    def test_silhouette_interpretation_depends_only_on_score(self):
+        self.assertEqual(interpret_silhouette(0.10), "Weak exploratory separation")
+        self.assertEqual(
+            interpret_silhouette(0.40), "Moderate exploratory separation"
+        )
+        self.assertEqual(interpret_silhouette(0.60), "Strong exploratory separation")
+
+
+class GreenHRMTests(unittest.TestCase):
+    def test_construct_means_require_all_declared_items(self):
+        row = {
+            column: 4.0
+            for columns in ITEMS.values()
+            for column in columns
+        }
+        incomplete = dict(row)
+        incomplete["GRS2"] = np.nan
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "ghrm.csv"
+            pd.DataFrame([row, incomplete]).to_csv(path, index=False)
+            with patch("src.green_hrm_analysis.DATA_DIR", Path(temp_dir)), patch(
+                "src.green_hrm_analysis.GHRM_FILES", ["ghrm.csv"]
+            ):
+                frame = load_ghrm()
+
+        self.assertEqual(frame.loc[0, "GRS"], 4.0)
+        self.assertTrue(pd.isna(frame.loc[1, "GRS"]))
 
 
 if __name__ == "__main__":

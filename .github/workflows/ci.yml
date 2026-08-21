@@ -2,13 +2,24 @@ name: Python CI
 
 on:
   push:
-    branches: [main, feature/thesis-analysis]
+    branches: [main]
   pull_request:
     branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,33 +27,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: "pip"
 
       - name: Install dependencies
-        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip check
 
       - name: Compile source
         run: |
-          python -m compileall -q run_all.py src tests
+          python -m compileall -q run_all.py src tests scripts
 
       - name: Run data-free unit tests
         run: python -m unittest discover -s tests -v
 
-      - name: Validate repository structure
-        run: |
-          test -f README.md
-          test -f requirements.txt
-          test -f run_all.py
-          test -f src/preprocessing.py
-          test -f src/classification.py
-          test -f src/clustering.py
-          test -f src/evaluation.py
-          test -f src/green_hrm_analysis.py
-          test -f src/reporting.py
-          test -f tests/test_pipeline.py
-          test -f results/chapter4_results.md
-          test -f results/tables/classification_metrics.csv
-          test -f results/figures/classification_f1.png
-          test -d outputs
-          test -d figures
+      - name: Validate published Chapter 4 artifacts
+        run: python scripts/validate_published_results.py

@@ -12,3 +12,7 @@ Use these rules when updating the Word thesis after the full pipeline has been r
 8. Any older Word number that cannot be reproduced by the current code/data combination must be replaced or explicitly marked as provisional.
 9. Do not claim RBF SVM when the committed pipeline uses `LinearSVC`.
 10. Do not claim an accuracy threshold was achieved unless the corresponding current run proves it.
+11. Copy result values only from `results/tables`; do not maintain a second manual benchmark table.
+12. Report the 95% bootstrap intervals and the paired Base-versus-`GEE+` differences, especially for the 64-row GHRM test set.
+13. In Persian prose use Persian digits with `.` as the decimal separator, matching the generated report.
+14. Run `python scripts/validate_published_results.py --require-data` before committing refreshed Chapter 4 artifacts.
