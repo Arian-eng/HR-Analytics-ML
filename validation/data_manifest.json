@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "datasets": [
+    {
+      "id": "ibm",
+      "filename": "WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv",
+      "rows": 1470,
+      "sha256": "a5c31e38bd7fafc9bc333884eb181b06b41b8e5e488e8f7ccb27199fb3be7659"
+    },
+    {
+      "id": "job_change",
+      "filename": "aug_train(2).csv",
+      "rows": 19158,
+      "sha256": "8b78da3482032500df40d5359c36ba4a59e28ccd6fc272b050dcf6dee37f114c"
+    },
+    {
+      "id": "promotion",
+      "filename": "train_LZdllcl(2).csv",
+      "rows": 54808,
+      "sha256": "3d7b679b3ba36d1cad25d4e0ea40bc84e5ac741c45e9c878d72adc3db74a984c"
+    },
+    {
+      "id": "ghrm",
+      "filename": "HRM DATASETS(2).csv",
+      "rows": 320,
+      "sha256": "ac5c0005d3492aa664ec4d290e027f04a778241d3ce6195e10c5f87aebc65203"
+    }
+  ]
+}

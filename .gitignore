@@ -27,6 +27,7 @@ figures/*
 !figures/README.md
 thesis_outputs/
 *.xlsx
+*.zip
 
 # OS / IDE
 .DS_Store

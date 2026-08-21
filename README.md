@@ -24,6 +24,7 @@ The older UCI dataset is not part of the final pipeline.
 - for datasets above 5,000 rows, Silhouette is computed on a deterministic 5,000-row sample to avoid quadratic memory growth
 - the target and identifier fields are excluded; for GHRM, `FEP` is excluded from cluster formation
 - clusters are reported only as `Cluster 0`, `Cluster 1`, etc.; no cluster is labelled green/non-green
+- K-Means uses Euclidean distance on standardized numeric and one-hot encoded categorical features; these mixed-data clusters are exploratory and require external validation
 
 ### Binary classification
 For IBM HR, Job Change and Employee Promotion:
@@ -63,6 +64,8 @@ The base GHRM regression uses `GRS`, `GTD`, `GPA` and `GCM`. A supplementary run
 - preprocessing remains inside the model pipeline
 - RMSE is the tuning objective
 - final test metrics: `R²`, `RMSE`, `MAE`
+- 95% non-parametric bootstrap intervals are reported for held-out metrics
+- Base versus `GEE+` differences use paired bootstrap resampling of the same test rows
 
 ## Classification evaluation
 
@@ -102,7 +105,7 @@ The same run also publishes the curated thesis results to GitHub-friendly files:
 ```text
 results/
 ├── chapter4_results.md     # Persian Chapter 4 results and interpretation
-├── tables/                 # Machine-readable result tables
+├── tables/                 # Metrics, 95% CIs, cluster sizes and QA tables
 └── figures/                # Model, confusion-matrix, regression and K-Means figures
 ```
 
@@ -123,7 +126,10 @@ HR-Analytics-ML/
 ├── outputs/               # Generated results
 ├── figures/               # Generated figures
 ├── run_all.py
+├── scripts/validate_published_results.py
 ├── requirements.txt
+├── CITATION.cff
+├── LICENSE
 ├── .gitignore
 └── README.md
 ```
@@ -141,10 +147,15 @@ HRM DATASETS(2).csv
 
 The loader also accepts the previously documented aliases `aug_train(5).csv`, `train_LZdllcl.csv`, and `HRM DATASETS.csv`.
 
-Then install `requirements.txt` and run:
+Use Python 3.11 or 3.12. The full thesis run was validated with Python 3.12,
+and CI checks both versions. Dependencies are pinned to the validated
+environment. Then install and run:
 
 ```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 python run_all.py
+python scripts/validate_published_results.py --require-data
 ```
 
 The CI checks do not require raw datasets. Run them locally with:
@@ -152,10 +163,27 @@ The CI checks do not require raw datasets. Run them locally with:
 ```bash
 python -m compileall -q run_all.py src tests
 python -m unittest discover -s tests -v
+python scripts/validate_published_results.py
 ```
 
-Raw datasets are intentionally not committed unless their redistribution licenses permit it.
+The validator checks any locally available raw file against
+[`validation/data_manifest.json`](validation/data_manifest.json). Raw datasets are
+intentionally not committed unless their redistribution licenses permit it.
+
+## Repository governance
+
+Pull requests run compilation, unit tests, dependency checks, and internal
+validation of all published Chapter 4 tables. `CODEOWNERS` assigns repository
+review to `@Arian-eng`. Enable a GitHub branch-protection rule for `main` and
+require both `validate` matrix checks before merging to enforce this policy
+server-side.
 
 ## GHRM interpretation
 
 The three general HR datasets do not directly measure Green HRM or environmental behaviour. Their HR variables are therefore interpreted as theoretically related proxy/predictive features only. The fourth GHRM dataset contains direct GHRM dimensions (`GRS`, `GTD`, `GPA`, `GCM`, `GEE`) and continuous environmental performance (`FEP`). The machine-learning analysis does not establish causal or mediation effects.
+
+## License and citation
+
+Code and thesis materials are distributed under the repository's
+[proprietary license](LICENSE); third-party datasets retain their own terms.
+Citation metadata is available in [`CITATION.cff`](CITATION.cff).
