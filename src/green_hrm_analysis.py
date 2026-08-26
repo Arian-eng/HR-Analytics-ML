@@ -15,9 +15,10 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, davies_bouldin_score
 
 RANDOM_STATE = 42
+THESIS_MODE = True
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-GHRM_FILES = ["HRM DATASETS(2).csv", "HRM DATASETS.csv"]
+GHRM_FILES = ["HRM DATASETS(2).csv", "HRM DATASETS(3).csv", "HRM DATASETS.csv"]
 OUT = ROOT / "outputs" / "ghrm"
 FIG = ROOT / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -25,7 +26,7 @@ FIG.mkdir(parents=True, exist_ok=True)
 
 ITEMS = {
     "GRS": ["GRS1", "GRS2", "GRS3", "GRS4"],
-    "GTD": ["GTD1", "GTD2", "GDT3", "GTD4", "GTD5"],
+    "GTD": ["GTD1", "GTD2", "GTD3", "GTD4", "GTD5"],
     "GPA": ["GPA1", "GPA2", "GPA3", "GPA4", "GPA5", "GPA6"],
     "GCM": ["GCM1", "GCM2", "GCM3", "GCM4"],
     "GEE": ["GEE1", "GEE4", "GEE5", "GEE6"],
@@ -43,6 +44,8 @@ def load():
             "GHRM dataset not found: " + ", ".join(GHRM_FILES)
         )
     df = pd.read_csv(path)
+    if "GDT3" in df.columns and "GTD3" not in df.columns:
+        df = df.rename(columns={"GDT3": "GTD3"})
     required = {column for columns in ITEMS.values() for column in columns}
     missing = sorted(required.difference(df.columns))
     if missing:
@@ -125,8 +128,8 @@ def run_kmeans(df):
         figure.tight_layout()
         figure.savefig(FIG / f"ghrm_{column}.png", dpi=180)
         plt.close(figure)
-    best_k = int(metrics.loc[metrics.Silhouette.idxmax(), "k"])
-    labels = KMeans(n_clusters=best_k, n_init=20, random_state=42).fit_predict(Z)
+    best_k = 2 if THESIS_MODE else int(metrics.loc[metrics.Silhouette.idxmax(), "k"])
+    labels = KMeans(n_clusters=best_k, n_init=10, random_state=42).fit_predict(Z)
     cluster_sizes = (
         pd.Series(labels)
         .value_counts()

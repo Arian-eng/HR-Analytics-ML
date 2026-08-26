@@ -1,15 +1,14 @@
 # Chapter 4 results
 
-The current executable pipeline is `run_all.py`. It analyzes three binary HR datasets and the separate GHRM–Environmental Performance dataset.
+The executable analysis pipeline is `run_all.py`. It analyzes three binary HR datasets and the separate GHRM–Environmental Performance dataset.
 
-The Persian, GitHub-ready result narrative is in [`chapter4_results.md`](chapter4_results.md). Its committed CSV tables live under [`tables/`](tables/) and its figures under [`figures/`](figures/). All files are regenerated from the same model outputs by `src/reporting.py`; the narrative does not contain manually maintained result values.
+The final thesis document is the publication authority. Its SHA-256 and all 19 Chapter 4 tables are recorded in [`thesis_chapter4_reference.json`](thesis_chapter4_reference.json). The Persian report is in [`chapter4_results.md`](chapter4_results.md), exact table CSVs are under [`tables/`](tables/), and derived figures are under [`figures/`](figures/).
 
-The tables include 95% bootstrap intervals, a paired Base-versus-`GEE+`
-regression comparison, and cluster sizes for all four datasets. Validate the
-tracked publication bundle with:
+Regenerate and validate the tracked publication bundle with:
 
 ```bash
+python scripts/sync_thesis_chapter4.py
 python scripts/validate_published_results.py
 ```
 
-Detailed predictions, tuning parameters, confusion-matrix CSV files and intermediate outputs remain under the ignored local `outputs/` directory. Historical fixed-configuration tables that used Employee Performance and Green Innovation/Sustainable Performance must not be mixed with the current Employee Promotion and continuous-`FEP` methodology.
+Detailed predictions, tuning parameters, confusion-matrix CSV files and intermediate live outputs remain under the ignored local `outputs/` directory. They are diagnostics, not an alternate publication source. Historical Employee Performance and Green Innovation/Sustainable Performance tables must not be mixed with the final Employee Promotion and continuous-`FEP` methodology.

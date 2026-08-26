@@ -18,6 +18,7 @@ results/*
 !results/README.md
 !results/chapter4_replacement_rules.md
 !results/chapter4_results.md
+!results/thesis_chapter4_reference.json
 !results/tables/
 !results/tables/*.csv
 !results/figures/

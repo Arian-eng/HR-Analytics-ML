@@ -1,5 +1,5 @@
-﻿Dataset,Rows,Raw_Columns,Target,Task,Positive_Count,Positive_Share
-IBM HR Attrition,1470,35,Attrition,Binary classification,237.0,0.16122448979591836
-Job Change,19158,14,target,Binary classification,4777.0,0.24934753105752167
-Employee Promotion,54808,14,is_promoted,Binary classification,4668.0,0.08517004816815063
-GHRM–Environmental Performance,320,33,FEP (derived mean score),Regression,,
+﻿Dataset,Rows,Train_N,Test_N,Target,Task,Positive_Count,Positive_Share_Percent
+IBM HR Analytics,1470,1176,294,Attrition,Binary classification,237,16.12
+Job Change,19158,15326,3832,target,Binary classification,4777,24.93
+Employee Promotion,54808,43846,10962,is_promoted,Binary classification,4668,8.52
+GHRM,320,256,64,FEP,Regression,,

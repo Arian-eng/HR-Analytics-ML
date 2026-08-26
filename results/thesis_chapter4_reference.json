@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "source": {
+    "filename": "پایان نامه آرین پوراسد.docx",
+    "sha256": "712c29ee29dda7a53159ae3ddab08569e334682bd8ad996b79a72420385c0d9f",
+    "chapter": 4,
+    "note": "The final thesis document is the sole numeric source of truth for the published Chapter 4 artifacts. Decimal separators are normalized to an ASCII full stop."
+  },
+  "protocol": {
+    "random_state": 42,
+    "train_share": 0.8,
+    "test_share": 0.2,
+    "classification_split": "stratified",
+    "regression_split": "not stratified",
+    "cross_validation_folds": 3,
+    "kmeans_range": "2..7",
+    "silhouette_sample_n_large_datasets": 5000
+  },
+  "tables": [
+    {
+      "number": "4-1",
+      "slug": "descriptive_ibm",
+      "caption": "آمار توصیفی متغیرهای فردی و شغلی در مجموعه‌داده IBM",
+      "columns": ["متغیر", "میانگین", "انحراف معیار", "حداقل", "حداکثر"],
+      "rows": [
+        ["سن (سال)", 36.9, 9.14, 18, 60],
+        ["سابقه کار در سازمان", 7.0, 6.1, 0, 40],
+        ["حقوق ماهانه (دلار)", 6502, 4707, 1009, 19999],
+        ["نرخ روزانه", 802, 403, 102, 1499]
+      ]
+    },
+    {
+      "number": "4-2",
+      "slug": "descriptive_job_change",
+      "caption": "آمار توصیفی متغیرهای عددی منتخب در مجموعه‌داده تغییر شغل",
+      "columns": ["متغیر", "میانگین", "انحراف معیار", "حداقل", "حداکثر"],
+      "rows": [
+        ["شاخص توسعه شهری", 0.829, 0.123, 0.448, 0.949],
+        ["ساعات آموزش", 65.37, 60.06, 1, 336]
+      ]
+    },
+    {
+      "number": "4-3",
+      "slug": "descriptive_promotion",
+      "caption": "آمار توصیفی متغیرهای منتخب مجموعه‌داده ارتقای کارکنان",
+      "columns": ["متغیر", "میانگین", "انحراف معیار", "حداقل", "حداکثر"],
+      "rows": [
+        ["سن", 34.80, 7.66, 20, 60],
+        ["تعداد دوره‌های آموزشی", 1.25, 0.61, 1, 10],
+        ["سابقه خدمت", 5.87, 4.27, 1, 37],
+        ["میانگین امتیاز آموزش", 63.39, 13.37, 39, 99],
+        ["ارزیابی عملکرد سال قبل", 3.33, 1.26, 1, 5]
+      ]
+    },
+    {
+      "number": "4-4",
+      "slug": "descriptive_ghrm",
+      "caption": "آمار توصیفی ابعاد و متغیرهای اصلی مجموعه‌داده GHRM",
+      "columns": ["بعد / متغیر", "تعداد گویه", "میانگین ± انحراف معیار", "دامنه مشاهده‌شده"],
+      "rows": [
+        ["GRS – استخدام و انتخاب سبز", 4, "3.44 ± 0.89", "1 تا 5"],
+        ["GTD – آموزش و توسعه سبز", 5, "3.47 ± 0.84", "1 تا 5"],
+        ["GPA – ارزیابی عملکرد سبز", 6, "3.46 ± 0.87", "1 تا 5"],
+        ["GCM – مدیریت جبران خدمات سبز", 4, "3.45 ± 0.88", "1 تا 5"],
+        ["GEE – توانمندسازی سبز کارکنان", 4, "3.43 ± 0.87", "1 تا 5"],
+        ["FEP – عملکرد محیط‌زیستی شرکت", 4, "3.54 ± 0.73", "1 تا 5"]
+      ]
+    },
+    {
+      "number": "4-5",
+      "slug": "preparation_ibm",
+      "caption": "وضعیت آماده‌سازی مجموعه‌داده IBM",
+      "columns": ["مرحله", "وضعیت / اقدام", "توضیح"],
+      "rows": [
+        ["مقادیر گمشده", "وجود ندارد", "در 1470 رکورد مقدار گمشده ثبت نشده است."],
+        ["متغیر هدف", "Attrition", "Yes=1 و No=0"],
+        ["حذف شناسه", "EmployeeNumber", "به دلیل ماهیت شناسه‌ای از ورودی مدل حذف شد."],
+        ["متغیرهای ثابت", "EmployeeCount، Over18، StandardHours", "به دلیل ثابت بودن در تمام رکوردها حذف شدند."],
+        ["متغیرهای طبقه‌ای", "One-Hot Encoding", "کدگذاری با استفاده از داده‌های آموزش انجام شد."],
+        ["مقیاس‌بندی", "برای LinearSVC و MLPClassifier", "ویژگی‌های عددی بر اساس داده‌های آموزش استاندارد شدند."]
+      ]
+    },
+    {
+      "number": "4-6",
+      "slug": "missing_job_change",
+      "caption": "وضعیت مقادیر گمشده در مجموعه‌داده Job Change",
+      "columns": ["متغیر", "تعداد مقادیر گمشده", "درصد مقادیر گمشده", "روش مدیریت"],
+      "rows": [
+        ["نوع شرکت", 6140, 32.05, "جایگذاری با مد"],
+        ["اندازه شرکت", 5938, 30.99, "جایگذاری با مد"],
+        ["جنسیت", 4508, 23.53, "جایگذاری با مد"],
+        ["رشته تخصصی", 2813, 14.68, "جایگذاری با مد"],
+        ["سطح تحصیلات", 460, 2.40, "جایگذاری با مد"],
+        ["آخرین تغییر شغل", 423, 2.21, "جایگذاری با مد"],
+        ["ثبت‌نام دانشگاهی", 386, 2.01, "جایگذاری با مد"],
+        ["سابقه کاری", 65, 0.34, "جایگذاری با مد"]
+      ]
+    },
+    {
+      "number": "4-7",
+      "slug": "missing_promotion",
+      "caption": "وضعیت مقادیر گمشده در مجموعه‌داده Employee Promotion",
+      "columns": ["متغیر", "تعداد مقادیر گمشده", "درصد مقادیر گمشده", "روش مدیریت"],
+      "rows": [
+        ["سطح تحصیلات", 2409, 4.40, "جایگذاری با مد"],
+        ["ارزیابی عملکرد سال قبل", 4124, 7.52, "جایگذاری با میانه"]
+      ]
+    },
+    {
+      "number": "4-8",
+      "slug": "preparation_ghrm",
+      "caption": "خلاصه مراحل پیش‌پردازش مجموعه‌داده GHRM",
+      "columns": ["مرحله", "اقدام"],
+      "rows": [
+        ["مقادیر گمشده", "وجود ندارد"],
+        ["اصلاح نام ستون", "GDT3 ← GTD3"],
+        ["تشکیل امتیازها", "میانگین گویه‌های GRS، GTD، GPA، GCM، GEE و FEP"],
+        ["حذف متغیر غیرتحلیلی", "Timestamp"],
+        ["متغیر هدف", "FEP"],
+        ["پیش‌بین‌های مدل پایه", "GRS، GTD، GPA و GCM"],
+        ["تحلیل تکمیلی", "افزودن GEE"],
+        ["تقسیم داده", "256 آموزش و 64 آزمون"],
+        ["مقیاس‌بندی", "برای LinearSVR و MLPRegressor"],
+        ["خوشه‌بندی", "GRS، GTD، GPA، GCM و GEE؛ بدون FEP"]
+      ]
+    },
+    {
+      "number": "4-9",
+      "slug": "kmeans_selection",
+      "caption": "خلاصه نتایج تعیین تعداد مناسب خوشه‌ها در چهار مجموعه‌داده",
+      "columns": ["مجموعه‌داده", "تعداد خوشه منتخب", "SSE", "Silhouette", "Davies-Bouldin"],
+      "rows": [
+        ["IBM HR Analytics", 2, 29253.11, 0.153, 2.382],
+        ["Job Change", 3, 11219.41, 0.577, 0.664],
+        ["Employee Promotion", 5, 191896.70, 0.257, 1.270],
+        ["GHRM", 2, 770.65, 0.436, 0.861]
+      ]
+    },
+    {
+      "number": "4-10",
+      "slug": "cluster_profiles",
+      "caption": "خلاصه ویژگی‌ها و نام‌گذاری خوشه‌های شناسایی‌شده",
+      "columns": ["مجموعه‌داده / خوشه", "نام خوشه", "ویژگی‌های شاخص و وضعیت متغیر هدف"],
+      "rows": [
+        ["IBM - 1 (n=1011)", "کارکنان در مراحل اولیه‌تر مسیر شغلی", "سن، سطح شغلی، سابقه و درآمد پایین‌تر، Attrition = 19.19%"],
+        ["IBM - 2 (n=459)", "کارکنان باتجربه و تثبیت‌شده شغلی", "سن، سطح شغلی، سابقه و درآمد بالاتر، Attrition = 9.37%"],
+        ["Job Change - 1 (n=11493)", "محیط‌های توسعه‌یافته با آموزش متعارف", "city_development_index = 0.904، training_hours = 45.60، target = 16.38%"],
+        ["Job Change - 2 (n=2435)", "گروه با آموزش فشرده", "training_hours = 189.23، city_development_index = 0.855، target = 18.93%"],
+        ["Job Change - 3 (n=5230)", "محیط‌های با سطح توسعه پایین‌تر", "city_development_index = 0.651، training_hours = 51.13، target = 46.54%"],
+        ["Promotion - 1 (n=7250)", "آموزش‌های متعدد و تحقق پایین‌تر KPI", "no_of_trainings = 2.46، KPI = 10.77%، is_promoted = 3.96%"],
+        ["Promotion - 2 (n=22853)", "فاقد تحقق KPI", "KPIs_met >80% = 0، تعداد آموزش ≈ 1، is_promoted = 3.58%"],
+        ["Promotion - 3 (n=16250)", "عملکرد بالاتر و تحقق KPI", "KPIs_met >80% = 1، previous_year_rating ≈ 3.98، is_promoted = 16.05%"],
+        ["Promotion - 4 (n=7185)", "کارکنان ارشد و باسابقه", "Age = 48.15، length_of_service = 13.45، is_promoted = 5.50%"],
+        ["Promotion - 5 (n=1270)", "دارای سابقه دریافت جایزه", "awards_won? = 1، avg_training_score = 69.65، is_promoted = 44.02%"],
+        ["GHRM - 1 (n=198)", "سطح بالاتر رویه‌های GHRM و توانمندسازی سبز", "GRS=3.92، GTD=3.93، GPA=3.97، GCM=3.95، GEE=3.93، FEP=3.85"],
+        ["GHRM - 2 (n=122)", "سطح پایین‌تر رویه‌های GHRM و توانمندسازی سبز", "GRS=2.67، GTD=2.71، GPA=2.62، GCM=2.64، GEE=2.62، FEP=3.04"]
+      ]
+    },
+    {
+      "number": "4-11",
+      "slug": "classification_ibm",
+      "caption": "مقایسه عملکرد مدل‌های پیش‌بینی ترک خدمت در مجموعه‌داده IBM",
+      "columns": ["مدل", "Accuracy", "Precision", "Recall", "F1-Score"],
+      "rows": [
+        ["Random Forest", 0.837, 0.462, 0.128, 0.200],
+        ["Decision Tree", 0.772, 0.321, 0.383, 0.350],
+        ["LinearSVC", 0.864, 0.652, 0.319, 0.429],
+        ["MLPClassifier", 0.874, 0.708, 0.362, 0.479]
+      ]
+    },
+    {
+      "number": "4-12",
+      "slug": "confusion_ibm",
+      "caption": "ماتریس درهم‌ریختگی مدل‌های پیش‌بینی ترک خدمت در مجموعه‌داده IBM",
+      "columns": ["مدل", "TN", "FP", "FN", "TP"],
+      "rows": [
+        ["Random Forest", 240, 7, 41, 6],
+        ["Decision Tree", 209, 38, 29, 18],
+        ["LinearSVC", 239, 8, 32, 15],
+        ["MLPClassifier", 240, 7, 30, 17]
+      ]
+    },
+    {
+      "number": "4-13",
+      "slug": "classification_job_change",
+      "caption": "نتایج چهار الگوریتم برای پیش‌بینی متغیر هدف در مجموعه‌داده Job Change",
+      "columns": ["مدل", "Accuracy", "Precision", "Recall", "F1-Score"],
+      "rows": [
+        ["Random Forest", 0.776, 0.569, 0.419, 0.483],
+        ["Decision Tree", 0.785, 0.585, 0.477, 0.526],
+        ["LinearSVC", 0.778, 0.586, 0.377, 0.459],
+        ["MLPClassifier", 0.785, 0.584, 0.476, 0.525]
+      ]
+    },
+    {
+      "number": "4-14",
+      "slug": "confusion_job_change",
+      "caption": "ماتریس درهم‌ریختگی مدل‌های پیش‌بینی تغییر شغل",
+      "columns": ["مدل", "TN", "FP", "FN", "TP"],
+      "rows": [
+        ["Random Forest", 2574, 303, 555, 400],
+        ["Decision Tree", 2554, 323, 499, 456],
+        ["LinearSVC", 2623, 254, 595, 360],
+        ["MLPClassifier", 2553, 324, 500, 455]
+      ]
+    },
+    {
+      "number": "4-15",
+      "slug": "classification_promotion",
+      "caption": "مقایسه عملکرد مدل‌های پیش‌بینی ارتقای کارکنان",
+      "columns": ["مدل", "Accuracy", "Precision", "Recall", "F1-Score"],
+      "rows": [
+        ["Random Forest", 0.933, 0.803, 0.279, 0.415],
+        ["Decision Tree", 0.937, 0.774, 0.374, 0.504],
+        ["LinearSVC", 0.933, 0.951, 0.228, 0.368],
+        ["MLPClassifier", 0.942, 0.932, 0.350, 0.509]
+      ]
+    },
+    {
+      "number": "4-16",
+      "slug": "confusion_promotion",
+      "caption": "ماتریس درهم‌ریختگی مدل‌های پیش‌بینی ارتقای کارکنان",
+      "columns": ["مدل", "TN", "FP", "FN", "TP"],
+      "rows": [
+        ["Random Forest", 9964, 64, 673, 261],
+        ["Decision Tree", 9926, 102, 585, 349],
+        ["LinearSVC", 10017, 11, 721, 213],
+        ["MLPClassifier", 10004, 24, 607, 327]
+      ]
+    },
+    {
+      "number": "4-17",
+      "slug": "regression_base",
+      "caption": "عملکرد مدل‌های رگرسیونی در پیش‌بینی FEP در تحلیل پایه",
+      "columns": ["مدل", "R²", "RMSE", "MAE"],
+      "rows": [
+        ["Random Forest Regressor", 0.432, 0.489, 0.386],
+        ["Decision Tree Regressor", 0.422, 0.494, 0.381],
+        ["LinearSVR", 0.417, 0.496, 0.386],
+        ["MLPRegressor", 0.356, 0.521, 0.403]
+      ]
+    },
+    {
+      "number": "4-18",
+      "slug": "regression_gee_plus",
+      "caption": "عملکرد مدل‌های رگرسیونی در پیش‌بینی FEP پس از افزودن GEE",
+      "columns": ["مدل", "R²", "RMSE", "MAE"],
+      "rows": [
+        ["Random Forest Regressor", 0.425, 0.492, 0.385],
+        ["Decision Tree Regressor", 0.406, 0.501, 0.382],
+        ["LinearSVR", 0.418, 0.495, 0.385],
+        ["MLPRegressor", 0.422, 0.494, 0.398]
+      ]
+    },
+    {
+      "number": "4-19",
+      "slug": "best_classifiers",
+      "caption": "خلاصه عملکرد مدل‌های منتخب در مسائل طبقه‌بندی",
+      "columns": ["مجموعه‌داده", "مسئله پیش‌بینی", "الگوریتم با عملکرد مناسب‌تر", "شاخص اصلی", "مقدار"],
+      "rows": [
+        ["IBM HR Analytics", "ترک خدمت", "MLPClassifier", "F1-Score", 0.479],
+        ["Job Change", "تغییر شغل", "Decision Tree", "F1-Score", 0.526],
+        ["Employee Promotion", "ارتقای کارکنان", "MLPClassifier", "F1-Score", 0.509]
+      ]
+    }
+  ],
+  "narrative_results": {
+    "mcnemar": [
+      ["IBM HR Analytics", "MLPClassifier", "LinearSVC", "0.508"],
+      ["IBM HR Analytics", "MLPClassifier", "Decision Tree", "<0.001"],
+      ["IBM HR Analytics", "MLPClassifier", "Random Forest", "0.035"],
+      ["Job Change", "Decision Tree", "MLPClassifier", "0.949"],
+      ["Job Change", "Decision Tree", "Random Forest", "0.072"],
+      ["Job Change", "Decision Tree", "LinearSVC", "0.114"],
+      ["Employee Promotion", "MLPClassifier", "Random Forest", "<0.001"],
+      ["Employee Promotion", "MLPClassifier", "Decision Tree", "<0.001"],
+      ["Employee Promotion", "MLPClassifier", "LinearSVC", "<0.001"]
+    ],
+    "dataset_overview": [
+      ["IBM HR Analytics", 1470, 1176, 294, "Attrition", "Binary classification", 237, 16.12],
+      ["Job Change", 19158, 15326, 3832, "target", "Binary classification", 4777, 24.93],
+      ["Employee Promotion", 54808, 43846, 10962, "is_promoted", "Binary classification", 4668, 8.52],
+      ["GHRM", 320, 256, 64, "FEP", "Regression", null, null]
+    ],
+    "additional_values": {
+      "ibm_age_mean_exact": 36.92,
+      "ibm_monthly_income_median": 4919,
+      "ibm_monthly_income_middle_approx": [2911, 8379],
+      "job_training_hours_median": 47,
+      "job_relevant_experience_yes": 13792,
+      "job_relevant_experience_no": 5366,
+      "job_negative_class": 14381,
+      "job_positive_class": 4777,
+      "job_k2_sse": 21755.94
+    }
+  }
+}

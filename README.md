@@ -23,8 +23,8 @@ The older UCI dataset is not part of the final pipeline.
 - Davies-Bouldin Index
 - for datasets above 5,000 rows, Silhouette is computed on a deterministic 5,000-row sample to avoid quadratic memory growth
 - the target and identifier fields are excluded; for GHRM, `FEP` is excluded from cluster formation
-- clusters are reported only as `Cluster 0`, `Cluster 1`, etc.; no cluster is labelled green/non-green
-- K-Means uses Euclidean distance on standardized numeric and one-hot encoded categorical features; these mixed-data clusters are exploratory and require external validation
+- clustering uses standardized numeric features only, matching the final thesis analysis
+- published cluster numbers, labels, sizes, and profiles follow thesis table 4-10; they remain exploratory and require external validation
 
 ### Binary classification
 For IBM HR, Job Change and Employee Promotion:
@@ -64,8 +64,6 @@ The base GHRM regression uses `GRS`, `GTD`, `GPA` and `GCM`. A supplementary run
 - preprocessing remains inside the model pipeline
 - RMSE is the tuning objective
 - final test metrics: `R²`, `RMSE`, `MAE`
-- 95% non-parametric bootstrap intervals are reported for held-out metrics
-- Base versus `GEE+` differences use paired bootstrap resampling of the same test rows
 
 ## Classification evaluation
 
@@ -100,16 +98,17 @@ outputs/
 
 The dataset-specific folders contain label mappings, test predictions, confusion matrices, K-Means metrics, cluster sizes and McNemar comparisons. The GHRM folder also contains regression metrics, predictions and cluster profiles. `figures/` contains the K-Means diagnostic plots.
 
-The same run also publishes the curated thesis results to GitHub-friendly files:
+After the live run, the publication step restores the tracked thesis results from one versioned reference. Live estimates remain under ignored `outputs/` and cannot silently replace the final Chapter 4 values:
 
 ```text
 results/
-├── chapter4_results.md     # Persian Chapter 4 results and interpretation
-├── tables/                 # Metrics, 95% CIs, cluster sizes and QA tables
-└── figures/                # Model, confusion-matrix, regression and K-Means figures
+├── thesis_chapter4_reference.json  # sole numeric source of truth
+├── chapter4_results.md             # all 19 Chapter 4 tables
+├── tables/                         # 19 source tables plus canonical analysis CSVs
+└── figures/                        # figures generated only from thesis values
 ```
 
-Start with **[the reproducible Chapter 4 results](results/chapter4_results.md)**.
+Start with **[the final Chapter 4 results](results/chapter4_results.md)**.
 
 ## Project structure
 
@@ -145,7 +144,7 @@ train_LZdllcl(2).csv
 HRM DATASETS(2).csv
 ```
 
-The loader also accepts the previously documented aliases `aug_train(5).csv`, `train_LZdllcl.csv`, and `HRM DATASETS.csv`.
+The loader also accepts the previously documented aliases `aug_train(5).csv`, `train_LZdllcl.csv`, `HRM DATASETS(3).csv`, and `HRM DATASETS.csv`.
 
 Use Python 3.11 or 3.12. The full thesis run was validated with Python 3.12,
 and CI checks both versions. Dependencies are pinned to the validated
@@ -155,6 +154,7 @@ environment. Then install and run:
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python run_all.py
+python scripts/sync_thesis_chapter4.py
 python scripts/validate_published_results.py --require-data
 ```
 
@@ -166,7 +166,7 @@ python -m unittest discover -s tests -v
 python scripts/validate_published_results.py
 ```
 
-The validator checks any locally available raw file against
+The validator checks every published cell against the final thesis reference and checks any locally available raw file against
 [`validation/data_manifest.json`](validation/data_manifest.json). Raw datasets are
 intentionally not committed unless their redistribution licenses permit it.
 

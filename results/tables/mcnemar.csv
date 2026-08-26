@@ -1,10 +1,10 @@
-﻿Dataset,Model_A,Model_B,b01,b10,statistic,p_value
-IBM HR Attrition,Random Forest,Decision Tree,37,21,3.8793103448275854,0.0488846339161811
-IBM HR Attrition,Random Forest,Linear SVM,52,26,8.012820512820513,0.0046447339422924
-IBM HR Attrition,Random Forest,MLP,11,19,1.6333333333333333,0.2012426209577202
-Job Change,Random Forest,Decision Tree,211,103,36.461783439490446,1.5568906259592867e-09
-Job Change,Random Forest,Linear SVM,214,140,15.05367231638418,0.0001044967442758
-Job Change,Random Forest,MLP,244,335,13.989637305699482,0.0001838209633788
-Employee Promotion,Random Forest,Decision Tree,543,209,147.4587765957447,6.2293309161864755e-34
-Employee Promotion,Random Forest,Linear SVM,2347,486,1221.1789622308506,1.5224854036069893e-267
-Employee Promotion,Random Forest,MLP,67,222,82.06228373702422,1.3186508025341704e-19
+﻿Dataset,Model_A,Model_B,p_value
+IBM HR Analytics,MLPClassifier,LinearSVC,0.508
+IBM HR Analytics,MLPClassifier,Decision Tree,<0.001
+IBM HR Analytics,MLPClassifier,Random Forest,0.035
+Job Change,Decision Tree,MLPClassifier,0.949
+Job Change,Decision Tree,Random Forest,0.072
+Job Change,Decision Tree,LinearSVC,0.114
+Employee Promotion,MLPClassifier,Random Forest,<0.001
+Employee Promotion,MLPClassifier,Decision Tree,<0.001
+Employee Promotion,MLPClassifier,LinearSVC,<0.001

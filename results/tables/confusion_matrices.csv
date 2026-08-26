@@ -1,13 +1,13 @@
 ﻿Dataset,Model,TN,FP,FN,TP,Test_N
-IBM HR Attrition,Random Forest,241,6,41,6,294
-IBM HR Attrition,Decision Tree,206,41,22,25,294
-IBM HR Attrition,Linear SVM,191,56,17,30,294
-IBM HR Attrition,MLP,234,13,26,21,294
-Job Change,Random Forest,2237,640,268,687,3832
-Job Change,Decision Tree,2109,768,248,707,3832
-Job Change,Linear SVM,2147,730,252,703,3832
-Job Change,MLP,2569,308,509,446,3832
-Employee Promotion,Random Forest,9851,177,610,324,10962
-Employee Promotion,Decision Tree,9421,607,514,420,10962
-Employee Promotion,Linear SVM,7531,2497,151,783,10962
-Employee Promotion,MLP,10000,28,604,330,10962
+IBM HR Analytics,Random Forest,240,7,41,6,294
+IBM HR Analytics,Decision Tree,209,38,29,18,294
+IBM HR Analytics,LinearSVC,239,8,32,15,294
+IBM HR Analytics,MLPClassifier,240,7,30,17,294
+Job Change,Random Forest,2574,303,555,400,3832
+Job Change,Decision Tree,2554,323,499,456,3832
+Job Change,LinearSVC,2623,254,595,360,3832
+Job Change,MLPClassifier,2553,324,500,455,3832
+Employee Promotion,Random Forest,9964,64,673,261,10962
+Employee Promotion,Decision Tree,9926,102,585,349,10962
+Employee Promotion,LinearSVC,10017,11,721,213,10962
+Employee Promotion,MLPClassifier,10004,24,607,327,10962

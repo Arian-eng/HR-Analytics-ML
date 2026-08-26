@@ -13,7 +13,7 @@ The loader checks all item columns before analysis and constructs complete-case 
 - `GEE`: green employee empowerment/engagement
 - `FEP`: firm environmental performance
 
-The source file uses the column name `GDT3` for the third training/development item; the mapping preserves that exact source spelling.
+The source file uses the misspelled column name `GDT3` for the third training/development item; the loader normalizes it to `GTD3` before constructing the score.
 
 ## Regression protocol
 
@@ -30,13 +30,11 @@ than being calculated from a different subset of items. Rows without a complete
 `FEP` composite are excluded from regression. Predictor missingness is
 median-imputed inside the model pipeline.
 
-Held-out R², RMSE, and MAE include 95% bootstrap intervals. Base and `GEE+`
-predictions use the same held-out rows and their metric differences are assessed
-with paired bootstrap resampling.
+The tracked R², RMSE, and MAE values are the values reported in thesis tables 4-17 and 4-18. Live predictions remain under `outputs/ghrm` and do not overwrite those publication values.
 
 ## Clustering protocol
 
-K-Means uses the five GHRM predictor composites and excludes `FEP` from cluster formation. Missing predictor composites are median-imputed before standardization. The analysis evaluates `k=2..7` with Inertia/SSE, Silhouette, and Davies-Bouldin, then writes cluster sizes and descriptive `FEP` profiles.
+K-Means uses the five GHRM predictor composites and excludes `FEP` from cluster formation. Missing predictor composites are median-imputed before standardization. The analysis evaluates `k=2..7` with Inertia/SSE, Silhouette, and Davies-Bouldin; thesis publication selects k=2 and reports cluster sizes and descriptive profiles from table 4-10.
 
 ## Interpretation boundary
 

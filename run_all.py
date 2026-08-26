@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import confusion_matrix
 from src.preprocessing import DATASETS, load_dataset, split_xy, make_preprocessor
-from src.classification import MODELS, build_search
+from src.classification import MODELS, THESIS_MODE, build_search, build_thesis_model
 from src.clustering import run_kmeans
 from src.evaluation import classification_metrics, mcnemar_pair
 from src.green_hrm_analysis import main as run_ghrm
@@ -55,16 +55,36 @@ def run_classification_analyses():
             print(f"[{name}] tuning {model_name}", flush=True)
             scaled = model_name in {"Linear SVM", "MLP"}
             prep = make_preprocessor(X_train, scale_numeric=scaled)
-            search = build_search(model_name, estimator, prep, cv)
-            search.fit(X_train, y_train)
-            pred = search.predict(X_test)
+            fitted = (
+                build_thesis_model(name, model_name, prep)
+                if THESIS_MODE
+                else None
+            )
+            if fitted is None:
+                fitted = build_search(model_name, estimator, prep, cv)
+                mode = "three-fold search"
+            else:
+                mode = "fixed configuration reported in thesis"
+            fitted.fit(X_train, y_train)
+            pred = fitted.predict(X_test)
+            best_score = (
+                float(fitted.best_score_)
+                if hasattr(fitted, "best_score_")
+                else None
+            )
+            best_params = (
+                fitted.best_params_
+                if hasattr(fitted, "best_params_")
+                else fitted.named_steps["model"].get_params()
+            )
             all_rows.append(
                 {
                     "Dataset": name,
                     "Model": model_name,
                     **classification_metrics(y_test, pred),
-                    "CV_Best_F1": float(search.best_score_),
-                    "Best_Params": json.dumps(search.best_params_, default=str),
+                    "CV_Best_F1": best_score,
+                    "Best_Params": json.dumps(best_params, default=str),
+                    "Execution_Mode": mode,
                 }
             )
             predictions[model_name] = pred

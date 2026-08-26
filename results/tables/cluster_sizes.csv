@@ -1,12 +1,13 @@
-﻿Dataset,Cluster,Size
-IBM HR Attrition,0,995
-IBM HR Attrition,1,475
-Job Change,0,13496
-Job Change,1,5662
-Employee Promotion,0,7227
-Employee Promotion,1,22568
-Employee Promotion,2,1270
-Employee Promotion,3,7586
-Employee Promotion,4,16157
-GHRM–Environmental Performance,0,198
-GHRM–Environmental Performance,1,122
+﻿Dataset,Cluster,Size,Label,Profile
+IBM HR Analytics,1,1011,کارکنان در مراحل اولیه‌تر مسیر شغلی,سن، سطح شغلی، سابقه و درآمد پایین‌تر، Attrition = 19.19%
+IBM HR Analytics,2,459,کارکنان باتجربه و تثبیت‌شده شغلی,سن، سطح شغلی، سابقه و درآمد بالاتر، Attrition = 9.37%
+Job Change,1,11493,محیط‌های توسعه‌یافته با آموزش متعارف,city_development_index = 0.904، training_hours = 45.60، target = 16.38%
+Job Change,2,2435,گروه با آموزش فشرده,training_hours = 189.23، city_development_index = 0.855، target = 18.93%
+Job Change,3,5230,محیط‌های با سطح توسعه پایین‌تر,city_development_index = 0.651، training_hours = 51.13، target = 46.54%
+Employee Promotion,1,7250,آموزش‌های متعدد و تحقق پایین‌تر KPI,no_of_trainings = 2.46، KPI = 10.77%، is_promoted = 3.96%
+Employee Promotion,2,22853,فاقد تحقق KPI,KPIs_met >80% = 0، تعداد آموزش ≈ 1، is_promoted = 3.58%
+Employee Promotion,3,16250,عملکرد بالاتر و تحقق KPI,KPIs_met >80% = 1، previous_year_rating ≈ 3.98، is_promoted = 16.05%
+Employee Promotion,4,7185,کارکنان ارشد و باسابقه,Age = 48.15، length_of_service = 13.45، is_promoted = 5.50%
+Employee Promotion,5,1270,دارای سابقه دریافت جایزه,awards_won? = 1، avg_training_score = 69.65، is_promoted = 44.02%
+GHRM,1,198,سطح بالاتر رویه‌های GHRM و توانمندسازی سبز,GRS=3.92، GTD=3.93، GPA=3.97، GCM=3.95، GEE=3.93، FEP=3.85
+GHRM,2,122,سطح پایین‌تر رویه‌های GHRM و توانمندسازی سبز,GRS=2.67، GTD=2.71، GPA=2.62، GCM=2.64، GEE=2.62، FEP=3.04
