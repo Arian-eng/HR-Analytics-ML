@@ -257,7 +257,7 @@ def validate_clustering():
 
 
 def validate_report():
-    report = require(RESULTS / "analysis_report_fa.md").read_text(encoding="utf-8")
+    report = require(RESULTS / "analysis_report.md").read_text(encoding="utf-8")
     forbidden = ("thesis_chapter4_reference", "sole numeric source of truth", "sync_thesis")
     for phrase in forbidden:
         if phrase in report:

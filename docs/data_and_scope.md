@@ -1,58 +1,58 @@
-# دامنه پژوهش و شناسنامه داده‌ها
+# Study scope and data identity
 
-## مسئله اصلی
+## Main research problem
 
-بخش اصلی پژوهش روی دیتاست `HRM DATASETS.csv` انجام می‌شود. این فایل پاسخ ۳۲۰ مشاهده به گویه‌های مدیریت منابع انسانی سبز و عملکرد محیط‌زیستی شرکت را دارد. هدف مدل، پیش‌بینی امتیاز مرکب `FEP` است.
+The main study uses `HRM DATASETS.csv`, which contains 320 responses to Green Human Resource Management and firm environmental-performance items. The modeling target is the composite `FEP` score.
 
-در نسخه فعلی داده، «بهره‌وری منابع انسانی» و «پایداری کلی شرکت» متغیر هدف جداگانه ندارند. بنابراین کد درباره آن دو شاخص ادعای اندازه‌گیری یا پیش‌بینی نمی‌کند. شاخص مستقیم قابل تحلیل، عملکرد محیط‌زیستی شرکت (`FEP`) است؛ سه خروجی دیگر نیز ترک خدمت، تغییر شغل و ارتقای کارکنان‌اند.
+The available data do not contain separate targets for “HR productivity” or “overall firm sustainability.” The code therefore makes no claim to measure or predict those outcomes. The direct main outcome is firm environmental performance (`FEP`); the supplementary outcomes are attrition, job change, and promotion.
 
-سه فایل دیگر مسائل عمومی منابع انسانی را پوشش می‌دهند. آن‌ها فقط تحلیل‌های تکمیلی‌اند و برای سنجش مستقیم GHRM یا پایداری شرکت به کار نرفته‌اند. ردیف‌های چهار منبع به هم وصل یا تجمیع نشده‌اند.
+The three other files cover general HR problems. They are supplementary analyses, not direct measurements of GHRM or firm sustainability. Records from different sources are never joined or pooled.
 
-## ارتباط چهار دیتاست
+## Relationship among the four datasets
 
-| شناسه | واحد تحلیل | هدف | نوع ارتباط با موضوع |
+| ID | Unit of analysis | Target | Relationship to the thesis topic |
 |---|---|---|---|
-| `ibm` | کارکنان | `Attrition` | تحلیل تکمیلی رفتار شغلی؛ فاقد سازه سبز مستقیم |
-| `job_change` | متقاضیان/شاغلان | `target` | تحلیل تکمیلی تمایل به تغییر شغل؛ فاقد سازه سبز مستقیم |
-| `promotion` | کارکنان | `is_promoted` | تحلیل تکمیلی ارتقا؛ فاقد سازه سبز مستقیم |
-| `ghrm` | پاسخ‌دهندگان بنگاه‌های کوچک و متوسط | `FEP` | تحلیل اصلی و اندازه‌گیری مستقیم ابعاد GHRM |
+| `ibm` | Employees | `Attrition` | Supplementary work-behavior analysis; no direct green construct |
+| `job_change` | Applicants/workers | `target` | Supplementary job-change analysis; no direct green construct |
+| `promotion` | Employees | `is_promoted` | Supplementary promotion analysis; no direct green construct |
+| `ghrm` | SME survey respondents | `FEP` | Main analysis with direct GHRM dimensions |
 
-منطق استفاده هم‌زمان این است که توان الگوریتم‌ها روی سه مسئله رایج منابع انسانی بررسی شود و تحلیل مستقیم مدیریت منابع انسانی سبز فقط با منبعی انجام شود که متغیرهای لازم را دارد. نتیجه‌های چهار دیتاست مستقل گزارش می‌شوند؛ بنابراین برتری یک مدل در IBM به GHRM یا شرکت‌های غنا تعمیم داده نمی‌شود.
+The common rationale is to evaluate the selected algorithms on three established HR tasks while restricting direct Green HRM claims to the dataset that contains the required constructs. Results remain dataset-specific: model performance on IBM is not generalized to GHRM or Ghanaian SMEs.
 
-## وضعیت دیجی‌کالا
+## Digikala status
 
-هیچ فایل، ستون یا رکوردی از دیجی‌کالا در این مخزن وجود ندارد. در صورت تفاوت جامعه یا منبع داده پایان‌نامه نهایی با پروپوزال اولیه، آن تغییر باید در فرایند دانشگاهی به‌صورت رسمی توضیح و تأیید شود؛ کد نمی‌تواند جای آن تأیید را بگیرد.
+No file, field, or record from Digikala exists in this repository. If the final thesis population or data source differs from the original proposal, that change must be explained and approved through the university process; code cannot replace that approval.
 
-## ساخت سازه‌های GHRM
+## GHRM construct creation
 
-هر سازه از میانگین کامل گویه‌های زیر ساخته می‌شود. اگر یکی از گویه‌های لازم یک ردیف موجود نباشد، امتیاز سازه همان ردیف محاسبه نمی‌شود.
+Each construct is the complete row mean of the listed items. If a required item is missing for a row, that row's construct score is not calculated.
 
-| سازه | گویه‌ها | معنی |
+| Construct | Items | Meaning |
 |---|---|---|
-| `GRS` | `GRS1` تا `GRS4` | استخدام و گزینش سبز |
-| `GTD` | `GTD1` تا `GTD5` | آموزش و توسعه سبز |
-| `GPA` | `GPA1` تا `GPA6` | ارزیابی عملکرد سبز |
-| `GCM` | `GCM1` تا `GCM4` | جبران خدمات سبز |
-| `GEE` | `GEE1`, `GEE4`, `GEE5`, `GEE6` | توانمندسازی/مشارکت سبز |
-| `FEP` | `FEP1`, `FEP5`, `FEP7`, `FEP9` | عملکرد محیط‌زیستی شرکت |
+| `GRS` | `GRS1` to `GRS4` | Green recruitment and selection |
+| `GTD` | `GTD1` to `GTD5` | Green training and development |
+| `GPA` | `GPA1` to `GPA6` | Green performance appraisal |
+| `GCM` | `GCM1` to `GCM4` | Green compensation management |
+| `GEE` | `GEE1`, `GEE4`, `GEE5`, `GEE6` | Green empowerment/engagement |
+| `FEP` | `FEP1`, `FEP5`, `FEP7`, `FEP9` | Firm environmental performance |
 
-نام `GDT3` در فایل خام، پیش از محاسبه سازه به `GTD3` اصلاح می‌شود. این تغییر فقط اصلاح نام ستون است و مقدار داده را عوض نمی‌کند.
+The raw column `GDT3` is renamed to `GTD3` before construct calculation. This corrects the field name only and does not alter its values.
 
-## کنترل کیفیت قابل بررسی
+## Auditable data-quality checks
 
-در شروع هر اجرا موارد زیر ذخیره می‌شود:
+Every run records:
 
-- نام دقیق فایل و هش SHA-256؛
-- تعداد ردیف و ستون خام؛
-- نوع داده هر فیلد؛
-- تعداد و درصد مقادیر گمشده؛
-- تعداد مقادیر یکتا و پرتکرار؛
-- کمینه، بیشینه و میانگین فیلدهای عددی در خروجی خصوصی محلی؛
-- تعداد ردیف‌های کاملاً تکراری؛
-- کامل بودن متغیر هدف.
+- exact source filename and SHA-256;
+- raw row and column counts;
+- field data types;
+- missing-value counts and percentages;
+- distinct-value counts;
+- numeric range and mean in a local private profile;
+- exact duplicate-row count;
+- target completeness.
 
-ساختار عمومی فیلدها در `results/data/column_dictionary.csv` و مشخصات فایل در `results/data/data_quality.json` است. نسخه محلی `column_dictionary_private.csv` آمار دامنه و فراوانی را نیز دارد و به GitHub عمومی ارسال نمی‌شود. هش‌های مورد انتظار در `validation/data_manifest.json` نگه‌داری می‌شوند.
+The public field structure is in `results/data/column_dictionary.csv`; file-level checks are in `results/data/data_quality.json`. The local `column_dictionary_private.csv` also contains sensitive ranges and frequencies and is not committed. Expected source hashes are stored in `validation/data_manifest.json`.
 
-## حجم نمونه
+## Sample-size limitation
 
-سه دیتاست عمومی بین ۱٬۴۷۰ تا ۵۴٬۸۰۸ رکورد دارند. دیتاست اصلی GHRM فقط ۳۲۰ رکورد دارد. برای کم‌کردن خطر نتیجه‌گیری ناپایدار در GHRM، علاوه بر آزمون نگه‌داشته‌شده، بازه اطمینان Bootstrap و اعتبارسنجی متقاطع تکرارشونده ۵×۵ گزارش می‌شود. این کار محدودیت حجم نمونه را حذف نمی‌کند؛ فقط عدم‌قطعیت را شفاف‌تر نشان می‌دهد.
+The three public datasets contain between 1,470 and 54,808 records. The main GHRM dataset has only 320 records. To make its uncertainty visible, the pipeline reports a held-out test, bootstrap confidence intervals, and repeated 5x5 cross-validation. These procedures do not remove the sample-size limitation; they only quantify instability more transparently.
