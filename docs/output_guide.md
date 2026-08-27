@@ -1,96 +1,90 @@
-# راهنمای خروجی‌ها
+# Output guide
 
-این راهنما برای پیدا کردن پاسخ هر سؤال فنی در مخزن است.
+Use this guide to locate the saved evidence for each technical question.
 
-## شناسنامه و ساختار داده
+## Data identity and structure
 
-| سؤال | فایل |
+| Question | File |
 |---|---|
-| هر دیتاست چند ردیف و ستون دارد؟ | `results/data/dataset_inventory.csv` |
-| هش فایل و تعداد ردیف تکراری چیست؟ | `results/data/data_quality.json` |
-| نام، نوع، داده گمشده و تعداد مقادیر متمایز هر فیلد چیست؟ | `results/data/column_dictionary.csv` |
-| کدام ردیف آموزش یا آزمون بوده؟ | `results/splits/<dataset>.csv` |
+| How many rows and raw fields does each dataset contain? | `results/data/dataset_inventory.csv` |
+| What is the source hash and duplicate-row count? | `results/data/data_quality.json` |
+| What are the name, type, missingness, and distinct count of each field? | `results/data/column_dictionary.csv` |
+| Which local rows were assigned to training or test? | `results/splits/<dataset>.csv` |
 
-## خروجی مدل‌های طبقه‌بندی
+## Classification outputs
 
-مسیر هر مدل به شکل زیر است:
+Each classifier uses this path:
 
 ```text
 results/classification/<dataset>/<model>/
 ```
 
-| فایل | محتوا |
+| File | Contents |
 |---|---|
-| `tuning_results.csv` | تمام ترکیب‌های فراپارامتر و امتیاز CV |
-| `model_diagnostics.json` | مدل منتخب، فراپارامترها و پیچیدگی |
-| `test_predictions.csv` | شناسه رکورد، مقدار واقعی، پیش‌بینی و درست/غلط بودن |
-| `confusion_matrix.csv` | TN، FP، FN و TP |
-| `permutation_importance.csv` | تغییر F1 پس از برهم‌زدن هر ویژگی |
-| `tree_nodes.csv` | تمام گره‌های Decision Tree و احتمال کلاس مثبت |
-| `tree_rules.txt` | قواعد متنی کامل Decision Tree |
-| `tree_top_levels.png` | چهار سطح اول درخت برای خوانایی |
-| `forest_tree_summary.csv` | عمق و تعداد برگ همه درخت‌های Random Forest |
-| `representative_tree_nodes.csv` | تمام گره‌های درخت شماره صفر جنگل |
-| `coefficients.csv` | ضرایب Linear SVM |
+| `tuning_results.csv` | Every evaluated hyperparameter combination and CV score |
+| `model_diagnostics.json` | Selected model, hyperparameters, and fitted complexity |
+| `test_predictions.csv` | Local record ID, truth, prediction, and correctness |
+| `confusion_matrix.csv` | TN, FP, FN, and TP |
+| `permutation_importance.csv` | F1 change after permuting each source feature |
+| `tree_nodes.csv` | Every Decision Tree node and positive-class probability |
+| `tree_rules.txt` | Complete human-readable Decision Tree rules |
+| `tree_top_levels.png` | Top four tree levels for readability |
+| `forest_tree_summary.csv` | Depth and leaf count for every Random Forest tree |
+| `representative_tree_nodes.csv` | Every node in forest tree 0 |
+| `coefficients.csv` | Linear SVM coefficients |
 
-جدول خلاصه تمام مدل‌ها در `results/tables/classification_metrics.csv` و مقایسه‌های McNemar در `results/tables/mcnemar.csv` است.
+The all-model summary is `results/tables/classification_metrics.csv`; all McNemar comparisons are in `results/tables/mcnemar.csv`.
 
-## خروجی رگرسیون GHRM
-
-مسیرها:
+## GHRM regression outputs
 
 ```text
 results/regression/base/<model>/
 results/regression/gee/<model>/
 ```
 
-فایل‌های تنظیم، پیش‌بینی، اهمیت و تشخیص مدل مشابه طبقه‌بندی‌اند. `repeated_cv_metrics.csv` نیز عملکرد هر یک از ۲۵ Fold اعتبارسنجی تکرارشونده را نشان می‌دهد.
+Tuning, prediction, importance, and diagnostics files follow the same pattern. `repeated_cv_metrics.csv` records all 25 folds of repeated cross-validation. `convergence_warnings.json` records warnings from tuning and repeated CV.
 
-`convergence_warnings.json` تعداد هشدارهای همگرایی در تنظیم و ۲۵ Fold تکرارشونده را ثبت می‌کند.
-
-| سؤال | فایل |
+| Question | File |
 |---|---|
-| R²، RMSE، MAE و بازه اطمینان چقدر است؟ | `results/tables/regression_metrics.csv` |
-| افزودن GEE چه تغییری ایجاد کرده؟ | `results/tables/base_vs_gee_plus.csv` |
-| مهم‌ترین متغیرهای هر مدل چیست؟ | `results/tables/regression_feature_importance.csv` |
-| معیارها چگونه بدون انتشار ردیف‌ها بازحساب می‌شوند؟ | `results/tables/regression_validation_aggregates.csv` |
+| What are R², RMSE, MAE, and their intervals? | `results/tables/regression_metrics.csv` |
+| What changed after adding GEE? | `results/tables/base_vs_gee_plus.csv` |
+| Which variables matter most for each model? | `results/tables/regression_feature_importance.csv` |
+| How are public metrics recomputed without row-level outputs? | `results/tables/regression_validation_aggregates.csv` |
 
-## خروجی الگوهای پنهان
-
-برای هر دیتاست:
+## Hidden-pattern outputs
 
 ```text
 results/clustering/<dataset>/
 ```
 
-| فایل | محتوا |
+| File | Contents |
 |---|---|
-| `kmeans_metrics.csv` | SSE، Silhouette و Davies–Bouldin برای k=2..7 |
-| `cluster_assignments.csv` | شماره خوشه هر ردیف |
-| `cluster_sizes.csv` | تعداد و سهم اعضای هر خوشه |
-| `cluster_distinguishing_features.csv` | ویژگی‌های متمایزکننده و جهت اختلاف |
-| `cluster_profile_numeric.csv` | میانگین، میانه و انحراف معیار عددی |
-| `cluster_profile_categorical.csv` | مقدار غالب و سهم متغیرهای طبقه‌ای |
-| `cluster_target_summary.csv` | توزیع/میانگین هدف پس از خوشه‌بندی |
+| `kmeans_metrics.csv` | SSE, Silhouette, and Davies–Bouldin for k=2..7 |
+| `cluster_assignments.csv` | Local cluster membership for every row |
+| `cluster_sizes.csv` | Count and share of each selected cluster |
+| `cluster_distinguishing_features.csv` | Largest standardized feature differences and direction |
+| `cluster_profile_numeric.csv` | Numeric mean, median, and standard deviation |
+| `cluster_profile_categorical.csv` | Categorical mode and share |
+| `cluster_target_summary.csv` | Target distribution or mean after clustering |
 
-در GHRM، ارتباط الگوهای سبز با عملکرد محیط‌زیستی دقیقاً از کنار هم گذاشتن `cluster_distinguishing_features.csv` و `cluster_target_summary.csv` دیده می‌شود. پنج سازه سبز خوشه را می‌سازند و میانگین `FEP` بعداً برای هر خوشه گزارش می‌شود.
+For GHRM, compare `cluster_distinguishing_features.csv` with `cluster_target_summary.csv`: the five green constructs form the clusters, while mean `FEP` is calculated afterward.
 
-پروفایل‌های تفصیلی سه دیتاست عمومی کارکنان فقط در اجرای محلی تولید می‌شوند. مخزن عمومی برای آن‌ها معیار انتخاب k و اندازه خوشه را نگه می‌دارد و آمار درآمد/نرخ، شناسه و پروفایل فردی را منتشر نمی‌کند. خروجی تفصیلی GHRM در مخزن باقی می‌ماند، چون در سطح سازه‌های پژوهش و بدون شناسه پاسخ‌دهنده گزارش شده است.
+Detailed profiles for the three public employee datasets are generated locally only. The public repository retains k-selection metrics and sizes without publishing employee-level identifiers or sensitive income/rate aggregates. Detailed GHRM profiles remain public because they contain research constructs without respondent IDs.
 
-## جدول‌ها و شکل‌های آماده استفاده
+## Ready-to-review outputs
 
-جدول‌های تجمیعی در `results/tables/` و نمودارهای نهایی در `results/figures/` هستند. `results/analysis_report_fa.md` همه نتیجه‌های مهم و پیوند فایل جزئیات را در یک گزارش جمع می‌کند.
+Consolidated tables are in `results/tables/`; final figures are in `results/figures/`; `results/analysis_report.md` links the main findings to their detailed artifacts.
 
-## ردگیری یک عدد نمونه
+## Tracing one reported value
 
-برای بررسی یک F1 مانند عدد مدل MLP در IBM:
+To audit IBM MLP F1:
 
-1. ردیف آزمون در `results/splits/ibm.csv` مشخص است.
-2. مقدار واقعی و پیش‌بینی در `results/classification/ibm/mlp/test_predictions.csv` است.
-3. F1 از همان دو ستون دوباره محاسبه می‌شود.
-4. نتیجه در `results/classification/classification_metrics.csv` و جدول تجمیعی تکرار می‌شود.
-5. `scripts/validate_results.py` برابری این مقادیر را کنترل می‌کند.
+1. The local split is recorded in `results/splits/ibm.csv`.
+2. Truth and predictions are in `results/classification/ibm/mlp/test_predictions.csv`.
+3. F1 is calculated from those two columns.
+4. The value is repeated in the model and consolidated classification tables.
+5. `scripts/validate_results.py` checks equality independently.
 
-دو فایل مرحله ۱ و ۲ فقط در اجرای محلی ساخته می‌شوند و به دلیل حفاظت از خروجی‌های فردی HR در GitHub عمومی قرار نمی‌گیرند. در نسخه عمومی، همان F1 مستقلاً از چهار مقدار ماتریس درهم‌ریختگی بازحساب می‌شود. برای رگرسیون نیز `regression_validation_aggregates.csv` شامل تعداد رکورد و مجموع خطاهای مربع/مطلق است، نه پیش‌بینی فردی.
+Steps 1 and 2 are local-only to protect employee-level outputs. The public validator recomputes the same F1 from the four confusion-matrix cells. Regression metrics are recomputed from record counts and aggregate squared/absolute-error sums, not individual predictions.
 
-برای عددهایی مانند ۰٫۴۶۵ نیز باید ابتدا نام معیار و فایل منبع مشخص شود. در خروجی فعلی هیچ عدد بدون نام ستون، مدل، دیتاست و مسیر محاسبه منتشر نمی‌شود.
+A value such as 0.465 must always be identified by metric, model, dataset, and source path. The current output contains no unlabeled thesis number.

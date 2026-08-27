@@ -1,7 +1,7 @@
-# خروجی اجرای نهایی
+# Final run outputs
 
-تمام فایل های این پوشه با اجرای `python run_all.py` از چهار CSV محلی ساخته شده اند. متن پایان نامه ورودی عددی برنامه نیست.
+Every file in this directory is generated from the four local CSV files by `python run_all.py`. Thesis text is not a numeric input to the pipeline.
 
-از [گزارش فارسی](analysis_report_fa.md) شروع کنید. جدول های تجمیعی در `tables/`، جزئیات هر مدل در پوشه های دیتاست، زمان اجرا در `run_log.txt` و نسخه محیط و هش داده در `run_manifest.json` است.
+Start with the [final execution report](analysis_report.md). Consolidated tables are in `tables/`, model details are grouped by dataset, execution timing is in `run_log.txt`, and environment versions plus data hashes are in `run_manifest.json`.
 
-فایل های خام داده در مخزن قرار ندارند. هویت دقیق SHA-256 آن ها در `data/dataset_inventory.csv` ثبت شده است.
+Raw data files are not committed. Their exact SHA-256 identities are recorded in `data/dataset_inventory.csv`.

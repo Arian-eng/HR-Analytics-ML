@@ -1,10 +1,9 @@
-"""Build tables, figures, and the Persian execution report from live outputs."""
+"""Build tables, figures, and the English execution report from live outputs."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-import re
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
@@ -22,25 +21,22 @@ from src.explainability import slug
 
 TABLES = RESULTS_DIR / "tables"
 FIGURES = RESULTS_DIR / "figures"
-PERSIAN_DIGITS = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
 COLORS = ["#2D5F8B", "#BE8A2D", "#C65D3B", "#687B45"]
 MODEL_COLORS = dict(zip(CLASSIFICATION_MODELS, COLORS))
-
-
-def to_persian_digits(value):
-    return str(value).translate(PERSIAN_DIGITS)
 
 
 def _format(value):
     if pd.isna(value):
         return "—"
     if isinstance(value, (float, np.floating)):
-        return to_persian_digits(f"{value:.4f}")
+        return f"{value:.4f}"
     if isinstance(value, (int, np.integer)):
-        return to_persian_digits(f"{value:,}")
-    if isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value):
+        return f"{value:,}"
+    if isinstance(value, str) and len(value) == 64 and all(
+        character in "0123456789abcdef" for character in value
+    ):
         return f"`{value}`"
-    return to_persian_digits(value)
+    return str(value)
 
 
 def markdown_table(frame):
@@ -64,10 +60,10 @@ def select_kmeans_row(metrics):
 
 def interpret_silhouette(value):
     if value < 0.25:
-        return "تفکیک ضعیف و صرفاً اکتشافی"
+        return "weak separation; exploratory only"
     if value < 0.50:
-        return "تفکیک متوسط و اکتشافی"
-    return "تفکیک نسبتاً روشن در همین داده"
+        return "moderate exploratory separation"
+    return "relatively clear separation in this dataset"
 
 
 def _configure_plotting():
@@ -234,14 +230,14 @@ def aggregate_tables(classification, mcnemar, regression, comparisons):
 
     workflow = pd.DataFrame(
         [
-            [1, "ثبت هویت داده", "هش SHA-256، تعداد ردیف و ستون"],
-            [2, "کنترل کیفیت", "مقادیر گمشده، تکراری و کامل بودن هدف"],
-            [3, "پیش پردازش", "جایگذاری فقط در داده آموزش، کدگذاری و مقیاس بندی"],
-            [4, "تقسیم داده", "۸۰ درصد آموزش و ۲۰ درصد آزمون با بذر ۴۲"],
-            [5, "تنظیم مدل", "اعتبارسنجی متقاطع و انتخاب پارامتر روی آموزش"],
-            [6, "ارزیابی نهایی", "آزمون نگه داشته شده، ماتریس و بازه اطمینان"],
-            [7, "تفسیر مدل", "اهمیت متغیرها، ساختار درخت و ضرایب"],
-            [8, "خوشه بندی", "بررسی k از ۲ تا ۷ و پروفایل خوشه ها"],
+            [1, "Record data identity", "SHA-256, row count, and column count"],
+            [2, "Check data quality", "Missing values, duplicates, and target completeness"],
+            [3, "Preprocess", "Training-only imputation, encoding, and scaling"],
+            [4, "Split data", "80% training and 20% test with random seed 42"],
+            [5, "Tune models", "Cross-validation and parameter selection on training data"],
+            [6, "Evaluate", "Held-out test metrics, matrices, and confidence intervals"],
+            [7, "Explain models", "Feature importance, tree structure, and coefficients"],
+            [8, "Cluster", "Evaluate k from 2 to 7 and profile the selected clusters"],
         ],
         columns=["Step", "Action", "Saved_Evidence"],
     )
@@ -397,17 +393,17 @@ def _classification_sections(classification):
         for model in CLASSIFICATION_MODELS:
             path = f"classification/{dataset}/{slug(model)}"
             links.append(
-                f"[{model}]({path}/model_diagnostics.json): پارامترها، پیش بینی آزمون، "
-                f"ماتریس، اهمیت متغیرها و خروجی تنظیم مدل"
+                f"[{model}]({path}/model_diagnostics.json): selected parameters, "
+                f"held-out predictions, confusion matrix, feature importance, and tuning results"
             )
         sections.append(
             f"### {DATASETS[dataset]['display_name']}\n\n"
             f"{markdown_table(display)}\n\n"
-            f"در این تفکیک، بیشترین F1 مربوط به **{best['Model']}** با مقدار "
-            f"**{_format(best['F1'])}** است. این نتیجه فقط درباره متغیر هدف "
-            f"`{DATASETS[dataset]['target']}` است و سنجش مستقیم GHRM نیست.\n\n"
+            f"**{best['Model']}** has the highest positive-class F1 "
+            f"(**{_format(best['F1'])}**) in this split. This result concerns only "
+            f"the `{DATASETS[dataset]['target']}` target and is not a direct measure of GHRM.\n\n"
             + "\n\n".join(links)
-            + f"\n\n![اهمیت متغیرها](figures/feature_importance_{dataset}.png)"
+            + f"\n\n![Feature importance](figures/feature_importance_{dataset}.png)"
         )
     return "\n\n".join(sections)
 
@@ -423,31 +419,31 @@ def _cluster_sections(tables):
         for cluster in sorted(sizes["Cluster"].unique()):
             size = int(sizes.loc[sizes["Cluster"] == cluster, "Size"].iloc[0])
             if dataset != "ghrm":
-                lines.append(f"- خوشه {_format(cluster)} با {_format(size)} رکورد.")
+                lines.append(f"- Cluster {_format(cluster)}: {_format(size)} records.")
                 continue
             target_rows = targets[targets["Cluster"] == cluster]
             target_row = target_rows.iloc[0]
-            target_text = f"میانگین FEP برابر {_format(target_row['Share_or_Mean'])}"
+            target_text = f"mean FEP = {_format(target_row['Share_or_Mean'])}"
             top = patterns[patterns["Cluster"] == cluster].head(3)
-            feature_text = "، ".join(
-                f"{row.Feature} {('بالاتر' if row.Direction == 'higher' else 'پایین تر')}"
+            feature_text = ", ".join(
+                f"{row.Feature} {('higher' if row.Direction == 'higher' else 'lower')}"
                 for row in top.itertuples(index=False)
             )
             lines.append(
-                f"- خوشه {_format(cluster)} با {_format(size)} رکورد: {feature_text}؛ {target_text}."
+                f"- Cluster {_format(cluster)}: {_format(size)} records; {feature_text}; {target_text}."
             )
         sections.append(
             f"### {DATASETS[dataset]['display_name']}\n\n"
-            f"مقدار منتخب k برابر **{_format(selected['k'])}**، Silhouette برابر "
-            f"**{_format(selected['Silhouette'])}** و تفسیر آن «{selected['Interpretation']}» است.\n\n"
+            f"The selected k is **{_format(selected['k'])}**, with a Silhouette score of "
+            f"**{_format(selected['Silhouette'])}** ({selected['Interpretation']}).\n\n"
             + "\n".join(lines)
             + (
-                "\n\nپروفایل آماری تفصیلی این دیتاست عمومی منابع انسانی "
-                "فقط در اجرای محلی نگه داری می شود."
+                "\n\nDetailed profiles for this public employee dataset are retained "
+                "only in the local run."
                 if dataset != "ghrm"
                 else ""
             )
-            + f"\n\n![نمودارهای انتخاب k](figures/kmeans_{dataset}.png)"
+            + f"\n\n![K selection diagnostics](figures/kmeans_{dataset}.png)"
         )
     return "\n\n".join(sections)
 
@@ -466,98 +462,96 @@ def write_report(tables):
         regression[regression["Variant"] == "GEE+"]["RMSE"].idxmin()
     ]
 
-    report = f"""# گزارش اجرای نهایی تحلیل منابع انسانی
+    report = f"""# Final HR analytics execution report
 
-این گزارش مستقیماً با اجرای `python run_all.py` ساخته شده است. هیچ عددی از فایل پایان نامه به نتایج کد تزریق نشده است. مسیر هر عدد از فایل داده، تقسیم آموزش و آزمون، پارامتر مدل و فایل پیش بینی قابل پیگیری است.
+This report is generated directly by `python run_all.py`. Thesis text is never used as a numeric input. Every reported value can be traced to a source-file hash, a train/test split, selected model parameters, and a saved evaluation artifact.
 
-## حدود پژوهش و نقش چهار دیتاست
+## Study scope and the role of each dataset
 
-دیتاست GHRM تحلیل اصلی مدیریت منابع انسانی سبز است و متغیرهای GRS، GTD، GPA، GCM، GEE و FEP را مستقیماً دارد. سه دیتاست دیگر تحلیل های مستقل و تکمیلی منابع انسانی هستند و برای ترک خدمت، تغییر شغل و ارتقا استفاده شده اند. نتایج آن سه دیتاست شاهد مستقیم رفتار سبز یا پایداری شرکت نیستند و با دیتاست GHRM ادغام نشده اند. این پروژه هیچ داده ای از دیجی کالا ندارد.
+The GHRM dataset is the main Green Human Resource Management analysis and directly contains GRS, GTD, GPA, GCM, GEE, and FEP measures. The other three datasets are independent supplementary HR analyses of attrition, job change, and promotion. They are not direct evidence of green behavior or firm sustainability and are never merged with GHRM. This project contains no Digikala data.
 
 {markdown_table(inventory)}
 
-نام تمام ستون ها، نوع داده، تعداد مقادیر گمشده و تعداد مقادیر متمایز در [`data/column_dictionary.csv`](data/column_dictionary.csv) ثبت شده است. دامنه و فراوانی های حساس فقط در اجرای محلی قرار می گیرند.
+Column names, data types, missing-value counts, and distinct-value counts are recorded in [`data/column_dictionary.csv`](data/column_dictionary.csv). Sensitive ranges and frequencies are retained only in the local run.
 
-## مراحل انجام کار
+## Analysis workflow
 
 {markdown_table(tables['workflow'])}
 
-پیش پردازش داخل Pipeline انجام شده است؛ بنابراین میانه، مد، کدگذاری و مقیاس بندی فقط از داده آموزش یاد گرفته می شوند. معیار تنظیم طبقه بندی F1 کلاس مثبت و معیار تنظیم رگرسیون RMSE است.
+Preprocessing is fitted inside each model pipeline, so imputation, encoding, and scaling learn only from training data. Classification is tuned on positive-class F1; regression is tuned on RMSE.
 
-## نتایج مدل های طبقه بندی
+## Classification results
 
-![مقایسه F1](figures/classification_f1.png)
+![F1 comparison](figures/classification_f1.png)
 
-![ماتریس های درهم ریختگی](figures/confusion_matrices.png)
+![Confusion matrices](figures/confusion_matrices.png)
 
 {_classification_sections(classification)}
 
-## آزمون McNemar
+## McNemar tests
 
-آزمون McNemar پیش بینی های دو مدل روی همان رکوردهای آزمون را مقایسه می کند. ستون های b01 و b10 تعداد موارد اختلاف دو مدل هستند. روش دقیق دو جمله ای برای تعداد اختلاف کمتر از ۲۵ و تقریب کای دو با تصحیح پیوستگی برای نمونه های بزرگ تر استفاده شده است. جدول کامل هر شش مقایسه برای هر دیتاست در [`tables/mcnemar.csv`](tables/mcnemar.csv) قرار دارد.
+McNemar's test compares two models on the same held-out records. Columns b01 and b10 count discordant outcomes. An exact binomial test is used when the discordant total is below 25; otherwise the continuity-corrected chi-square approximation is used. All six pairwise comparisons for every classification dataset are in [`tables/mcnemar.csv`](tables/mcnemar.csv).
 
-## تحلیل اصلی GHRM و پیش بینی FEP
+## Main GHRM analysis and FEP prediction
 
-در مدل پایه، GRS، GTD، GPA و GCM پیش بین هستند. در تحلیل GEE+، متغیر GEE نیز اضافه شده است. علاوه بر آزمون ۲۰ درصدی، برای بررسی محدودیت حجم ۳۲۰ رکورد، عملکرد مدل نهایی در اعتبارسنجی متقاطع تکرارشونده ۵×۵ نیز ثبت شده است.
+The Base model uses GRS, GTD, GPA, and GCM. The GEE+ analysis adds GEE. Alongside the 20% holdout, each selected pipeline is evaluated with repeated 5x5 cross-validation to disclose the uncertainty associated with the 320-record sample.
 
 {markdown_table(regression[['Variant', 'Model', 'R2', 'RMSE', 'MAE', 'R2_CI_Lower', 'R2_CI_Upper', 'Repeated_CV_R2_Mean', 'Repeated_CV_R2_Std']])}
 
-بهترین مدل پایه از نظر RMSE، **{best_base['Model']}** با R²={_format(best_base['R2'])} و RMSE={_format(best_base['RMSE'])} است. در حالت GEE+، بهترین مدل **{best_plus['Model']}** با R²={_format(best_plus['R2'])} و RMSE={_format(best_plus['RMSE'])} است. این نتایج پیش بینانه هستند و رابطه علّی یا میانجی گری را اثبات نمی کنند.
+The lowest-RMSE Base model is **{best_base['Model']}**, with R²={_format(best_base['R2'])} and RMSE={_format(best_base['RMSE'])}. The lowest-RMSE GEE+ model is **{best_plus['Model']}**, with R²={_format(best_plus['R2'])} and RMSE={_format(best_plus['RMSE'])}. These are predictive results and do not establish causality or mediation.
 
-### کنترل همگرایی حل گرها
+### Solver convergence checks
 
-تعداد هشدارهای همگرایی پنهان نشده و برای مرحله تنظیم و ۲۵ Fold اعتبارسنجی تکرارشونده ثبت شده است.
+Convergence warnings are counted for tuning and all 25 repeated-CV folds rather than being suppressed.
 
 {markdown_table(regression[['Variant', 'Model', 'Tuning_Convergence_Warnings', 'Repeated_CV_Convergence_Warnings']])}
 
-### تغییر عملکرد پس از افزودن GEE
+### Change after adding GEE
 
 {markdown_table(comparisons)}
 
-![مقایسه RMSE](figures/ghrm_regression_rmse.png)
+![RMSE comparison](figures/ghrm_regression_rmse.png)
 
-![اهمیت متغیرهای GHRM](figures/ghrm_feature_importance.png)
+![GHRM feature importance](figures/ghrm_feature_importance.png)
 
-![واقعی در برابر پیش بینی](figures/ghrm_actual_vs_predicted.png)
+![Actual versus predicted FEP](figures/ghrm_actual_vs_predicted.png)
 
-خروجی کامل هر مدل شامل پارامترها، تمام نتایج تنظیم، پیش بینی های آزمون، اهمیت متغیرها و برای مدل های درختی ساختار گره ها و شکل چند سطح اول است. در جنگل تصادفی صدها درخت وجود دارد؛ بنابراین مشخصات تمام درخت ها در `forest_tree_summary.csv` و ساختار کامل درخت اول به عنوان نمونه در `representative_tree_nodes.csv` ذخیره شده است.
+Each model directory contains selected parameters, full tuning results, held-out predictions, feature importance, and—where applicable—tree-node exports and a readable top-level plot. Random forests contain hundreds of trees, so `forest_tree_summary.csv` records every tree's depth and leaf count while `representative_tree_nodes.csv` provides the complete structure of tree 0.
 
-## الگوهای پنهان حاصل از K-Means
+## Hidden patterns from K-Means
 
-K-Means برای هر دیتاست جداگانه اجرا شده است. متغیر هدف و شناسه ها در تشکیل خوشه وارد نشده اند. k از ۲ تا ۷ بررسی و مقدار دارای بیشترین Silhouette انتخاب شده است. وضعیت متغیر هدف فقط بعد از تشکیل خوشه برای توصیف الگو گزارش شده است.
+K-Means is run separately for every dataset. Targets and identifiers are excluded from cluster formation. Values of k from 2 through 7 are evaluated and the maximum-Silhouette solution is selected. Target outcomes are examined only after clustering for descriptive profiling.
 
 {_cluster_sections(tables)}
 
-## محدودیت های تفسیر
+## Interpretation limits
 
-1. سه دیتاست عمومی، GHRM را مستقیماً اندازه گیری نمی کنند و نتایج آنها فقط در حوزه عمومی تحلیل منابع انسانی تفسیر می شود.
-2. نمونه GHRM شامل ۳۲۰ رکورد است؛ بنابراین بازه های اطمینان و اعتبارسنجی تکرارشونده گزارش شده و تعمیم گسترده مجاز نیست.
-3. خوشه بندی ماهیت اکتشافی دارد و نام گذاری خوشه ها نتیجه علّی نیست.
-4. اهمیت متغیر نشان دهنده نقش پیش بینانه در مدل است، نه اثر علّی.
+1. The three public HR datasets do not directly measure GHRM; their results are limited to general HR analytics.
+2. GHRM contains 320 records. Confidence intervals and repeated CV disclose uncertainty but do not justify broad population-level generalization.
+3. Clustering is exploratory; cluster labels are not causal conclusions.
+4. Feature importance measures predictive contribution, not causal effect.
 
-## فایل های قابل بررسی
+## Audit files
 
-- [`run_log.txt`](run_log.txt): گزارش زمانی اجرای پایتون
-- [`run_manifest.json`](run_manifest.json): نسخه محیط، بذر و هش داده ها
-- [`data/column_dictionary.csv`](data/column_dictionary.csv): فهرست تمام فیلدها
-- [`tables`](tables): جدول های تجمیعی
-- [`classification`](classification): جزئیات چهار الگوریتم طبقه بندی
-- [`regression`](regression): جزئیات چهار الگوریتم رگرسیون در دو حالت
-- [`clustering`](clustering): معیار و اندازه خوشه ها؛ پروفایل تفصیلی GHRM
+- [`run_log.txt`](run_log.txt): timestamped Python execution log
+- [`run_manifest.json`](run_manifest.json): environment versions, seed, and data hashes
+- [`data/column_dictionary.csv`](data/column_dictionary.csv): public field dictionary
+- [`tables`](tables): consolidated result tables
+- [`classification`](classification): details for all four classifiers
+- [`regression`](regression): details for all four regressors in both variants
+- [`clustering`](clustering): cluster metrics and sizes, plus detailed GHRM profiles
 """
-    if "٫" in report:
-        raise ValueError("Use an ASCII full stop as decimal separator")
-    (RESULTS_DIR / "analysis_report_fa.md").write_text(report, encoding="utf-8")
+    (RESULTS_DIR / "analysis_report.md").write_text(report, encoding="utf-8")
 
 
 def write_results_readme():
-    text = """# خروجی اجرای نهایی
+    text = """# Final run outputs
 
-تمام فایل های این پوشه با اجرای `python run_all.py` از چهار CSV محلی ساخته شده اند. متن پایان نامه ورودی عددی برنامه نیست.
+Every file in this directory is generated from the four local CSV files by `python run_all.py`. Thesis text is not a numeric input to the pipeline.
 
-از [گزارش فارسی](analysis_report_fa.md) شروع کنید. جدول های تجمیعی در `tables/`، جزئیات هر مدل در پوشه های دیتاست، زمان اجرا در `run_log.txt` و نسخه محیط و هش داده در `run_manifest.json` است.
+Start with the [final execution report](analysis_report.md). Consolidated tables are in `tables/`, model details are grouped by dataset, execution timing is in `run_log.txt`, and environment versions plus data hashes are in `run_manifest.json`.
 
-فایل های خام داده در مخزن قرار ندارند. هویت دقیق SHA-256 آن ها در `data/dataset_inventory.csv` ثبت شده است.
+Raw data files are not committed. Their exact SHA-256 identities are recorded in `data/dataset_inventory.csv`.
 """
     (RESULTS_DIR / "README.md").write_text(text, encoding="utf-8")
 

@@ -151,11 +151,10 @@ class ReportingTests(unittest.TestCase):
         )
         self.assertEqual(int(select_kmeans_row(metrics)["k"]), 3)
 
-    def test_markdown_table_uses_persian_digits_and_ascii_decimal(self):
+    def test_markdown_table_uses_ascii_digits_and_decimal(self):
         table = markdown_table(pd.DataFrame({"label": ["A|B"], "value": [0.125]}))
         self.assertIn("A\\|B", table)
-        self.assertIn("۰.۱۲۵۰", table)
-        self.assertNotIn("٫", table)
+        self.assertIn("0.1250", table)
 
     def test_markdown_table_preserves_sha256_identity(self):
         digest = "a5c31e38bd7fafc9bc333884eb181b06b41b8e5e488e8f7ccb27199fb3be7659"
@@ -163,9 +162,9 @@ class ReportingTests(unittest.TestCase):
         self.assertIn(f"`{digest}`", table)
 
     def test_silhouette_interpretation_is_consistent(self):
-        self.assertIn("ضعیف", interpret_silhouette(0.1))
-        self.assertIn("متوسط", interpret_silhouette(0.4))
-        self.assertIn("روشن", interpret_silhouette(0.6))
+        self.assertIn("weak", interpret_silhouette(0.1))
+        self.assertIn("moderate", interpret_silhouette(0.4))
+        self.assertIn("clear", interpret_silhouette(0.6))
 
 
 if __name__ == "__main__":

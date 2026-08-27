@@ -1,24 +1,24 @@
-# اعتبارسنجی نتایج
+# Result validation
 
-دو سطح کنترل وجود دارد:
+The repository has two validation layers:
 
-1. `tests/test_pipeline.py` توابع محاسبه معیار، Bootstrap، McNemar، ساخت سازه GHRM، پیش‌پردازش، خوشه‌بندی و خروجی درخت را با داده کوچک آزمایشی کنترل می‌کند.
-2. `scripts/validate_results.py` در اجرای محلی خروجی را از فایل‌های پیش‌بینی بازحساب می‌کند. در GitHub عمومی، F1 و سایر معیارهای طبقه‌بندی از ماتریس درهم‌ریختگی و معیارهای رگرسیون از مجموع خطاهای ناشناس بازحساب می‌شوند.
+1. `tests/test_pipeline.py` tests metric calculations, bootstrap intervals, McNemar logic, GHRM construct creation, preprocessing, clustering, and tree exports on small synthetic data.
+2. `scripts/validate_results.py` recomputes outputs from held-out predictions during a local run. In the public repository, it recomputes classification metrics from confusion matrices and regression metrics from privacy-safe aggregate error sums.
 
-اجرای بدون فایل خام:
+Run without raw files:
 
 ```bash
 python scripts/validate_results.py
 ```
 
-این حالت برای CI مناسب است و سازگاری داخلی تمام خروجی‌های منتشرشده را بررسی می‌کند.
+This mode is used in CI and verifies the internal consistency of all published outputs.
 
-اجرای محلی همراه با کنترل چهار CSV:
+Run locally with the four CSV files:
 
 ```bash
 python scripts/validate_results.py --require-data
 ```
 
-این حالت علاوه بر موارد بالا، نام، تعداد ردیف و SHA-256 فایل‌های خام را با `data_manifest.json` تطبیق می‌دهد.
+This mode also checks filenames, row counts, and SHA-256 hashes against `data_manifest.json`.
 
-اعتبارسنج به هیچ جدول دستی فصل چهارم وابسته نیست. مرجع معیارها خود فایل پیش‌بینی نگه‌داشته‌شده است.
+The validator does not rely on a manually edited Chapter 4 table. Its numeric authority is the saved model evidence from the current pipeline.
