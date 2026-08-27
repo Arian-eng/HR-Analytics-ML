@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.stats import chi2
+from scipy.stats import binomtest, chi2
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -28,15 +28,21 @@ def mcnemar_pair(y_true, pred_a, pred_b):
     discordant = b01 + b10
 
     if discordant == 0:
-        statistic, p_value = 0.0, 1.0
+        statistic, p_value, method = 0.0, 1.0, "no discordant pairs"
+    elif discordant < 25:
+        statistic = float("nan")
+        p_value = binomtest(min(b01, b10), discordant, 0.5).pvalue
+        method = "exact binomial"
     else:
         statistic = (abs(b01 - b10) - 1) ** 2 / discordant
         p_value = chi2.sf(statistic, df=1)
+        method = "continuity-corrected chi-square"
     return {
         "b01": b01,
         "b10": b10,
         "statistic": float(statistic),
         "p_value": float(p_value),
+        "method": method,
     }
 
 

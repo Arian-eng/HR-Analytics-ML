@@ -1,13 +1,13 @@
-﻿Dataset,Model,TN,FP,FN,TP,Test_N
-IBM HR Analytics,Random Forest,240,7,41,6,294
-IBM HR Analytics,Decision Tree,209,38,29,18,294
-IBM HR Analytics,LinearSVC,239,8,32,15,294
-IBM HR Analytics,MLPClassifier,240,7,30,17,294
-Job Change,Random Forest,2574,303,555,400,3832
-Job Change,Decision Tree,2554,323,499,456,3832
-Job Change,LinearSVC,2623,254,595,360,3832
-Job Change,MLPClassifier,2553,324,500,455,3832
-Employee Promotion,Random Forest,9964,64,673,261,10962
-Employee Promotion,Decision Tree,9926,102,585,349,10962
-Employee Promotion,LinearSVC,10017,11,721,213,10962
-Employee Promotion,MLPClassifier,10004,24,607,327,10962
+﻿Dataset,Model,TN,FP,FN,TP
+ibm,Random Forest,238,9,40,7
+ibm,Decision Tree,209,38,25,22
+ibm,Linear SVM,191,56,17,30
+ibm,MLP,239,8,28,19
+job_change,Random Forest,2206,671,241,714
+job_change,Decision Tree,2158,719,249,706
+job_change,Linear SVM,2147,730,252,703
+job_change,MLP,2477,400,429,526
+promotion,Random Forest,9598,430,519,415
+promotion,Decision Tree,7270,2758,106,828
+promotion,Linear SVM,7531,2497,151,783
+promotion,MLP,10019,9,615,319

@@ -1,189 +1,103 @@
-# HR Analytics ML
+# تحلیل منابع انسانی با یادگیری ماشین
 
-Reproducible machine-learning analysis for the master's thesis on Green HRM and HR analytics.
+این مخزن کد و خروجی‌های قابل بازتولید پایان‌نامه من را نگه می‌دارد. هدف اصلی، بررسی ابعاد مدیریت منابع انسانی سبز و پیش‌بینی عملکرد محیط‌زیستی شرکت (`FEP`) است. سه دیتاست عمومی منابع انسانی نیز جداگانه برای تحلیل ترک خدمت، تغییر شغل و ارتقای کارکنان استفاده شده‌اند.
 
-## Study design
+هیچ‌کدام از چهار دیتاست با دیگری ادغام نشده است. همچنین این مخزن داده‌ای از دیجی‌کالا ندارد.
 
-The thesis uses **four independent public datasets**. They are never merged and their row counts are not treated as one sample:
+## نقش دیتاست‌ها
 
-1. **IBM HR Analytics Employee Attrition & Performance** — target: `Attrition` — binary classification
-2. **HR Analytics: Job Change of Data Scientists** — target: `target` — binary classification
-3. **Employee Promotion Prediction** — target: `is_promoted` — binary classification
-4. **GHRM–Environmental Performance** (`HRM DATASETS(2).csv`) — target: continuous `FEP` — regression and exploratory clustering
+| دیتاست | تعداد رکورد | تعداد فیلد خام | کاربرد در پروژه |
+|---|---:|---:|---|
+| IBM HR Analytics | ۱٬۴۷۰ | ۳۵ | طبقه‌بندی ترک خدمت و خوشه‌بندی تکمیلی |
+| Job Change | ۱۹٬۱۵۸ | ۱۴ | طبقه‌بندی تمایل به تغییر شغل و خوشه‌بندی تکمیلی |
+| Employee Promotion | ۵۴٬۸۰۸ | ۱۴ | طبقه‌بندی ارتقا و خوشه‌بندی تکمیلی |
+| GHRM–Environmental Performance | ۳۲۰ | ۳۳ | تحلیل اصلی GHRM، پیش‌بینی `FEP` و کشف الگوهای سبز |
 
-The older UCI dataset is not part of the final pipeline.
+فقط دیتاست چهارم سازه‌های سبز را مستقیماً اندازه‌گیری می‌کند: استخدام و گزینش سبز (`GRS`)، آموزش و توسعه سبز (`GTD`)، ارزیابی عملکرد سبز (`GPA`)، جبران خدمات سبز (`GCM`)، توانمندسازی/مشارکت سبز (`GEE`) و عملکرد محیط‌زیستی شرکت (`FEP`). سه دیتاست دیگر شاهد مستقیم GHRM یا پایداری شرکت نیستند.
 
-## Final Chapter 3 algorithms
+در این چهار فایل، متغیر مستقلی با عنوان «بهره‌وری منابع انسانی» یا «پایداری کلی شرکت» وجود ندارد؛ به همین دلیل در خروجی جدید ادعایی برای اندازه‌گیری آن‌ها نشده است.
 
-### Exploratory clustering
-- `KMeans`
-- evaluated independently for **each of the four datasets** with `k=2...7`
-- Inertia / SSE
-- Silhouette Score
-- Davies-Bouldin Index
-- for datasets above 5,000 rows, Silhouette is computed on a deterministic 5,000-row sample to avoid quadratic memory growth
-- the target and identifier fields are excluded; for GHRM, `FEP` is excluded from cluster formation
-- clustering uses standardized numeric features only, matching the final thesis analysis
-- published cluster numbers, labels, sizes, and profiles follow thesis table 4-10; they remain exploratory and require external validation
+جزئیات منطق انتخاب داده‌ها و فیلدها در [دامنه و داده‌ها](docs/data_and_scope.md) آمده است.
 
-### Binary classification
-For IBM HR, Job Change and Employee Promotion:
-- `RandomForestClassifier`
-- `DecisionTreeClassifier`
-- `LinearSVC`
-- `MLPClassifier`
+## روش اجرا
 
-### GHRM regression
-For continuous `FEP`:
-- `RandomForestRegressor`
-- `DecisionTreeRegressor`
-- `LinearSVR`
-- `MLPRegressor`
+- تقسیم ثابت ۸۰/۲۰ با بذر `42`
+- یادگیری تمام مراحل پیش‌پردازش فقط از داده آموزش
+- تنظیم فراپارامترها با اعتبارسنجی متقاطع روی بخش آموزش
+- چهار مدل طبقه‌بندی: Random Forest، Decision Tree، Linear SVM و MLP
+- چهار مدل رگرسیون: Random Forest، Decision Tree، LinearSVR و MLPRegressor
+- K-Means مستقل برای هر دیتاست با بررسی `k=2..7`
+- بازه اطمینان Bootstrap برای معیارهای آزمون
+- اعتبارسنجی متقاطع تکرارشونده ۵×۵ برای نمونه ۳۲۰تایی GHRM
+- آزمون McNemar برای مقایسه جفتی طبقه‌بندها روی همان رکوردهای آزمون
 
-The base GHRM regression uses `GRS`, `GTD`, `GPA` and `GCM`. A supplementary run adds `GEE` to assess its predictive contribution. This is predictive analysis, not a test of mediation or causality.
+شرح مرحله‌به‌مرحله در [روش‌شناسی اجرا](docs/methodology.md) ثبت شده است.
 
-## Experimental design
+## اجرای مجدد
 
-### Classification
-- 80% train / 20% test
-- stratified split
-- `random_state=42`
-- 3-fold `StratifiedKFold` cross-validation on training data only
-- `GridSearchCV` for Random Forest, Decision Tree and Linear SVM
-- `RandomizedSearchCV` for MLP
-- F1 score of the positive class is used for hyperparameter selection
-- preprocessing is fitted inside the model pipeline using training data only
-- identifier columns are removed before modelling
-- categorical variables use `OneHotEncoder(handle_unknown="ignore")`
-- missing values are imputed from training data only
-- numeric features are standardized for Linear SVM and MLP
-
-### GHRM regression
-- 80% train / 20% test without stratification
-- 3-fold `KFold` cross-validation on training data only
-- preprocessing remains inside the model pipeline
-- RMSE is the tuning objective
-- final test metrics: `R²`, `RMSE`, `MAE`
-
-## Classification evaluation
-
-For every classifier and dataset the held-out test set is used once for:
-
-- Accuracy
-- Precision
-- Recall
-- F1-Score
-- Confusion Matrix
-
-McNemar's test compares the same held-out predictions for:
-- Random Forest vs Decision Tree
-- Random Forest vs Linear SVM
-- Random Forest vs MLP
-
-No model is assumed to be best before evaluation.
-
-## Outputs
-
-`run_all.py` generates:
+چهار فایل زیر را در پوشه `data/` قرار دهید:
 
 ```text
-outputs/
-├── ibm/
-├── job_change/
-├── promotion/
-├── ghrm/
-├── model_metrics.csv
-└── model_metrics.xlsx
+WA_Fn-UseC_-HR-Employee-Attrition (3).csv
+aug_train.csv
+train_LZdllcl.csv
+HRM DATASETS.csv
 ```
 
-The dataset-specific folders contain label mappings, test predictions, confusion matrices, K-Means metrics, cluster sizes and McNemar comparisons. The GHRM folder also contains regression metrics, predictions and cluster profiles. `figures/` contains the K-Means diagnostic plots.
-
-After the live run, the publication step restores the tracked thesis results from one versioned reference. Live estimates remain under ignored `outputs/` and cannot silently replace the final Chapter 4 values:
-
-```text
-results/
-├── thesis_chapter4_reference.json  # sole numeric source of truth
-├── chapter4_results.md             # all 19 Chapter 4 tables
-├── tables/                         # 19 source tables plus canonical analysis CSVs
-└── figures/                        # figures generated only from thesis values
-```
-
-Start with **[the final Chapter 4 results](results/chapter4_results.md)**.
-
-## Project structure
-
-```text
-HR-Analytics-ML/
-├── data/                  # Local datasets; not committed by default
-├── src/
-│   ├── preprocessing.py
-│   ├── clustering.py
-│   ├── classification.py
-│   ├── evaluation.py
-│   ├── green_hrm_analysis.py
-│   └── reporting.py
-├── outputs/               # Generated results
-├── figures/               # Generated figures
-├── run_all.py
-├── scripts/validate_published_results.py
-├── requirements.txt
-├── CITATION.cff
-├── LICENSE
-├── .gitignore
-└── README.md
-```
-
-## Reproducibility
-
-Place these four current files in `data/`:
-
-```text
-WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv
-aug_train(2).csv
-train_LZdllcl(2).csv
-HRM DATASETS(2).csv
-```
-
-The loader also accepts the previously documented aliases `aug_train(5).csv`, `train_LZdllcl.csv`, `HRM DATASETS(3).csv`, and `HRM DATASETS.csv`.
-
-Use Python 3.11 or 3.12. The full thesis run was validated with Python 3.12,
-and CI checks both versions. Dependencies are pinned to the validated
-environment. Then install and run:
+سپس:
 
 ```bash
-python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python run_all.py
-python scripts/sync_thesis_chapter4.py
-python scripts/validate_published_results.py --require-data
+python scripts/validate_results.py --require-data
 ```
 
-The CI checks do not require raw datasets. Run them locally with:
+اجرای کامل در سیستم مرجع حدود ۸ دقیقه زمان برد. `run_all.py` پوشه `results/` را از نو می‌سازد تا خروجی‌های قدیمی با نتایج جدید مخلوط نشوند.
+
+## خروجی‌ها
+
+نقطه شروع، [گزارش فارسی اجرای نهایی](results/analysis_report_fa.md) است. فایل‌های اصلی شامل موارد زیر است:
+
+برای مرور مرحله‌ای جدول‌ها و الگوی سبز می‌توان [Notebook اجراشده](notebooks/analysis_walkthrough.ipynb) را نیز باز کرد.
+
+| خروجی | محل |
+|---|---|
+| تعداد رکورد، فیلد، داده گمشده و SHA-256 | `results/data/` |
+| معیارها، بازه اطمینان و پارامتر منتخب | `results/tables/` |
+| مجموع‌های ناشناس لازم برای بازحساب معیارها | ماتریس‌ها و `regression_validation_aggregates.csv` |
+| ماتریس‌های درهم‌ریختگی | پوشه هر مدل و `results/figures/` |
+| تمام گره‌ها و قواعد درخت تصمیم | پوشه `decision_tree` هر تحلیل |
+| تعداد، عمق و برگ‌های تمام درخت‌های جنگل | فایل `forest_tree_summary.csv` هر Random Forest |
+| ساختار کامل یک درخت نماینده از جنگل | `representative_tree_nodes.csv` و شکل متناظر |
+| ضرایب SVM/LinearSVR | `coefficients.csv` |
+| معماری، تعداد تکرار و Loss شبکه عصبی | `model_diagnostics.json` |
+| معیار انتخاب k، اعضا و ویژگی خوشه‌ها | `results/clustering/` |
+| گزارش زمان اجرا و نسخه کتابخانه‌ها | `results/run_log.txt` و `results/run_manifest.json` |
+
+راهنمای دقیق فایل‌ها در [راهنمای خروجی‌ها](docs/output_guide.md) قرار دارد.
+
+## نتیجه اصلی GHRM
+
+رگرسیون پایه از `GRS`، `GTD`، `GPA` و `GCM` برای پیش‌بینی `FEP` استفاده می‌کند. تحلیل دوم `GEE` را نیز اضافه می‌کند. اختلاف دو حالت با Bootstrap جفتی گزارش شده است؛ بنابراین می‌توان دید افزودن `GEE` در همین نمونه چقدر عملکرد پیش‌بینی را تغییر داده است.
+
+در خوشه‌بندی GHRM، متغیر `FEP` وارد تشکیل خوشه‌ها نشده و فقط پس از خوشه‌بندی برای توصیف آن‌ها استفاده شده است. این کار جلوی نشت متغیر هدف را می‌گیرد و نشان می‌دهد ترکیب پنج سازه سبز چه الگوهایی دارد.
+
+## مرز تفسیر
+
+این تحلیل پیش‌بینانه و اکتشافی است. اهمیت متغیر، تفاوت خوشه‌ها یا بهتر بودن یک مدل، رابطه علّی و میانجی‌گری را اثبات نمی‌کند. نمونه GHRM نیز ۳۲۰ رکورد دارد؛ به همین دلیل نتایج آن با بازه اطمینان و اعتبارسنجی تکرارشونده گزارش شده و نباید بدون داده مستقل به همه شرکت‌ها تعمیم داده شود.
+
+## کنترل صحت
 
 ```bash
-python -m compileall -q run_all.py src tests
+python -m compileall -q run_all.py src tests scripts
 python -m unittest discover -s tests -v
-python scripts/validate_published_results.py
+python scripts/validate_results.py
 ```
 
-The validator checks every published cell against the final thesis reference and checks any locally available raw file against
-[`validation/data_manifest.json`](validation/data_manifest.json). Raw datasets are
-intentionally not committed unless their redistribution licenses permit it.
+اعتبارسنج در اجرای محلی معیارها را از فایل پیش‌بینی دوباره محاسبه می‌کند و در نسخه عمومی همان کنترل را با ماتریس‌ها و مجموع خطاهای ناشناس انجام می‌دهد. همچنین جمع اندازه خوشه‌ها و وجود خروجی‌های تفسیری هر الگوریتم کنترل می‌شود. اعداد پایان‌نامه به کد تزریق نشده‌اند.
 
-## Repository governance
+فایل‌های پیش‌بینی، Split و عضویت خوشه در سطح ردیف هنگام اجرای محلی ساخته می‌شوند، اما به دلیل وجود شناسه‌ها و نتایج فردی کارکنان در مخزن عمومی Commit نمی‌شوند. اعتبارسنج عمومی معیارهای طبقه‌بندی را از ماتریس درهم‌ریختگی و معیارهای رگرسیون را از مجموع خطاهای ناشناس بازحساب می‌کند.
 
-Pull requests run compilation, unit tests, dependency checks, and internal
-validation of all published Chapter 4 tables. `CODEOWNERS` assigns repository
-review to `@Arian-eng`. Enable a GitHub branch-protection rule for `main` and
-require both `validate` matrix checks before merging to enforce this policy
-server-side.
+## مجوز
 
-## GHRM interpretation
-
-The three general HR datasets do not directly measure Green HRM or environmental behaviour. Their HR variables are therefore interpreted as theoretically related proxy/predictive features only. The fourth GHRM dataset contains direct GHRM dimensions (`GRS`, `GTD`, `GPA`, `GCM`, `GEE`) and continuous environmental performance (`FEP`). The machine-learning analysis does not establish causal or mediation effects.
-
-## License and citation
-
-Code and thesis materials are distributed under the repository's
-[proprietary license](LICENSE); third-party datasets retain their own terms.
-Citation metadata is available in [`CITATION.cff`](CITATION.cff).
+کد و خروجی‌های این پروژه تحت شرایط فایل [LICENSE](LICENSE) هستند. فایل‌های خام داده متعلق به منابع اصلی خودشان هستند و در مخزن منتشر نشده‌اند.

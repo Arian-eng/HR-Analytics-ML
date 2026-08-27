@@ -1,0 +1,5 @@
+﻿Dataset,Model,Feature,Importance_Mean,Importance_Std
+ghrm,Base Decision Tree Regressor,GRS,0.21026271223850354,0.028670599517054984
+ghrm,Base Decision Tree Regressor,GCM,0.0594631364912217,0.023317644079619167
+ghrm,Base Decision Tree Regressor,GPA,0.005741305412421194,0.018265701971441128
+ghrm,Base Decision Tree Regressor,GTD,-0.0194755363906035,0.004055120408555623

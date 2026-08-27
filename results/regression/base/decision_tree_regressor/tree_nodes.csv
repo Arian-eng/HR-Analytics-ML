@@ -1,0 +1,14 @@
+﻿Dataset,Model,Tree_Index,Node,Left_Child,Right_Child,Feature,Threshold,Impurity,Samples,Weighted_Samples,Is_Leaf,Value_0
+ghrm,Decision Tree Regressor,,0,1,6,numeric__GRS,-1.4686678647994995,0.5514793395996094,256,256.0,False,3.556640625
+ghrm,Decision Tree Regressor,,1,2,3,numeric__GCM,-2.264734983444214,0.7641776937618143,23,23.0,False,2.3369565217391304
+ghrm,Decision Tree Regressor,,2,-1,-1,leaf,,0.27951388888888884,6,6.0,True,1.5416666666666667
+ghrm,Decision Tree Regressor,,3,4,5,numeric__GTD,-1.0106538534164429,0.6332179930795849,17,17.0,False,2.6176470588235294
+ghrm,Decision Tree Regressor,,4,-1,-1,leaf,,0.2400000000000002,10,10.0,True,2.4
+ghrm,Decision Tree Regressor,,5,-1,-1,leaf,,1.030612244897961,7,7.0,True,2.9285714285714284
+ghrm,Decision Tree Regressor,,6,7,10,numeric__GRS,0.22875413671135902,0.36914015730626737,233,233.0,False,3.677038626609442
+ghrm,Decision Tree Regressor,,7,8,9,numeric__GCM,-0.4046564847230911,0.30096327042055115,113,113.0,False,3.3827433628318584
+ghrm,Decision Tree Regressor,,8,-1,-1,leaf,,0.2753515413737162,43,43.0,True,3.0813953488372094
+ghrm,Decision Tree Regressor,,9,-1,-1,leaf,,0.2266454081632645,70,70.0,True,3.567857142857143
+ghrm,Decision Tree Regressor,,10,11,12,numeric__GPA,1.1183066368103027,0.27498263888888985,120,120.0,False,3.9541666666666666
+ghrm,Decision Tree Regressor,,11,-1,-1,leaf,,0.21824848549261233,97,97.0,True,3.827319587628866
+ghrm,Decision Tree Regressor,,12,-1,-1,leaf,,0.16020793950850987,23,23.0,True,4.489130434782608

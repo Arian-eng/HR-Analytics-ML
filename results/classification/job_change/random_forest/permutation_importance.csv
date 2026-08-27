@@ -1,0 +1,13 @@
+﻿Dataset,Model,Feature,Importance_Mean,Importance_Std
+job_change,Random Forest,city,0.09167930778067353,0.007142405380034128
+job_change,Random Forest,city_development_index,0.08794246928569296,0.0060293830034906706
+job_change,Random Forest,company_size,0.08515341881121323,0.007805223007340614
+job_change,Random Forest,education_level,0.02307128529918725,0.004834678994922466
+job_change,Random Forest,relevent_experience,0.01331642318334576,0.0015795813133762946
+job_change,Random Forest,company_type,0.01103482520475647,0.004284205910071972
+job_change,Random Forest,enrolled_university,0.010130384241954116,0.0036255312038706387
+job_change,Random Forest,experience,0.007351986207599359,0.0013144400033264017
+job_change,Random Forest,last_new_job,0.0054871079076270314,0.0024164676695682666
+job_change,Random Forest,training_hours,0.003342730725417198,0.0016861908763786077
+job_change,Random Forest,gender,0.00041450957115403143,0.0007779275262248391
+job_change,Random Forest,major_discipline,-0.0009876016431232815,0.00013805749757619804

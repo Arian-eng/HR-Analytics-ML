@@ -1,5 +1,0 @@
-﻿مدل,Accuracy,Precision,Recall,F1-Score
-Random Forest,0.837,0.462,0.128,0.200
-Decision Tree,0.772,0.321,0.383,0.350
-LinearSVC,0.864,0.652,0.319,0.429
-MLPClassifier,0.874,0.708,0.362,0.479
