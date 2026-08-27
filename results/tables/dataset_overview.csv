@@ -1,5 +1,0 @@
-﻿Dataset,Rows,Train_N,Test_N,Target,Task,Positive_Count,Positive_Share_Percent
-IBM HR Analytics,1470,1176,294,Attrition,Binary classification,237,16.12
-Job Change,19158,15326,3832,target,Binary classification,4777,24.93
-Employee Promotion,54808,43846,10962,is_promoted,Binary classification,4668,8.52
-GHRM,320,256,64,FEP,Regression,,

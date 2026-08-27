@@ -1,6 +1,10 @@
+"""Independent, exploratory K-Means analysis for each dataset."""
+
+from __future__ import annotations
+
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.impute import SimpleImputer
@@ -8,123 +12,241 @@ from sklearn.metrics import davies_bouldin_score, silhouette_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-SILHOUETTE_SAMPLE_SIZE = 5000
-THESIS_SELECTED_K = {
-    "ibm": 2,
-    "job_change": 3,
-    "promotion": 5,
-    "ghrm": 2,
-}
-THESIS_CLUSTER_ORDER = {
-    "ibm": [1, 0],
-    "job_change": [0, 1, 2],
-    "promotion": [0, 3, 2, 1, 4],
-    "ghrm": [0, 1],
-}
+from src.config import RANDOM_STATE, SILHOUETTE_SAMPLE_SIZE
 
 
-def _matrix(df, drop_cols):
-    X = df.drop(columns=drop_cols, errors="ignore").copy()
-    X = X.select_dtypes(include="number")
-    if X.shape[1] == 0:
-        raise ValueError("K-Means requires at least one numeric non-target feature")
-    return Pipeline(
+def numeric_matrix(frame, drop_columns):
+    features = frame.drop(columns=drop_columns, errors="ignore")
+    features = features.select_dtypes(include="number").copy()
+    constant = [
+        column
+        for column in features.columns
+        if features[column].nunique(dropna=False) <= 1
+    ]
+    features = features.drop(columns=constant)
+    if features.shape[1] == 0:
+        raise ValueError("K-Means needs at least one numeric non-target feature")
+    transformer = Pipeline(
         [
             ("impute", SimpleImputer(strategy="median")),
             ("scale", StandardScaler()),
         ]
-    ).fit_transform(X)
-
-
-def run_kmeans(
-    df, target, ids, out_dir, figure_dir, name, extra_drop=None
-):
-    drop_columns = list(ids) + [target] + (extra_drop or [])
-    matrix = _matrix(df, drop_columns)
-    if matrix.shape[0] <= 7:
-        raise ValueError("K-Means k=2..7 requires at least eight rows")
-
-    output_path = Path(out_dir)
-    figure_path = Path(figure_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
-    figure_path.mkdir(parents=True, exist_ok=True)
-    dense_matrix = (
-        matrix.toarray() if hasattr(matrix, "toarray") else matrix
     )
+    matrix = transformer.fit_transform(features)
+    return features, matrix
+
+
+def _profile_numeric(frame, labels, target, dataset):
+    data = frame.copy()
+    data["Cluster"] = labels
+    numeric = data.select_dtypes(include="number").columns.tolist()
+    rows = []
+    for cluster, group in data.groupby("Cluster", sort=True):
+        for column in numeric:
+            if column == "Cluster":
+                continue
+            rows.append(
+                {
+                    "Dataset": dataset,
+                    "Cluster": int(cluster),
+                    "Feature": column,
+                    "Mean": float(group[column].mean()),
+                    "Median": float(group[column].median()),
+                    "Std": float(group[column].std()),
+                    "Is_Target": column == target,
+                }
+            )
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "Dataset",
+            "Cluster",
+            "Feature",
+            "Mean",
+            "Median",
+            "Std",
+            "Is_Target",
+        ],
+    )
+
+
+def _profile_categorical(frame, labels, target, dataset):
+    data = frame.copy()
+    data["Cluster"] = labels
+    categorical = data.select_dtypes(include=["object", "category", "bool"]).columns
+    rows = []
+    for cluster, group in data.groupby("Cluster", sort=True):
+        for column in categorical:
+            counts = group[column].fillna("<missing>").astype(str).value_counts()
+            if counts.empty:
+                continue
+            rows.append(
+                {
+                    "Dataset": dataset,
+                    "Cluster": int(cluster),
+                    "Feature": column,
+                    "Most_Common_Value": counts.index[0],
+                    "Count": int(counts.iloc[0]),
+                    "Share": float(counts.iloc[0] / len(group)),
+                    "Is_Target": column == target,
+                }
+            )
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "Dataset",
+            "Cluster",
+            "Feature",
+            "Most_Common_Value",
+            "Count",
+            "Share",
+            "Is_Target",
+        ],
+    )
+
+
+def _target_distribution(frame, labels, target, dataset):
+    data = pd.DataFrame({"Cluster": labels, "Target": frame[target].to_numpy()})
+    rows = []
+    if pd.api.types.is_numeric_dtype(data["Target"]):
+        for cluster, group in data.groupby("Cluster", sort=True):
+            rows.append(
+                {
+                    "Dataset": dataset,
+                    "Cluster": int(cluster),
+                    "Target": target,
+                    "Target_Value": "mean",
+                    "Count": len(group),
+                    "Share_or_Mean": float(group["Target"].mean()),
+                }
+            )
+    else:
+        for (cluster, value), count in (
+            data.groupby(["Cluster", "Target"], dropna=False).size().items()
+        ):
+            size = int((data["Cluster"] == cluster).sum())
+            rows.append(
+                {
+                    "Dataset": dataset,
+                    "Cluster": int(cluster),
+                    "Target": target,
+                    "Target_Value": str(value),
+                    "Count": int(count),
+                    "Share_or_Mean": float(count / size),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def _distinguishing_features(features, labels, dataset):
+    imputed = features.copy()
+    for column in imputed.columns:
+        imputed[column] = imputed[column].fillna(imputed[column].median())
+    overall_mean = imputed.mean()
+    overall_std = imputed.std(ddof=0).replace(0, np.nan)
+    rows = []
+    labelled = imputed.assign(Cluster=labels)
+    for cluster, group in labelled.groupby("Cluster", sort=True):
+        z_difference = ((group.drop(columns="Cluster").mean() - overall_mean) / overall_std)
+        for feature, value in z_difference.abs().nlargest(8).items():
+            signed = float(z_difference[feature])
+            rows.append(
+                {
+                    "Dataset": dataset,
+                    "Cluster": int(cluster),
+                    "Feature": feature,
+                    "Cluster_Mean": float(group[feature].mean()),
+                    "Overall_Mean": float(overall_mean[feature]),
+                    "Standardized_Difference": signed,
+                    "Direction": "higher" if signed > 0 else "lower",
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def run_kmeans(frame, target, ids, out_dir, dataset, extra_drop=None):
+    """Evaluate k=2..7, select maximum Silhouette, and save profiles."""
+
+    output = Path(out_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    drop_columns = list(ids) + [target] + list(extra_drop or [])
+    numeric_features, matrix = numeric_matrix(frame, drop_columns)
 
     rows = []
     for k in range(2, 8):
         model = KMeans(
-            n_clusters=k, n_init=20, max_iter=300, random_state=42
+            n_clusters=k,
+            n_init=20,
+            max_iter=300,
+            random_state=RANDOM_STATE,
         ).fit(matrix)
         silhouette_kwargs = {}
-        if matrix.shape[0] > SILHOUETTE_SAMPLE_SIZE:
+        if len(frame) > SILHOUETTE_SAMPLE_SIZE:
             silhouette_kwargs = {
                 "sample_size": SILHOUETTE_SAMPLE_SIZE,
-                "random_state": 42,
+                "random_state": RANDOM_STATE,
             }
         rows.append(
             {
-                "Dataset": name,
+                "Dataset": dataset,
                 "k": k,
-                "Inertia_SSE": model.inertia_,
-                "Silhouette": silhouette_score(
-                    matrix, model.labels_, **silhouette_kwargs
+                "Numeric_Features": numeric_features.shape[1],
+                "Inertia_SSE": float(model.inertia_),
+                "Silhouette": float(
+                    silhouette_score(matrix, model.labels_, **silhouette_kwargs)
                 ),
-                "Davies_Bouldin": davies_bouldin_score(
-                    dense_matrix, model.labels_
+                "Davies_Bouldin": float(
+                    davies_bouldin_score(np.asarray(matrix), model.labels_)
                 ),
+                "Iterations": int(model.n_iter_),
+                "Silhouette_N": min(len(frame), SILHOUETTE_SAMPLE_SIZE),
             }
         )
 
     metrics = pd.DataFrame(rows)
-    metrics.to_csv(
-        output_path / "kmeans_metrics.csv",
-        index=False,
-        encoding="utf-8-sig",
-    )
-    plots = [
-        ("Inertia_SSE", "K-Means Elbow", "Inertia / SSE"),
-        ("Silhouette", "K-Means Silhouette", "Silhouette Score"),
-        ("Davies_Bouldin", "K-Means Davies-Bouldin", "Davies-Bouldin Index"),
-    ]
-    display_name = name.replace("_", " ").title()
-    for column, title, ylabel in plots:
-        figure, axis = plt.subplots()
-        axis.plot(metrics["k"], metrics[column], marker="o")
-        sample_note = ""
-        if column == "Silhouette" and matrix.shape[0] > SILHOUETTE_SAMPLE_SIZE:
-            sample_note = f" (sample n={SILHOUETTE_SAMPLE_SIZE:,})"
-        axis.set_title(f"{display_name} {title}{sample_note}")
-        axis.set_xlabel("k")
-        axis.set_ylabel(ylabel)
-        figure.tight_layout()
-        figure.savefig(
-            figure_path / f"{name}_{column}.png", dpi=180
-        )
-        plt.close(figure)
-
-    best_k = THESIS_SELECTED_K.get(
-        name, int(metrics.loc[metrics["Silhouette"].idxmax(), "k"])
-    )
+    metrics.to_csv(output / "kmeans_metrics.csv", index=False, encoding="utf-8-sig")
+    selected = metrics.loc[metrics["Silhouette"].idxmax()]
+    selected_k = int(selected["k"])
     final_model = KMeans(
-        n_clusters=best_k, n_init=10, max_iter=300, random_state=42
+        n_clusters=selected_k,
+        n_init=20,
+        max_iter=300,
+        random_state=RANDOM_STATE,
     ).fit(matrix)
-    labels = final_model.labels_.copy()
-    order = THESIS_CLUSTER_ORDER.get(name)
-    if order is not None:
-        remap = {raw_label: published_label for published_label, raw_label in enumerate(order)}
-        labels = pd.Series(labels).map(remap).to_numpy()
-    cluster_sizes = (
+    labels = final_model.labels_
+
+    sizes = (
         pd.Series(labels)
         .value_counts()
         .sort_index()
         .rename_axis("Cluster")
         .reset_index(name="Size")
     )
-    cluster_sizes.to_csv(
-        output_path / "cluster_sizes.csv",
+    sizes.insert(0, "Dataset", dataset)
+    sizes["Share"] = sizes["Size"] / len(frame)
+    sizes.to_csv(output / "cluster_sizes.csv", index=False, encoding="utf-8-sig")
+    profile_frame = frame.drop(
+        columns=list(ids) + list(extra_drop or []), errors="ignore"
+    )
+    _profile_numeric(profile_frame, labels, target, dataset).to_csv(
+        output / "cluster_profile_numeric.csv", index=False, encoding="utf-8-sig"
+    )
+    _profile_categorical(profile_frame, labels, target, dataset).to_csv(
+        output / "cluster_profile_categorical.csv",
         index=False,
         encoding="utf-8-sig",
     )
-    return metrics, best_k, labels
+    _target_distribution(frame, labels, target, dataset).to_csv(
+        output / "cluster_target_summary.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    _distinguishing_features(numeric_features, labels, dataset).to_csv(
+        output / "cluster_distinguishing_features.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    pd.DataFrame({"Row_Index": frame.index, "Cluster": labels}).to_csv(
+        output / "cluster_assignments.csv", index=False, encoding="utf-8-sig"
+    )
+    return metrics, selected_k, labels

@@ -1,0 +1,895 @@
+|--- num__KPIs_met >80% <= 0.50
+|   |--- num__avg_training_score <= 60.50
+|   |   |--- num__avg_training_score <= 57.50
+|   |   |   |--- num__avg_training_score <= 54.50
+|   |   |   |   |--- num__avg_training_score <= 53.50
+|   |   |   |   |   |--- class: 0
+|   |   |   |   |--- num__avg_training_score >  53.50
+|   |   |   |   |   |--- cat__region_region_7 <= 0.50
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- cat__region_region_7 >  0.50
+|   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |--- num__avg_training_score >  54.50
+|   |   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |   |--- cat__department_HR <= 0.50
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- cat__department_HR >  0.50
+|   |   |   |   |   |   |--- num__previous_year_rating <= 3.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__previous_year_rating >  3.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |   |--- num__avg_training_score <= 55.50
+|   |   |   |   |   |   |--- cat__region_region_2 <= 0.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- cat__region_region_2 >  0.50
+|   |   |   |   |   |   |   |--- num__length_of_service <= 2.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__length_of_service >  2.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- num__avg_training_score >  55.50
+|   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |--- num__age <= 26.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- num__age >  26.50
+|   |   |   |   |   |   |   |   |--- num__length_of_service <= 5.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__length_of_service >  5.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 7.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_sourcing <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_sourcing >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  7.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |--- num__length_of_service <= 5.50
+|   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__length_of_service >  5.50
+|   |   |   |   |   |   |   |   |--- num__age <= 38.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  38.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |--- num__avg_training_score >  57.50
+|   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |--- cat__department_HR <= 0.50
+|   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |   |--- cat__department_HR >  0.50
+|   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |--- num__avg_training_score <= 58.50
+|   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |--- num__age <= 31.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__age >  31.50
+|   |   |   |   |   |   |   |--- num__age <= 38.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__age >  38.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- num__avg_training_score >  58.50
+|   |   |   |   |   |--- num__length_of_service <= 8.50
+|   |   |   |   |   |   |--- num__age <= 29.50
+|   |   |   |   |   |   |   |--- num__length_of_service <= 3.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__length_of_service >  3.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__age >  29.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- num__length_of_service >  8.50
+|   |   |   |   |   |   |--- class: 1
+|   |--- num__avg_training_score >  60.50
+|   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |--- num__awards_won? <= 0.50
+|   |   |   |   |   |--- num__avg_training_score <= 87.50
+|   |   |   |   |   |   |--- cat__department_Operations <= 0.50
+|   |   |   |   |   |   |   |--- num__avg_training_score <= 79.50
+|   |   |   |   |   |   |   |   |--- cat__department_HR <= 0.50
+|   |   |   |   |   |   |   |   |   |--- cat__department_Finance <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Legal <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 73.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  73.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Legal >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 69.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  69.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__department_Finance >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 66.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_28 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_28 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  66.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 68.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  68.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__department_HR >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__avg_training_score >  79.50
+|   |   |   |   |   |   |   |   |--- cat__department_Procurement <= 0.50
+|   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 1.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_16 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_16 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 6.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  6.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  1.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 81.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  81.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__department_Procurement >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__department_Operations >  0.50
+|   |   |   |   |   |   |   |--- num__avg_training_score <= 67.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 65.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_23 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_4 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_4 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 63.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  63.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_23 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 36.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  36.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  65.50
+|   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_sourcing <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 32.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  32.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_sourcing >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- num__avg_training_score >  67.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 68.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 4.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  4.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  68.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 39.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  39.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- num__avg_training_score >  87.50
+|   |   |   |   |   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |   |   |   |   |--- cat__department_R&D <= 0.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 89.50
+|   |   |   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  89.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__department_R&D >  0.50
+|   |   |   |   |   |   |   |   |--- num__age <= 29.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 28.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__age >  28.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  29.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- cat__department_Analytics >  0.50
+|   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_25 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 90.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_23 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_23 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  90.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 30.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 4.00
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  4.00
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  30.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__region_region_25 >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |--- num__age <= 32.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 27.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 1.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  1.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__age >  27.50
+|   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  32.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |--- num__awards_won? >  0.50
+|   |   |   |   |   |--- num__avg_training_score <= 67.50
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- num__avg_training_score >  67.50
+|   |   |   |   |   |   |--- num__avg_training_score <= 85.50
+|   |   |   |   |   |   |   |--- cat__department_Technology <= 0.50
+|   |   |   |   |   |   |   |   |--- cat__department_Operations <= 0.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 69.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  69.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Finance <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 76.00
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  76.00
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Finance >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__department_Operations >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__department_Technology >  0.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 79.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  79.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 5.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  5.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__avg_training_score >  85.50
+|   |   |   |   |   |   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__department_Analytics >  0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |--- cat__region_region_16 <= 0.50
+|   |   |   |   |   |--- class: 1
+|   |   |   |   |--- cat__region_region_16 >  0.50
+|   |   |   |   |   |--- class: 1
+|   |   |--- num__previous_year_rating >  4.50
+|   |   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |   |--- num__avg_training_score <= 65.50
+|   |   |   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |   |   |--- cat__department_HR <= 0.50
+|   |   |   |   |   |   |   |--- cat__region_region_26 <= 0.50
+|   |   |   |   |   |   |   |   |--- num__age <= 29.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 4.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  4.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  29.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__region_region_26 >  0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__department_HR >  0.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- num__avg_training_score >  65.50
+|   |   |   |   |   |--- cat__department_R&D <= 0.50
+|   |   |   |   |   |   |--- cat__department_Procurement <= 0.50
+|   |   |   |   |   |   |   |--- cat__department_Technology <= 0.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 67.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 41.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 66.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  66.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__age >  41.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  67.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 14.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  14.00
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 49.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  49.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__department_Technology >  0.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 79.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  79.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 87.00
+|   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_referred <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 45.00
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  45.00
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_referred >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  87.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__department_Procurement >  0.50
+|   |   |   |   |   |   |   |--- num__avg_training_score <= 75.00
+|   |   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- num__avg_training_score >  75.00
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 78.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  78.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- cat__department_R&D >  0.50
+|   |   |   |   |   |   |--- cat__region_region_7 <= 0.50
+|   |   |   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |   |   |--- num__age <= 29.00
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__age >  29.00
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 5.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 33.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  33.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 83.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  83.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  5.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |   |   |--- cat__education_Master's & above <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__education_Master's & above >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__region_region_7 >  0.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |--- cat__department_Analytics >  0.50
+|   |   |   |   |--- num__awards_won? <= 0.50
+|   |   |   |   |   |--- num__age <= 36.50
+|   |   |   |   |   |   |--- cat__region_region_32 <= 0.50
+|   |   |   |   |   |   |   |--- num__avg_training_score <= 80.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- num__avg_training_score >  80.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_15 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_referred <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_11 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_13 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_13 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_11 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_referred >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__region_region_15 >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- cat__region_region_32 >  0.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- num__age >  36.50
+|   |   |   |   |   |   |--- num__avg_training_score <= 86.50
+|   |   |   |   |   |   |   |--- cat__region_region_4 <= 0.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__region_region_4 >  0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__avg_training_score >  86.50
+|   |   |   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |--- num__awards_won? >  0.50
+|   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |--- class: 1
+|--- num__KPIs_met >80% >  0.50
+|   |--- num__avg_training_score <= 88.50
+|   |   |--- num__previous_year_rating <= 1.50
+|   |   |   |--- num__length_of_service <= 9.50
+|   |   |   |   |--- num__avg_training_score <= 70.50
+|   |   |   |   |   |--- num__length_of_service <= 6.50
+|   |   |   |   |   |   |--- num__no_of_trainings <= 3.50
+|   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |--- num__age <= 24.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  24.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 55.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  55.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 30.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  30.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 37.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  37.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__no_of_trainings >  3.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- num__length_of_service >  6.50
+|   |   |   |   |   |   |--- num__age <= 39.50
+|   |   |   |   |   |   |   |--- num__avg_training_score <= 61.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_15 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 31.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  31.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__department_Operations <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__department_Operations >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_15 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- num__avg_training_score >  61.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__age >  39.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |--- num__avg_training_score >  70.50
+|   |   |   |   |   |--- cat__recruitment_channel_referred <= 0.50
+|   |   |   |   |   |   |--- cat__region_region_2 <= 0.50
+|   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 83.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 41.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__age >  41.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  83.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 33.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 29.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  29.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__age >  33.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |--- num__age <= 32.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 80.00
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Procurement <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Procurement >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  80.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  32.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_7 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_7 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__region_region_2 >  0.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- cat__recruitment_channel_referred >  0.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |--- num__length_of_service >  9.50
+|   |   |   |   |--- num__age <= 47.00
+|   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |--- cat__region_region_2 <= 0.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__region_region_2 >  0.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- num__age >  47.00
+|   |   |   |   |   |--- class: 0
+|   |   |--- num__previous_year_rating >  1.50
+|   |   |   |--- num__awards_won? <= 0.50
+|   |   |   |   |--- num__avg_training_score <= 66.50
+|   |   |   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |   |   |--- num__age <= 54.50
+|   |   |   |   |   |   |   |--- cat__region_region_22 <= 0.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_4 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 3.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 5.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_19 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_19 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  5.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 29.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  29.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  3.50
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 52.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  52.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__region_region_4 >  0.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 6.50
+|   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 60.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 55.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  55.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  60.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  6.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 15.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 37.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  37.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  15.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__region_region_22 >  0.50
+|   |   |   |   |   |   |   |   |--- num__age <= 26.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 60.50
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  60.50
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 3.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  3.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__age >  26.50
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 48.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  48.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 37.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  37.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 45.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  45.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__age >  54.50
+|   |   |   |   |   |   |   |--- cat__department_Legal <= 0.50
+|   |   |   |   |   |   |   |   |--- num__length_of_service <= 12.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_2 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_2 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__length_of_service >  12.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 16.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  16.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__department_Legal >  0.50
+|   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |   |   |--- num__avg_training_score <= 57.50
+|   |   |   |   |   |   |   |--- num__length_of_service <= 7.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_26 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_9 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_19 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 30.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  30.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_19 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_9 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__region_region_26 >  0.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 4.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  4.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 33.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  33.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- num__length_of_service >  7.50
+|   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_16 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 52.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_referred <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_referred >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  52.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_16 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 55.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 9.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_7 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_7 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  9.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 13.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  13.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__age >  55.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__avg_training_score >  57.50
+|   |   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |   |--- num__age <= 27.00
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  27.00
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- num__avg_training_score >  66.50
+|   |   |   |   |   |--- cat__region_region_29 <= 0.50
+|   |   |   |   |   |   |--- cat__department_Sales & Marketing <= 0.50
+|   |   |   |   |   |   |   |--- cat__department_Operations <= 0.50
+|   |   |   |   |   |   |   |   |--- cat__region_region_11 <= 0.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_2 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_33 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_33 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_Analytics >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 42.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  42.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_2 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 7.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__no_of_trainings >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  7.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 36.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  36.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__region_region_11 >  0.50
+|   |   |   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 82.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  82.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__department_Technology <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__department_Technology >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 3.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 29.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  29.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  3.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__department_Operations >  0.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 69.50
+|   |   |   |   |   |   |   |   |   |--- num__previous_year_rating <= 4.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 33.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  33.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__previous_year_rating >  4.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  69.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- cat__department_Sales & Marketing >  0.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- cat__region_region_29 >  0.50
+|   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |   |   |   |   |   |--- cat__department_Technology <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__department_Technology >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |--- cat__department_Analytics >  0.50
+|   |   |   |   |   |   |   |   |--- cat__gender_m <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__gender_m >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |--- num__awards_won? >  0.50
+|   |   |   |   |--- cat__department_Legal <= 0.50
+|   |   |   |   |   |--- cat__region_region_20 <= 0.50
+|   |   |   |   |   |   |--- num__previous_year_rating <= 2.50
+|   |   |   |   |   |   |   |--- num__length_of_service <= 4.50
+|   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other <= 0.50
+|   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- cat__recruitment_channel_other >  0.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__length_of_service >  4.50
+|   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__previous_year_rating >  2.50
+|   |   |   |   |   |   |   |--- num__avg_training_score <= 83.50
+|   |   |   |   |   |   |   |   |--- num__avg_training_score <= 48.50
+|   |   |   |   |   |   |   |   |   |--- cat__gender_f <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 28.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  28.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age <= 39.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__age >  39.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__gender_f >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |--- num__avg_training_score >  48.50
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_27 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_16 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_4 <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- cat__region_region_4 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__region_region_16 >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score <= 72.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |   |--- num__avg_training_score >  72.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- cat__region_region_27 >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__avg_training_score >  83.50
+|   |   |   |   |   |   |   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 41.00
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_R&D <= 0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- cat__department_R&D >  0.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__age >  41.00
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__department_Analytics >  0.50
+|   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_sourcing <= 0.50
+|   |   |   |   |   |   |   |   |   |   |--- num__age <= 29.00
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__age >  29.00
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |--- cat__recruitment_channel_sourcing >  0.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- cat__region_region_20 >  0.50
+|   |   |   |   |   |   |--- num__previous_year_rating <= 3.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- num__previous_year_rating >  3.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |--- cat__department_Legal >  0.50
+|   |   |   |   |   |--- num__age <= 33.00
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- num__age >  33.00
+|   |   |   |   |   |   |--- class: 0
+|   |--- num__avg_training_score >  88.50
+|   |   |--- cat__department_Analytics <= 0.50
+|   |   |   |--- cat__department_R&D <= 0.50
+|   |   |   |   |--- class: 1
+|   |   |   |--- cat__department_R&D >  0.50
+|   |   |   |   |--- num__length_of_service <= 6.50
+|   |   |   |   |   |--- num__avg_training_score <= 91.50
+|   |   |   |   |   |   |--- num__age <= 33.50
+|   |   |   |   |   |   |   |--- num__length_of_service <= 3.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__length_of_service >  3.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__age >  33.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- num__avg_training_score >  91.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- num__length_of_service >  6.50
+|   |   |   |   |   |--- class: 0
+|   |   |--- cat__department_Analytics >  0.50
+|   |   |   |--- num__avg_training_score <= 90.50
+|   |   |   |   |--- num__length_of_service <= 1.50
+|   |   |   |   |   |--- class: 0
+|   |   |   |   |--- num__length_of_service >  1.50
+|   |   |   |   |   |--- cat__region_region_29 <= 0.50
+|   |   |   |   |   |   |--- cat__region_region_32 <= 0.50
+|   |   |   |   |   |   |   |--- cat__gender_m <= 0.50
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- cat__gender_m >  0.50
+|   |   |   |   |   |   |   |   |--- cat__education_Bachelor's <= 0.50
+|   |   |   |   |   |   |   |   |   |--- num__no_of_trainings <= 1.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 5.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  5.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__no_of_trainings >  1.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- cat__education_Bachelor's >  0.50
+|   |   |   |   |   |   |   |   |   |--- num__age <= 33.50
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  2.50
+|   |   |   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |   |   |   |   |--- num__length_of_service >  4.50
+|   |   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__age >  33.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |   |--- cat__region_region_32 >  0.50
+|   |   |   |   |   |   |   |--- class: 0
+|   |   |   |   |   |--- cat__region_region_29 >  0.50
+|   |   |   |   |   |   |--- class: 0
+|   |   |   |--- num__avg_training_score >  90.50
+|   |   |   |   |--- num__avg_training_score <= 94.50
+|   |   |   |   |   |--- num__awards_won? <= 0.50
+|   |   |   |   |   |   |--- num__length_of_service <= 6.50
+|   |   |   |   |   |   |   |--- num__age <= 34.00
+|   |   |   |   |   |   |   |   |--- num__age <= 28.50
+|   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |--- num__age >  28.50
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service <= 2.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |   |   |--- num__length_of_service >  2.50
+|   |   |   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |   |--- num__age >  34.00
+|   |   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |   |--- num__length_of_service >  6.50
+|   |   |   |   |   |   |   |--- class: 1
+|   |   |   |   |   |--- num__awards_won? >  0.50
+|   |   |   |   |   |   |--- class: 1
+|   |   |   |   |--- num__avg_training_score >  94.50
+|   |   |   |   |   |--- class: 1

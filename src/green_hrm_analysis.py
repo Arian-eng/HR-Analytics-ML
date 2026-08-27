@@ -1,154 +1,323 @@
+"""Main Green HRM analysis: predict environmental performance (FEP)."""
+
+from __future__ import annotations
+
+import json
 from pathlib import Path
-import matplotlib.pyplot as plt
+import warnings
+
+import numpy as np
 import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import (
+    GridSearchCV,
+    KFold,
+    RandomizedSearchCV,
+    RepeatedKFold,
+    cross_validate,
+    train_test_split,
+)
+from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import LinearSVR
-from sklearn.neural_network import MLPRegressor
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, KFold, train_test_split
-from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score, davies_bouldin_score
+from sklearn.tree import DecisionTreeRegressor
 
-RANDOM_STATE = 42
-THESIS_MODE = True
-ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = ROOT / "data"
-GHRM_FILES = ["HRM DATASETS(2).csv", "HRM DATASETS(3).csv", "HRM DATASETS.csv"]
-OUT = ROOT / "outputs" / "ghrm"
-FIG = ROOT / "figures"
-OUT.mkdir(parents=True, exist_ok=True)
-FIG.mkdir(parents=True, exist_ok=True)
+from src.config import RANDOM_STATE, REGRESSION_MODELS, RESULTS_DIR, TEST_SIZE
+from src.evaluation import (
+    bootstrap_regression_difference,
+    bootstrap_regression_metrics,
+    regression_metrics,
+)
+from src.explainability import (
+    permutation_table,
+    slug,
+    write_model_diagnostics,
+)
+from src.preprocessing import load_dataset
 
-ITEMS = {
-    "GRS": ["GRS1", "GRS2", "GRS3", "GRS4"],
-    "GTD": ["GTD1", "GTD2", "GTD3", "GTD4", "GTD5"],
-    "GPA": ["GPA1", "GPA2", "GPA3", "GPA4", "GPA5", "GPA6"],
-    "GCM": ["GCM1", "GCM2", "GCM3", "GCM4"],
-    "GEE": ["GEE1", "GEE4", "GEE5", "GEE6"],
-    "FEP": ["FEP1", "FEP5", "FEP7", "FEP9"],
+
+MODELS = {
+    "Random Forest Regressor": (
+        RandomForestRegressor(random_state=RANDOM_STATE, n_jobs=-1),
+        {
+            "model__n_estimators": [200, 400],
+            "model__max_depth": [None, 10],
+            "model__min_samples_leaf": [1, 2],
+            "model__max_features": [1.0, "sqrt"],
+        },
+    ),
+    "Decision Tree Regressor": (
+        DecisionTreeRegressor(random_state=RANDOM_STATE),
+        {
+            "model__max_depth": [3, 5, 8, None],
+            "model__min_samples_leaf": [2, 5, 10],
+        },
+    ),
+    "LinearSVR": (
+        LinearSVR(random_state=RANDOM_STATE, max_iter=100_000),
+        {
+            "model__C": [0.1, 1, 10],
+            "model__epsilon": [0.0, 0.1, 0.2],
+        },
+    ),
+    "MLPRegressor": (
+        MLPRegressor(
+            random_state=RANDOM_STATE,
+            max_iter=3_000,
+            early_stopping=True,
+            validation_fraction=0.15,
+        ),
+        {
+            "model__hidden_layer_sizes": [(20,), (50,), (50, 25)],
+            "model__alpha": [0.0001, 0.001],
+            "model__learning_rate_init": [0.001, 0.01],
+        },
+    ),
 }
 
 
-def load():
-    path = next(
-        (DATA_DIR / name for name in GHRM_FILES if (DATA_DIR / name).exists()),
-        None,
+def _preprocessor(features):
+    return ColumnTransformer(
+        [
+            (
+                "numeric",
+                Pipeline(
+                    [
+                        ("impute", SimpleImputer(strategy="median")),
+                        ("scale", StandardScaler()),
+                    ]
+                ),
+                features,
+            )
+        ],
+        remainder="drop",
     )
-    if path is None:
-        raise FileNotFoundError(
-            "GHRM dataset not found: " + ", ".join(GHRM_FILES)
-        )
-    df = pd.read_csv(path)
-    if "GDT3" in df.columns and "GTD3" not in df.columns:
-        df = df.rename(columns={"GDT3": "GTD3"})
-    required = {column for columns in ITEMS.values() for column in columns}
-    missing = sorted(required.difference(df.columns))
-    if missing:
-        raise ValueError(f"GHRM dataset is missing required columns: {missing}")
-    for name, cols in ITEMS.items():
-        # A construct score is valid only when all of its stated items exist.
-        # This avoids silently changing the construct definition row by row.
-        df[name] = (
-            df[cols]
-            .apply(pd.to_numeric, errors="coerce")
-            .mean(axis=1, skipna=False)
-        )
-    return df
 
 
-def run_regression(df, gee_plus=False):
-    features = ["GRS", "GTD", "GPA", "GCM"] + (["GEE"] if gee_plus else [])
-    valid_target = df["FEP"].notna()
-    X, y = df.loc[valid_target, features], df.loc[valid_target, "FEP"]
-    if len(y) < 4:
-        raise ValueError("GHRM regression requires at least four non-missing FEP rows")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=RANDOM_STATE)
-    prep = ColumnTransformer([("num", Pipeline([("impute", SimpleImputer(strategy="median")), ("scale", StandardScaler())]), features)])
-    models = {
-        "Random Forest Regressor": (RandomForestRegressor(random_state=42, n_jobs=-1), {
-            "model__n_estimators": [100, 200], "model__max_depth": [None, 10, 20],
-            "model__max_features": [1.0, "sqrt"], "model__min_samples_split": [2, 5]}),
-        "Decision Tree Regressor": (DecisionTreeRegressor(random_state=42), {
-            "model__max_depth": [5, 10, 15, None], "model__min_samples_split": [2, 5], "model__min_samples_leaf": [1, 2]}),
-        "LinearSVR": (LinearSVR(random_state=42, max_iter=20000), {
-            "model__C": [0.1, 1, 10], "model__epsilon": [0, 0.1, 0.2]}),
-        "MLPRegressor": (MLPRegressor(random_state=42, max_iter=1000, early_stopping=True), {
-            "model__hidden_layer_sizes": [(50,), (100,), (50, 50)], "model__alpha": [0.0001, 0.001], "model__learning_rate_init": [0.001, 0.01]})}
-    cv = KFold(n_splits=3, shuffle=True, random_state=42)
-    rows = []
-    for name, (estimator, grid) in models.items():
-        pipe = Pipeline([("preprocess", prep), ("model", estimator)])
-        if name == "MLPRegressor":
-            search = RandomizedSearchCV(pipe, grid, n_iter=8, scoring="neg_root_mean_squared_error", cv=cv, random_state=42, n_jobs=-1, refit=True)
-        else:
-            search = GridSearchCV(pipe, grid, scoring="neg_root_mean_squared_error", cv=cv, n_jobs=-1, refit=True)
-        search.fit(X_train, y_train)
-        pred = search.predict(X_test)
-        rows.append({"Variant": "GEE+" if gee_plus else "Base", "Model": name,
-                     "R2": r2_score(y_test, pred), "MAE": mean_absolute_error(y_test, pred),
-                     "RMSE": mean_squared_error(y_test, pred) ** 0.5,
-                     "CV_RMSE": -search.best_score_, "Best_Params": str(search.best_params_)})
-        pd.DataFrame({"y_true": y_test.to_numpy(), "y_pred": pred}).to_csv(
-            OUT / f"{('gee_plus' if gee_plus else 'base')}_{name.replace(' ', '_')}_test_predictions.csv", index=False)
-    return rows
+def _search(model_name, estimator, grid, features):
+    pipeline = Pipeline(
+        [("preprocess", _preprocessor(features)), ("model", estimator)]
+    )
+    cv = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+    common = {
+        "estimator": pipeline,
+        "param_distributions" if model_name == "MLPRegressor" else "param_grid": grid,
+        "scoring": "neg_root_mean_squared_error",
+        "cv": cv,
+        "n_jobs": -1,
+        "refit": True,
+        "return_train_score": True,
+    }
+    if model_name == "MLPRegressor":
+        common.update({"n_iter": 8, "random_state": RANDOM_STATE})
+        return RandomizedSearchCV(**common)
+    return GridSearchCV(**common)
 
 
-def run_kmeans(df):
-    features = ["GRS", "GTD", "GPA", "GCM", "GEE"]
-    Z = Pipeline([
-        ("impute", SimpleImputer(strategy="median")),
-        ("scale", StandardScaler()),
-    ]).fit_transform(df[features])
-    rows = []
-    for k in range(2, 8):
-        km = KMeans(n_clusters=k, n_init=20, random_state=42).fit(Z)
-        rows.append({"k": k, "Inertia_SSE": km.inertia_, "Silhouette": silhouette_score(Z, km.labels_), "Davies_Bouldin": davies_bouldin_score(Z, km.labels_)})
-    metrics = pd.DataFrame(rows)
-    metrics.to_csv(OUT / "kmeans_metrics.csv", index=False, encoding="utf-8-sig")
-    plots = [
-        ("Inertia_SSE", "GHRM K-Means Elbow", "Inertia / SSE"),
-        ("Silhouette", "GHRM K-Means Silhouette", "Silhouette Score"),
-        (
-            "Davies_Bouldin",
-            "GHRM K-Means Davies-Bouldin",
-            "Davies-Bouldin Index",
-        ),
+def _cv_table(search):
+    frame = pd.DataFrame(search.cv_results_)
+    columns = [
+        column
+        for column in frame.columns
+        if column.startswith("param_")
+        or column
+        in {
+            "rank_test_score",
+            "mean_test_score",
+            "std_test_score",
+            "mean_train_score",
+            "std_train_score",
+            "mean_fit_time",
+        }
     ]
-    for column, title, ylabel in plots:
-        figure, axis = plt.subplots()
-        axis.plot(metrics["k"], metrics[column], marker="o")
-        axis.set_title(title)
-        axis.set_xlabel("k")
-        axis.set_ylabel(ylabel)
-        figure.tight_layout()
-        figure.savefig(FIG / f"ghrm_{column}.png", dpi=180)
-        plt.close(figure)
-    best_k = 2 if THESIS_MODE else int(metrics.loc[metrics.Silhouette.idxmax(), "k"])
-    labels = KMeans(n_clusters=best_k, n_init=10, random_state=42).fit_predict(Z)
-    cluster_sizes = (
-        pd.Series(labels)
-        .value_counts()
-        .sort_index()
-        .rename_axis("Cluster")
-        .reset_index(name="Size")
+    return frame[columns].sort_values("rank_test_score")
+
+
+def run_regression_analysis():
+    frame, _, _ = load_dataset("ghrm")
+    valid = frame["FEP"].notna()
+    frame = frame.loc[valid].copy()
+    y = frame["FEP"]
+    train_index, test_index = train_test_split(
+        frame.index,
+        test_size=TEST_SIZE,
+        random_state=RANDOM_STATE,
     )
-    cluster_sizes.to_csv(
-        OUT / "cluster_sizes.csv", index=False, encoding="utf-8-sig"
+    split_dir = RESULTS_DIR / "splits"
+    split_dir.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(
+        {
+            "Row_Index": frame.index,
+            "Split": np.where(frame.index.isin(test_index), "test", "train"),
+            "FEP": y,
+        }
+    ).to_csv(split_dir / "ghrm.csv", index=False, encoding="utf-8-sig")
+
+    metric_rows = []
+    all_predictions = {}
+    for variant, features in {
+        "Base": ["GRS", "GTD", "GPA", "GCM"],
+        "GEE+": ["GRS", "GTD", "GPA", "GCM", "GEE"],
+    }.items():
+        X = frame[features]
+        X_train, X_test = X.loc[train_index], X.loc[test_index]
+        y_train, y_test = y.loc[train_index], y.loc[test_index]
+        for model_name in REGRESSION_MODELS:
+            estimator, grid = MODELS[model_name]
+            output = RESULTS_DIR / "regression" / slug(variant) / slug(model_name)
+            output.mkdir(parents=True, exist_ok=True)
+            search = _search(model_name, estimator, grid, features)
+            with warnings.catch_warnings(record=True) as tuning_warnings:
+                warnings.simplefilter("always", ConvergenceWarning)
+                search.fit(X_train, y_train)
+            tuning_convergence_warnings = sum(
+                issubclass(item.category, ConvergenceWarning)
+                for item in tuning_warnings
+            )
+            prediction = search.predict(X_test)
+            point = regression_metrics(y_test, prediction)
+            intervals = bootstrap_regression_metrics(y_test, prediction)
+
+            repeated = RepeatedKFold(
+                n_splits=5, n_repeats=5, random_state=RANDOM_STATE
+            )
+            with warnings.catch_warnings(record=True) as repeated_warnings:
+                warnings.simplefilter("always", ConvergenceWarning)
+                stability = cross_validate(
+                    search.best_estimator_,
+                    X,
+                    y,
+                    cv=repeated,
+                    scoring={
+                        "r2": "r2",
+                        "rmse": "neg_root_mean_squared_error",
+                        "mae": "neg_mean_absolute_error",
+                    },
+                    n_jobs=-1,
+                )
+            repeated_convergence_warnings = sum(
+                issubclass(item.category, ConvergenceWarning)
+                for item in repeated_warnings
+            )
+            stability_frame = pd.DataFrame(
+                {
+                    "Fold": np.arange(1, len(stability["test_r2"]) + 1),
+                    "R2": stability["test_r2"],
+                    "RMSE": -stability["test_rmse"],
+                    "MAE": -stability["test_mae"],
+                }
+            )
+            stability_frame.to_csv(
+                output / "repeated_cv_metrics.csv", index=False, encoding="utf-8-sig"
+            )
+            row = {
+                "Variant": variant,
+                "Model": model_name,
+                "Train_N": len(train_index),
+                "Test_N": len(test_index),
+                **point,
+                **intervals,
+                "Tuning_CV_RMSE": float(-search.best_score_),
+                "Repeated_CV_R2_Mean": float(stability_frame["R2"].mean()),
+                "Repeated_CV_R2_Std": float(stability_frame["R2"].std()),
+                "Repeated_CV_RMSE_Mean": float(stability_frame["RMSE"].mean()),
+                "Repeated_CV_RMSE_Std": float(stability_frame["RMSE"].std()),
+                "Tuning_Convergence_Warnings": tuning_convergence_warnings,
+                "Repeated_CV_Convergence_Warnings": repeated_convergence_warnings,
+                "Best_Params": json.dumps(search.best_params_, default=str),
+            }
+            metric_rows.append(row)
+            predictions = pd.DataFrame(
+                {
+                    "Row_Index": test_index,
+                    "y_true": y_test.to_numpy(),
+                    "y_pred": prediction,
+                }
+            )
+            predictions.to_csv(
+                output / "test_predictions.csv", index=False, encoding="utf-8-sig"
+            )
+            all_predictions[(variant, model_name)] = predictions
+            _cv_table(search).to_csv(
+                output / "tuning_results.csv", index=False, encoding="utf-8-sig"
+            )
+            importance = permutation_table(
+                search.best_estimator_,
+                X_test,
+                y_test,
+                "neg_root_mean_squared_error",
+                "ghrm",
+                f"{variant} {model_name}",
+            )
+            importance.to_csv(
+                output / "permutation_importance.csv",
+                index=False,
+                encoding="utf-8-sig",
+            )
+            write_model_diagnostics(
+                search.best_estimator_, output, "ghrm", model_name
+            )
+            (output / "convergence_warnings.json").write_text(
+                json.dumps(
+                    {
+                        "tuning_convergence_warnings": tuning_convergence_warnings,
+                        "repeated_cv_convergence_warnings": repeated_convergence_warnings,
+                        "note": "Counts are recorded instead of suppressing model convergence warnings.",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+    comparison_rows = []
+    for model_name in REGRESSION_MODELS:
+        base = all_predictions[("Base", model_name)]
+        plus = all_predictions[("GEE+", model_name)]
+        if not np.array_equal(base["Row_Index"], plus["Row_Index"]):
+            raise ValueError(f"Base and GEE+ rows differ for {model_name}")
+        comparison_rows.append(
+            {
+                "Model": model_name,
+                **bootstrap_regression_difference(
+                    base["y_true"], base["y_pred"], plus["y_pred"]
+                ),
+            }
+        )
+
+    regression_root = RESULTS_DIR / "regression"
+    metrics = pd.DataFrame(metric_rows)
+    metrics.to_csv(
+        regression_root / "regression_metrics.csv",
+        index=False,
+        encoding="utf-8-sig",
     )
-    profiles = pd.DataFrame({"Cluster": labels, "FEP": df["FEP"]}).groupby("Cluster").agg(Size=("FEP", "size"), Mean_FEP=("FEP", "mean"), SD_FEP=("FEP", "std"))
-    profiles.to_csv(OUT / "cluster_profiles.csv", encoding="utf-8-sig")
-
-
-def main():
-    df = load()
-    rows = run_regression(df, False) + run_regression(df, True)
-    pd.DataFrame(rows).to_csv(OUT / "regression_metrics.csv", index=False, encoding="utf-8-sig")
-    run_kmeans(df)
-
-if __name__ == "__main__":
-    main()
+    comparisons = pd.DataFrame(comparison_rows)
+    comparisons.to_csv(
+        regression_root / "base_vs_gee_plus.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    validation_rows = []
+    for (variant, model_name), predictions in all_predictions.items():
+        residual = predictions["y_true"] - predictions["y_pred"]
+        validation_rows.append(
+            {
+                "Variant": variant,
+                "Model": model_name,
+                "N": len(predictions),
+                "Sum_Squared_Error": float((residual**2).sum()),
+                "Sum_Absolute_Error": float(residual.abs().sum()),
+                "Sum_Y": float(predictions["y_true"].sum()),
+                "Sum_Y_Squared": float((predictions["y_true"] ** 2).sum()),
+            }
+        )
+    pd.DataFrame(validation_rows).to_csv(
+        regression_root / "regression_validation_aggregates.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    return frame, metrics, comparisons

@@ -9,24 +9,28 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Local data / generated outputs
+# Third-party raw datasets
 data/*.csv
-outputs/*
-!outputs/.gitkeep
-!outputs/README.md
-results/*
-!results/README.md
-!results/chapter4_replacement_rules.md
-!results/chapter4_results.md
-!results/thesis_chapter4_reference.json
-!results/tables/
-!results/tables/*.csv
-!results/figures/
-!results/figures/*.png
-figures/*
-!figures/.gitkeep
-!figures/README.md
-thesis_outputs/
+
+# Row-level HR outputs stay local; only aggregate evidence is published
+results/**/test_predictions.csv
+results/splits/
+results/clustering/*/cluster_assignments.csv
+results/data/column_dictionary_private.csv
+results/clustering/ibm/cluster_distinguishing_features.csv
+results/clustering/ibm/cluster_profile_categorical.csv
+results/clustering/ibm/cluster_profile_numeric.csv
+results/clustering/ibm/cluster_target_summary.csv
+results/clustering/job_change/cluster_distinguishing_features.csv
+results/clustering/job_change/cluster_profile_categorical.csv
+results/clustering/job_change/cluster_profile_numeric.csv
+results/clustering/job_change/cluster_target_summary.csv
+results/clustering/promotion/cluster_distinguishing_features.csv
+results/clustering/promotion/cluster_profile_categorical.csv
+results/clustering/promotion/cluster_profile_numeric.csv
+results/clustering/promotion/cluster_target_summary.csv
+
+# Local exports
 *.xlsx
 *.zip
 

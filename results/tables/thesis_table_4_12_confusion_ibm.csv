@@ -1,5 +1,0 @@
-﻿مدل,TN,FP,FN,TP
-Random Forest,240,7,41,6
-Decision Tree,209,38,29,18
-LinearSVC,239,8,32,15
-MLPClassifier,240,7,30,17

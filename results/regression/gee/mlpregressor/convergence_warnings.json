@@ -1,0 +1,5 @@
+{
+  "tuning_convergence_warnings": 0,
+  "repeated_cv_convergence_warnings": 0,
+  "note": "Counts are recorded instead of suppressing model convergence warnings."
+}

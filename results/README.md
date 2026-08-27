@@ -1,14 +1,7 @@
-# Chapter 4 results
+# خروجی اجرای نهایی
 
-The executable analysis pipeline is `run_all.py`. It analyzes three binary HR datasets and the separate GHRM–Environmental Performance dataset.
+تمام فایل های این پوشه با اجرای `python run_all.py` از چهار CSV محلی ساخته شده اند. متن پایان نامه ورودی عددی برنامه نیست.
 
-The final thesis document is the publication authority. Its SHA-256 and all 19 Chapter 4 tables are recorded in [`thesis_chapter4_reference.json`](thesis_chapter4_reference.json). The Persian report is in [`chapter4_results.md`](chapter4_results.md), exact table CSVs are under [`tables/`](tables/), and derived figures are under [`figures/`](figures/).
+از [گزارش فارسی](analysis_report_fa.md) شروع کنید. جدول های تجمیعی در `tables/`، جزئیات هر مدل در پوشه های دیتاست، زمان اجرا در `run_log.txt` و نسخه محیط و هش داده در `run_manifest.json` است.
 
-Regenerate and validate the tracked publication bundle with:
-
-```bash
-python scripts/sync_thesis_chapter4.py
-python scripts/validate_published_results.py
-```
-
-Detailed predictions, tuning parameters, confusion-matrix CSV files and intermediate live outputs remain under the ignored local `outputs/` directory. They are diagnostics, not an alternate publication source. Historical Employee Performance and Green Innovation/Sustainable Performance tables must not be mixed with the final Employee Promotion and continuous-`FEP` methodology.
+فایل های خام داده در مخزن قرار ندارند. هویت دقیق SHA-256 آن ها در `data/dataset_inventory.csv` ثبت شده است.

@@ -1,5 +1,0 @@
-﻿مدل,R²,RMSE,MAE
-Random Forest Regressor,0.425,0.492,0.385
-Decision Tree Regressor,0.406,0.501,0.382
-LinearSVR,0.418,0.495,0.385
-MLPRegressor,0.422,0.494,0.398

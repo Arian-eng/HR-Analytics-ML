@@ -43,5 +43,5 @@ jobs:
       - name: Run data-free unit tests
         run: python -m unittest discover -s tests -v
 
-      - name: Validate published Chapter 4 artifacts
-        run: python scripts/validate_published_results.py
+      - name: Recompute and validate tracked results
+        run: python scripts/validate_results.py

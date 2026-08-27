@@ -1,4 +1,0 @@
-﻿مجموعه‌داده,مسئله پیش‌بینی,الگوریتم با عملکرد مناسب‌تر,شاخص اصلی,مقدار
-IBM HR Analytics,ترک خدمت,MLPClassifier,F1-Score,0.479
-Job Change,تغییر شغل,Decision Tree,F1-Score,0.526
-Employee Promotion,ارتقای کارکنان,MLPClassifier,F1-Score,0.509

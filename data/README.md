@@ -1,28 +1,19 @@
-# Local datasets
+# فایل‌های داده محلی
 
-Place the four thesis datasets in this directory when running the project locally:
+چهار فایل زیر برای اجرای کامل لازم است:
 
-- `WA_Fn-UseC_-HR-Employee-Attrition (3)(2).csv`
-- `aug_train(2).csv`
-- `train_LZdllcl(2).csv`
-- `HRM DATASETS(2).csv`
+- `WA_Fn-UseC_-HR-Employee-Attrition (3).csv`
+- `aug_train.csv`
+- `train_LZdllcl.csv`
+- `HRM DATASETS.csv`
 
-The loader also accepts the earlier aliases `aug_train(5).csv`, `train_LZdllcl.csv`, and `HRM DATASETS.csv`. The datasets are intentionally not committed to GitHub. Each dataset is analyzed independently and no records are merged across sources.
+فایل‌های خام در GitHub قرار نمی‌گیرند. `run_all.py` پیش از تحلیل، نام فایل، تعداد ردیف و ستون، هش SHA-256، داده‌های گمشده و ردیف‌های تکراری را ثبت می‌کند. مقدارهای مورد انتظار اجرای نهایی در `validation/data_manifest.json` هستند.
 
-## Sources
+منابع معرفی‌شده برای داده‌ها:
 
-- IBM HR Attrition: [IBM HR Analytics Employee Attrition & Performance on Kaggle](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset)
-- Job Change: [HR Analytics: Job Change of Data Scientists on Kaggle](https://www.kaggle.com/datasets/arashnic/hr-analytics-job-change-of-data-scientists)
-- Employee Promotion: [WNS Analytics Wizard 2018 challenge](https://datahack.analyticsvidhya.com/contest/wns-analytics-hackathon-2018-1/)
-- GHRM: [PLOS ONE source article](https://doi.org/10.1371/journal.pone.0293957) and its [PLOS Figshare materials](https://plos.figshare.com/articles/dataset/Variance_Inflation_Factor_VIF_/25630768)
+- [IBM HR Analytics Employee Attrition & Performance](https://www.kaggle.com/datasets/pavansubhasht/ibm-hr-analytics-attrition-dataset)
+- [HR Analytics: Job Change of Data Scientists](https://www.kaggle.com/datasets/arashnic/hr-analytics-job-change-of-data-scientists)
+- [WNS Analytics Wizard 2018](https://datahack.analyticsvidhya.com/contest/wns-analytics-hackathon-2018-1/)
+- [مقاله GHRM در PLOS ONE](https://doi.org/10.1371/journal.pone.0293957)
 
-Confirm each source's current access and redistribution terms before sharing a
-raw file. The repository deliberately tracks only metadata and results, not the
-third-party CSV files.
-
-## File identity
-
-Exact filenames, row counts, and SHA-256 hashes for the validated thesis run are
-recorded in [`validation/data_manifest.json`](../validation/data_manifest.json).
-Run `python scripts/validate_published_results.py --require-data` to verify all
-four local files before reproducing the final results.
+پیش از بازنشر هر فایل خام، شرایط استفاده منبع آن باید جداگانه بررسی شود.

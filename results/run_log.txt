@@ -1,0 +1,33 @@
+2026-08-27 18:22:19 | final analysis started
+2026-08-27 18:22:20 | ibm: 1470 rows, 1176 train, 294 test, positive share 0.1612
+2026-08-27 18:22:20 | ibm: tuning Random Forest
+2026-08-27 18:22:32 | ibm: Random Forest F1=0.2222, accuracy=0.8333
+2026-08-27 18:22:36 | ibm: tuning Decision Tree
+2026-08-27 18:22:42 | ibm: Decision Tree F1=0.4112, accuracy=0.7857
+2026-08-27 18:22:43 | ibm: tuning Linear SVM
+2026-08-27 18:22:48 | ibm: Linear SVM F1=0.4511, accuracy=0.7517
+2026-08-27 18:22:49 | ibm: tuning MLP
+2026-08-27 18:22:54 | ibm: MLP F1=0.5135, accuracy=0.8776
+2026-08-27 18:22:54 | ibm: running K-Means k=2..7
+2026-08-27 18:22:56 | job_change: 19158 rows, 15326 train, 3832 test, positive share 0.2493
+2026-08-27 18:22:56 | job_change: tuning Random Forest
+2026-08-27 18:23:33 | job_change: Random Forest F1=0.6103, accuracy=0.7620
+2026-08-27 18:23:36 | job_change: tuning Decision Tree
+2026-08-27 18:23:43 | job_change: Decision Tree F1=0.5933, accuracy=0.7474
+2026-08-27 18:23:44 | job_change: tuning Linear SVM
+2026-08-27 18:23:51 | job_change: Linear SVM F1=0.5888, accuracy=0.7437
+2026-08-27 18:23:51 | job_change: tuning MLP
+2026-08-27 18:24:01 | job_change: MLP F1=0.5593, accuracy=0.7837
+2026-08-27 18:24:02 | job_change: running K-Means k=2..7
+2026-08-27 18:24:22 | promotion: 54808 rows, 43846 train, 10962 test, positive share 0.0852
+2026-08-27 18:24:22 | promotion: tuning Random Forest
+2026-08-27 18:26:24 | promotion: Random Forest F1=0.4666, accuracy=0.9134
+2026-08-27 18:26:43 | promotion: tuning Decision Tree
+2026-08-27 18:27:14 | promotion: Decision Tree F1=0.3664, accuracy=0.7387
+2026-08-27 18:27:16 | promotion: tuning Linear SVM
+2026-08-27 18:27:26 | promotion: Linear SVM F1=0.3716, accuracy=0.7584
+2026-08-27 18:27:26 | promotion: tuning MLP
+2026-08-27 18:27:52 | promotion: MLP F1=0.5055, accuracy=0.9431
+2026-08-27 18:27:52 | promotion: running K-Means k=2..7
+2026-08-27 18:29:51 | ghrm: running K-Means k=2..7 on five GHRM constructs
+2026-08-27 18:29:58 | final analysis completed in 458.9 seconds

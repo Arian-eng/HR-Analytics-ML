@@ -1,0 +1,18 @@
+{
+  "dataset": "ghrm",
+  "model": "LinearSVR",
+  "estimator": "LinearSVR",
+  "parameters": {
+    "C": 1,
+    "dual": "auto",
+    "epsilon": 0.2,
+    "fit_intercept": true,
+    "intercept_scaling": 1.0,
+    "loss": "epsilon_insensitive",
+    "max_iter": 100000,
+    "random_state": 42,
+    "tol": 0.0001,
+    "verbose": 0
+  },
+  "iterations": 365
+}

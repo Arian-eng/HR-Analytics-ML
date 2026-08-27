@@ -1,0 +1,19 @@
+|--- numeric__GRS <= -1.47
+|   |--- numeric__GCM <= -2.26
+|   |   |--- value: [1.54]
+|   |--- numeric__GCM >  -2.26
+|   |   |--- numeric__GTD <= -1.01
+|   |   |   |--- value: [2.40]
+|   |   |--- numeric__GTD >  -1.01
+|   |   |   |--- value: [2.93]
+|--- numeric__GRS >  -1.47
+|   |--- numeric__GRS <= 0.23
+|   |   |--- numeric__GCM <= -0.40
+|   |   |   |--- value: [3.08]
+|   |   |--- numeric__GCM >  -0.40
+|   |   |   |--- value: [3.57]
+|   |--- numeric__GRS >  0.23
+|   |   |--- numeric__GPA <= 1.12
+|   |   |   |--- value: [3.83]
+|   |   |--- numeric__GPA >  1.12
+|   |   |   |--- value: [4.49]
