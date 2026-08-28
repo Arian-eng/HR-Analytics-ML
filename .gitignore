@@ -9,32 +9,15 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Third-party raw datasets
+# Local raw data (public/collected datasets - not redistributed)
 data/*.csv
-
-# Row-level HR outputs stay local; only aggregate evidence is published
-results/**/test_predictions.csv
-results/splits/
-results/clustering/*/cluster_assignments.csv
-results/data/column_dictionary_private.csv
-results/clustering/ibm/cluster_distinguishing_features.csv
-results/clustering/ibm/cluster_profile_categorical.csv
-results/clustering/ibm/cluster_profile_numeric.csv
-results/clustering/ibm/cluster_target_summary.csv
-results/clustering/job_change/cluster_distinguishing_features.csv
-results/clustering/job_change/cluster_profile_categorical.csv
-results/clustering/job_change/cluster_profile_numeric.csv
-results/clustering/job_change/cluster_target_summary.csv
-results/clustering/promotion/cluster_distinguishing_features.csv
-results/clustering/promotion/cluster_profile_categorical.csv
-results/clustering/promotion/cluster_profile_numeric.csv
-results/clustering/promotion/cluster_target_summary.csv
-
-# Local exports
-*.xlsx
-*.zip
 
 # OS / IDE
 .DS_Store
 .vscode/
 .idea/
+
+# NOTE: results/ and figures/ are intentionally NOT ignored anymore.
+# They are the real, reproducible outputs of src/*.py and are committed
+# so Chapter 4 numbers/figures are traceable to actual code, per the
+# advisor's feedback in validation/validation_report.md.
