@@ -1,9 +1,0 @@
-﻿Step,Action,Saved_Evidence
-1,Record data identity,"SHA-256, row count, and column count"
-2,Check data quality,"Missing values, duplicates, and target completeness"
-3,Preprocess,"Training-only imputation, encoding, and scaling"
-4,Split data,80% training and 20% test with random seed 42
-5,Tune models,Cross-validation and parameter selection on training data
-6,Evaluate,"Held-out test metrics, matrices, and confidence intervals"
-7,Explain models,"Feature importance, tree structure, and coefficients"
-8,Cluster,Evaluate k from 2 to 7 and profile the selected clusters

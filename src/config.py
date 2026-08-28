@@ -1,63 +1,50 @@
-"""Shared configuration for the final thesis analysis."""
-
-from __future__ import annotations
-
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 RESULTS_DIR = ROOT / "results"
+FIGURES_DIR = ROOT / "figures"
+VALIDATION_DIR = ROOT / "validation"
 RANDOM_STATE = 42
 TEST_SIZE = 0.20
-CV_FOLDS = 3
-SILHOUETTE_SAMPLE_SIZE = 5_000
-
+CLASSIFICATION_CV_FOLDS = 3
+REGRESSION_CV_FOLDS = 5
+CLASSIFICATION_BOOTSTRAPS = 2000
+REGRESSION_BOOTSTRAPS = 4000
+K_VALUES = range(2, 8)
+KMEANS_N_INIT = 20
+KMEANS_MAX_ITER = 300
+SILHOUETTE_SAMPLE_SIZE = 5000
 
 DATASETS = {
     "ibm": {
-        "filename": "WA_Fn-UseC_-HR-Employee-Attrition (3).csv",
-        "display_name": "IBM HR Analytics",
+        "file": "WA_Fn-UseC_-HR-Employee-Attrition__3_.csv",
         "target": "Attrition",
-        "positive_label": "Yes",
+        "positive": "Yes",
         "ids": ["EmployeeNumber"],
         "drop": ["EmployeeCount", "Over18", "StandardHours"],
-        "task": "classification",
-        "role": "supplementary HR analysis",
+        "role": "public HR benchmark/proxy; not direct Green HRM evidence",
     },
     "job_change": {
-        "filename": "aug_train.csv",
-        "display_name": "Job Change",
+        "file": "aug_train.csv",
         "target": "target",
-        "positive_label": 1.0,
+        "positive": 1.0,
         "ids": ["enrollee_id"],
         "drop": [],
-        "task": "classification",
-        "role": "supplementary HR analysis",
+        "role": "public HR benchmark/proxy; not direct Green HRM evidence",
     },
     "promotion": {
-        "filename": "train_LZdllcl.csv",
-        "display_name": "Employee Promotion",
+        "file": "train_LZdllcl.csv",
         "target": "is_promoted",
-        "positive_label": 1,
+        "positive": 1,
         "ids": ["employee_id"],
         "drop": [],
-        "task": "classification",
-        "role": "supplementary HR analysis",
-    },
-    "ghrm": {
-        "filename": "HRM DATASETS.csv",
-        "display_name": "GHRM - Environmental Performance",
-        "target": "FEP",
-        "ids": ["Timestamp"],
-        "drop": [],
-        "task": "regression",
-        "role": "main Green HRM analysis",
+        "role": "public HR benchmark/proxy; not direct Green HRM evidence",
     },
 }
 
-
-GHRM_ITEMS = {
+SURVEY_FILE = "HRM_DATASETS.csv"
+SURVEY_CONSTRUCTS = {
     "GRS": ["GRS1", "GRS2", "GRS3", "GRS4"],
     "GTD": ["GTD1", "GTD2", "GTD3", "GTD4", "GTD5"],
     "GPA": ["GPA1", "GPA2", "GPA3", "GPA4", "GPA5", "GPA6"],
@@ -65,18 +52,5 @@ GHRM_ITEMS = {
     "GEE": ["GEE1", "GEE4", "GEE5", "GEE6"],
     "FEP": ["FEP1", "FEP5", "FEP7", "FEP9"],
 }
-
-
-CLASSIFICATION_MODELS = [
-    "Random Forest",
-    "Decision Tree",
-    "Linear SVM",
-    "MLP",
-]
-
-REGRESSION_MODELS = [
-    "Random Forest Regressor",
-    "Decision Tree Regressor",
-    "LinearSVR",
-    "MLPRegressor",
-]
+BASE_FEATURES = ["GRS", "GTD", "GPA", "GCM"]
+GEE_PLUS_FEATURES = BASE_FEATURES + ["GEE"]

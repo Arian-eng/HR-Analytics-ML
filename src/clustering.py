@@ -1,252 +1,41 @@
-"""Independent, exploratory K-Means analysis for each dataset."""
-
-from __future__ import annotations
-
-from pathlib import Path
-
+import json
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import davies_bouldin_score, silhouette_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-
-from src.config import RANDOM_STATE, SILHOUETTE_SAMPLE_SIZE
-
-
-def numeric_matrix(frame, drop_columns):
-    features = frame.drop(columns=drop_columns, errors="ignore")
-    features = features.select_dtypes(include="number").copy()
-    constant = [
-        column
-        for column in features.columns
-        if features[column].nunique(dropna=False) <= 1
-    ]
-    features = features.drop(columns=constant)
-    if features.shape[1] == 0:
-        raise ValueError("K-Means needs at least one numeric non-target feature")
-    transformer = Pipeline(
-        [
-            ("impute", SimpleImputer(strategy="median")),
-            ("scale", StandardScaler()),
-        ]
-    )
-    matrix = transformer.fit_transform(features)
-    return features, matrix
+from sklearn.metrics import silhouette_score, davies_bouldin_score
+from .config import *
+from .preprocessing import load_public
+from .survey_analysis import load_survey
 
 
-def _profile_numeric(frame, labels, target, dataset):
-    data = frame.copy()
-    data["Cluster"] = labels
-    numeric = data.select_dtypes(include="number").columns.tolist()
-    rows = []
-    for cluster, group in data.groupby("Cluster", sort=True):
-        for column in numeric:
-            if column == "Cluster":
-                continue
-            rows.append(
-                {
-                    "Dataset": dataset,
-                    "Cluster": int(cluster),
-                    "Feature": column,
-                    "Mean": float(group[column].mean()),
-                    "Median": float(group[column].median()),
-                    "Std": float(group[column].std()),
-                    "Is_Target": column == target,
-                }
-            )
-    return pd.DataFrame(
-        rows,
-        columns=[
-            "Dataset",
-            "Cluster",
-            "Feature",
-            "Mean",
-            "Median",
-            "Std",
-            "Is_Target",
-        ],
-    )
+def _evaluate(Z):
+    rows=[]
+    for k in K_VALUES:
+        km=KMeans(n_clusters=k,n_init=KMEANS_N_INIT,max_iter=KMEANS_MAX_ITER,random_state=RANDOM_STATE).fit(Z)
+        kwargs={}
+        if len(Z)>SILHOUETTE_SAMPLE_SIZE: kwargs={"sample_size":SILHOUETTE_SAMPLE_SIZE,"random_state":RANDOM_STATE}
+        rows.append({"k":k,"sse":float(km.inertia_),"silhouette":float(silhouette_score(Z,km.labels_,**kwargs)),"davies_bouldin":float(davies_bouldin_score(Z,km.labels_))})
+    return rows
 
+def _figure(name,rows):
+    fig,axes=plt.subplots(1,3,figsize=(13,3.8)); metrics=[("sse","SSE / Inertia"),("silhouette","Silhouette"),("davies_bouldin","Davies-Bouldin")]
+    for ax,(key,label) in zip(axes,metrics): ax.plot([r['k'] for r in rows],[r[key] for r in rows],marker='o'); ax.set_xlabel('k'); ax.set_ylabel(label); ax.set_title(label)
+    fig.suptitle(f"{name}: K-Means k=2..7"); fig.tight_layout(); fig.savefig(FIGURES_DIR/f"kmeans_{name}.png",dpi=160); plt.close(fig)
 
-def _profile_categorical(frame, labels, target, dataset):
-    data = frame.copy()
-    data["Cluster"] = labels
-    categorical = data.select_dtypes(include=["object", "category", "bool"]).columns
-    rows = []
-    for cluster, group in data.groupby("Cluster", sort=True):
-        for column in categorical:
-            counts = group[column].fillna("<missing>").astype(str).value_counts()
-            if counts.empty:
-                continue
-            rows.append(
-                {
-                    "Dataset": dataset,
-                    "Cluster": int(cluster),
-                    "Feature": column,
-                    "Most_Common_Value": counts.index[0],
-                    "Count": int(counts.iloc[0]),
-                    "Share": float(counts.iloc[0] / len(group)),
-                    "Is_Target": column == target,
-                }
-            )
-    return pd.DataFrame(
-        rows,
-        columns=[
-            "Dataset",
-            "Cluster",
-            "Feature",
-            "Most_Common_Value",
-            "Count",
-            "Share",
-            "Is_Target",
-        ],
-    )
+def run_public_kmeans(name,logger=print):
+    raw,X,y,_,_=load_public(name); numeric=X.select_dtypes(include=np.number).copy(); numeric=numeric[[c for c in numeric if numeric[c].nunique(dropna=False)>1]]
+    Z=Pipeline([("impute",SimpleImputer(strategy="median")),("scale",StandardScaler())]).fit_transform(numeric)
+    rows=_evaluate(Z); best=max(rows,key=lambda r:r['silhouette']); final=KMeans(n_clusters=best['k'],n_init=KMEANS_N_INIT,max_iter=KMEANS_MAX_ITER,random_state=RANDOM_STATE).fit(Z); labels=final.labels_; sizes=pd.Series(labels).value_counts().sort_index().to_dict(); profiles=[{"cluster":int(c),"size":int((labels==c).sum()),"positive_target_share":float(y.to_numpy()[labels==c].mean())} for c in range(best['k'])]
+    out={"dataset":name,"features":"numeric non-constant predictors only; target, identifiers and constant columns excluded","numeric_feature_count":len(numeric.columns),"k_results":rows,"selected_k":best['k'],"selection_rule":"maximum silhouette; SSE and Davies-Bouldin reported simultaneously","cluster_sizes":{str(k):int(v) for k,v in sizes.items()},"target_profile_after_clustering":profiles}
+    (RESULTS_DIR/f"clustering_{name}.json").write_text(json.dumps(out,indent=2),encoding="utf-8"); _figure(name,rows); logger(f"{name}/KMeans: features={len(numeric.columns)} selected_k={best['k']} silhouette={best['silhouette']:.4f} SSE={best['sse']:.3f} DB={best['davies_bouldin']:.4f}"); return out
 
-
-def _target_distribution(frame, labels, target, dataset):
-    data = pd.DataFrame({"Cluster": labels, "Target": frame[target].to_numpy()})
-    rows = []
-    if pd.api.types.is_numeric_dtype(data["Target"]):
-        for cluster, group in data.groupby("Cluster", sort=True):
-            rows.append(
-                {
-                    "Dataset": dataset,
-                    "Cluster": int(cluster),
-                    "Target": target,
-                    "Target_Value": "mean",
-                    "Count": len(group),
-                    "Share_or_Mean": float(group["Target"].mean()),
-                }
-            )
-    else:
-        for (cluster, value), count in (
-            data.groupby(["Cluster", "Target"], dropna=False).size().items()
-        ):
-            size = int((data["Cluster"] == cluster).sum())
-            rows.append(
-                {
-                    "Dataset": dataset,
-                    "Cluster": int(cluster),
-                    "Target": target,
-                    "Target_Value": str(value),
-                    "Count": int(count),
-                    "Share_or_Mean": float(count / size),
-                }
-            )
-    return pd.DataFrame(rows)
-
-
-def _distinguishing_features(features, labels, dataset):
-    imputed = features.copy()
-    for column in imputed.columns:
-        imputed[column] = imputed[column].fillna(imputed[column].median())
-    overall_mean = imputed.mean()
-    overall_std = imputed.std(ddof=0).replace(0, np.nan)
-    rows = []
-    labelled = imputed.assign(Cluster=labels)
-    for cluster, group in labelled.groupby("Cluster", sort=True):
-        z_difference = ((group.drop(columns="Cluster").mean() - overall_mean) / overall_std)
-        for feature, value in z_difference.abs().nlargest(8).items():
-            signed = float(z_difference[feature])
-            rows.append(
-                {
-                    "Dataset": dataset,
-                    "Cluster": int(cluster),
-                    "Feature": feature,
-                    "Cluster_Mean": float(group[feature].mean()),
-                    "Overall_Mean": float(overall_mean[feature]),
-                    "Standardized_Difference": signed,
-                    "Direction": "higher" if signed > 0 else "lower",
-                }
-            )
-    return pd.DataFrame(rows)
-
-
-def run_kmeans(frame, target, ids, out_dir, dataset, extra_drop=None):
-    """Evaluate k=2..7, select maximum Silhouette, and save profiles."""
-
-    output = Path(out_dir)
-    output.mkdir(parents=True, exist_ok=True)
-    drop_columns = list(ids) + [target] + list(extra_drop or [])
-    numeric_features, matrix = numeric_matrix(frame, drop_columns)
-
-    rows = []
-    for k in range(2, 8):
-        model = KMeans(
-            n_clusters=k,
-            n_init=20,
-            max_iter=300,
-            random_state=RANDOM_STATE,
-        ).fit(matrix)
-        silhouette_kwargs = {}
-        if len(frame) > SILHOUETTE_SAMPLE_SIZE:
-            silhouette_kwargs = {
-                "sample_size": SILHOUETTE_SAMPLE_SIZE,
-                "random_state": RANDOM_STATE,
-            }
-        rows.append(
-            {
-                "Dataset": dataset,
-                "k": k,
-                "Numeric_Features": numeric_features.shape[1],
-                "Inertia_SSE": float(model.inertia_),
-                "Silhouette": float(
-                    silhouette_score(matrix, model.labels_, **silhouette_kwargs)
-                ),
-                "Davies_Bouldin": float(
-                    davies_bouldin_score(np.asarray(matrix), model.labels_)
-                ),
-                "Iterations": int(model.n_iter_),
-                "Silhouette_N": min(len(frame), SILHOUETTE_SAMPLE_SIZE),
-            }
-        )
-
-    metrics = pd.DataFrame(rows)
-    metrics.to_csv(output / "kmeans_metrics.csv", index=False, encoding="utf-8-sig")
-    selected = metrics.loc[metrics["Silhouette"].idxmax()]
-    selected_k = int(selected["k"])
-    final_model = KMeans(
-        n_clusters=selected_k,
-        n_init=20,
-        max_iter=300,
-        random_state=RANDOM_STATE,
-    ).fit(matrix)
-    labels = final_model.labels_
-
-    sizes = (
-        pd.Series(labels)
-        .value_counts()
-        .sort_index()
-        .rename_axis("Cluster")
-        .reset_index(name="Size")
-    )
-    sizes.insert(0, "Dataset", dataset)
-    sizes["Share"] = sizes["Size"] / len(frame)
-    sizes.to_csv(output / "cluster_sizes.csv", index=False, encoding="utf-8-sig")
-    profile_frame = frame.drop(
-        columns=list(ids) + list(extra_drop or []), errors="ignore"
-    )
-    _profile_numeric(profile_frame, labels, target, dataset).to_csv(
-        output / "cluster_profile_numeric.csv", index=False, encoding="utf-8-sig"
-    )
-    _profile_categorical(profile_frame, labels, target, dataset).to_csv(
-        output / "cluster_profile_categorical.csv",
-        index=False,
-        encoding="utf-8-sig",
-    )
-    _target_distribution(frame, labels, target, dataset).to_csv(
-        output / "cluster_target_summary.csv",
-        index=False,
-        encoding="utf-8-sig",
-    )
-    _distinguishing_features(numeric_features, labels, dataset).to_csv(
-        output / "cluster_distinguishing_features.csv",
-        index=False,
-        encoding="utf-8-sig",
-    )
-    pd.DataFrame({"Row_Index": frame.index, "Cluster": labels}).to_csv(
-        output / "cluster_assignments.csv", index=False, encoding="utf-8-sig"
-    )
-    return metrics, selected_k, labels
+def run_ghrm_kmeans(logger=print):
+    df,comp,_=load_survey(); features=GEE_PLUS_FEATURES; Z=StandardScaler().fit_transform(SimpleImputer(strategy="median").fit_transform(comp[features])); rows=_evaluate(Z); best=max(rows,key=lambda r:r['silhouette']); final=KMeans(n_clusters=best['k'],n_init=KMEANS_N_INIT,max_iter=KMEANS_MAX_ITER,random_state=RANDOM_STATE).fit(Z); labels=final.labels_; sizes=pd.Series(labels).value_counts().sort_index().to_dict(); prof=[]
+    for c in range(best['k']):
+        mask=labels==c; row={"cluster":int(c),"size":int(mask.sum()),"mean_FEP":float(comp.loc[mask,'FEP'].mean())}; row.update({f"mean_{f}":float(comp.loc[mask,f].mean()) for f in features}); prof.append(row)
+    out={"dataset":"ghrm","features":features,"FEP_used_for_clustering":False,"k_results":rows,"selected_k":best['k'],"selection_rule":"maximum silhouette; SSE and Davies-Bouldin reported simultaneously","cluster_sizes":{str(k):int(v) for k,v in sizes.items()},"profiles_after_clustering":prof}
+    (RESULTS_DIR/'clustering_ghrm.json').write_text(json.dumps(out,indent=2),encoding='utf-8'); _figure('ghrm',rows); logger(f"ghrm/KMeans: features=5 selected_k={best['k']} silhouette={best['silhouette']:.4f} SSE={best['sse']:.3f} DB={best['davies_bouldin']:.4f}"); return out

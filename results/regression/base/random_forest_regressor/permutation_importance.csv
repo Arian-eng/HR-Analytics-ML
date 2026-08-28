@@ -1,5 +1,0 @@
-﻿Dataset,Model,Feature,Importance_Mean,Importance_Std
-ghrm,Base Random Forest Regressor,GRS,0.08556374377850265,0.03186433691987512
-ghrm,Base Random Forest Regressor,GCM,0.027338387621501627,0.015441308534655255
-ghrm,Base Random Forest Regressor,GTD,-0.0009607922114323375,0.010575821446390707
-ghrm,Base Random Forest Regressor,GPA,-0.019941131330251282,0.015828958649139253

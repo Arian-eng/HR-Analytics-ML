@@ -1,5 +1,0 @@
-﻿Dataset,Display_Name,Role,File,SHA256,Rows,Raw_Columns,Exact_Duplicate_Rows,Target,Missing_Target
-ibm,IBM HR Analytics,supplementary HR analysis,WA_Fn-UseC_-HR-Employee-Attrition (3).csv,a5c31e38bd7fafc9bc333884eb181b06b41b8e5e488e8f7ccb27199fb3be7659,1470,35,0,Attrition,0
-job_change,Job Change,supplementary HR analysis,aug_train.csv,8b78da3482032500df40d5359c36ba4a59e28ccd6fc272b050dcf6dee37f114c,19158,14,0,target,0
-promotion,Employee Promotion,supplementary HR analysis,train_LZdllcl.csv,3d7b679b3ba36d1cad25d4e0ea40bc84e5ac741c45e9c878d72adc3db74a984c,54808,14,0,is_promoted,0
-ghrm,GHRM - Environmental Performance,main Green HRM analysis,HRM DATASETS.csv,ac5c0005d3492aa664ec4d290e027f04a778241d3ce6195e10c5f87aebc65203,320,33,0,FEP items,0
