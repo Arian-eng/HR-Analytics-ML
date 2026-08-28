@@ -1,0 +1,54 @@
+{
+  "by_k": [
+    {
+      "k": 2,
+      "sse": 321148.01,
+      "silhouette": 0.2273,
+      "davies_bouldin": 1.9264
+    },
+    {
+      "k": 3,
+      "sse": 267851.79,
+      "silhouette": 0.2357,
+      "davies_bouldin": 1.4031
+    },
+    {
+      "k": 4,
+      "sse": 221204.8,
+      "silhouette": 0.2469,
+      "davies_bouldin": 1.3041
+    },
+    {
+      "k": 5,
+      "sse": 191896.7,
+      "silhouette": 0.2565,
+      "davies_bouldin": 1.2695
+    },
+    {
+      "k": 6,
+      "sse": 170961.98,
+      "silhouette": 0.2424,
+      "davies_bouldin": 1.1929
+    },
+    {
+      "k": 7,
+      "sse": 157007.93,
+      "silhouette": 0.2351,
+      "davies_bouldin": 1.1644
+    }
+  ],
+  "best_k": 5,
+  "selection_rule": "max silhouette (2<=k<=7); SSE and Davies-Bouldin reported as supplementary criteria",
+  "dataset": "promotion",
+  "n_used": 54808,
+  "cluster_input_vars": [
+    "no_of_trainings",
+    "age",
+    "previous_year_rating",
+    "length_of_service",
+    "KPIs_met >80%",
+    "awards_won?",
+    "avg_training_score"
+  ],
+  "runtime_seconds": 8.3
+}

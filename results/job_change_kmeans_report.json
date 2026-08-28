@@ -1,0 +1,49 @@
+{
+  "by_k": [
+    {
+      "k": 2,
+      "sse": 21755.94,
+      "silhouette": 0.5216,
+      "davies_bouldin": 0.8542
+    },
+    {
+      "k": 3,
+      "sse": 11219.41,
+      "silhouette": 0.5773,
+      "davies_bouldin": 0.6639
+    },
+    {
+      "k": 4,
+      "sse": 8306.64,
+      "silhouette": 0.5212,
+      "davies_bouldin": 0.7118
+    },
+    {
+      "k": 5,
+      "sse": 6459.79,
+      "silhouette": 0.5129,
+      "davies_bouldin": 0.7388
+    },
+    {
+      "k": 6,
+      "sse": 5313.75,
+      "silhouette": 0.5117,
+      "davies_bouldin": 0.7026
+    },
+    {
+      "k": 7,
+      "sse": 4268.23,
+      "silhouette": 0.4882,
+      "davies_bouldin": 0.7184
+    }
+  ],
+  "best_k": 3,
+  "selection_rule": "max silhouette (2<=k<=7); SSE and Davies-Bouldin reported as supplementary criteria",
+  "dataset": "job_change",
+  "n_used": 19158,
+  "cluster_input_vars": [
+    "city_development_index",
+    "training_hours"
+  ],
+  "runtime_seconds": 4.4
+}

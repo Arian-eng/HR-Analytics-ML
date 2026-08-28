@@ -1,0 +1,244 @@
+{
+  "dataset": "promotion",
+  "n_total": 54808,
+  "n_train": 43846,
+  "n_test": 10962,
+  "target": "is_promoted",
+  "models": {
+    "DecisionTree": {
+      "best_params": {
+        "max_depth": null,
+        "min_samples_split": 2
+      },
+      "cv_best_f1": 0.4298,
+      "accuracy": 0.8982,
+      "precision": 0.4113,
+      "recall": 0.4518,
+      "f1": 0.4306,
+      "bootstrap_95ci": {
+        "accuracy": {
+          "ci_low": 0.8922,
+          "ci_high": 0.9038
+        },
+        "precision": {
+          "ci_low": 0.3815,
+          "ci_high": 0.4415
+        },
+        "recall": {
+          "ci_low": 0.4195,
+          "ci_high": 0.4832
+        },
+        "f1": {
+          "ci_low": 0.4031,
+          "ci_high": 0.4573
+        }
+      },
+      "runtime_seconds": 29.2
+    },
+    "RandomForest": {
+      "best_params": {
+        "max_depth": null,
+        "n_estimators": 200
+      },
+      "cv_best_f1": 0.4076,
+      "accuracy": 0.935,
+      "precision": 0.8323,
+      "recall": 0.2976,
+      "f1": 0.4385,
+      "bootstrap_95ci": {
+        "accuracy": {
+          "ci_low": 0.9305,
+          "ci_high": 0.9395
+        },
+        "precision": {
+          "ci_low": 0.791,
+          "ci_high": 0.8713
+        },
+        "recall": {
+          "ci_low": 0.2686,
+          "ci_high": 0.3275
+        },
+        "f1": {
+          "ci_low": 0.4042,
+          "ci_high": 0.4728
+        }
+      },
+      "runtime_seconds": 273.4
+    },
+    "LinearSVC": {
+      "best_params": {
+        "C": 0.1
+      },
+      "cv_best_f1": 0.3694,
+      "accuracy": 0.7584,
+      "precision": 0.2387,
+      "recall": 0.8383,
+      "f1": 0.3716,
+      "bootstrap_95ci": {
+        "accuracy": {
+          "ci_low": 0.7508,
+          "ci_high": 0.7664
+        },
+        "precision": {
+          "ci_low": 0.2247,
+          "ci_high": 0.2535
+        },
+        "recall": {
+          "ci_low": 0.8144,
+          "ci_high": 0.8629
+        },
+        "f1": {
+          "ci_low": 0.3537,
+          "ci_high": 0.39
+        }
+      },
+      "runtime_seconds": 20.6
+    },
+    "MLPClassifier": {
+      "best_params": {
+        "alpha": 0.0001,
+        "hidden_layer_sizes": [
+          32,
+          16
+        ],
+        "learning_rate_init": 0.001
+      },
+      "cv_best_f1": 0.4951,
+      "accuracy": 0.9414,
+      "precision": 0.9011,
+      "recall": 0.3512,
+      "f1": 0.5054,
+      "bootstrap_95ci": {
+        "accuracy": {
+          "ci_low": 0.9373,
+          "ci_high": 0.9455
+        },
+        "precision": {
+          "ci_low": 0.8676,
+          "ci_high": 0.9299
+        },
+        "recall": {
+          "ci_low": 0.3215,
+          "ci_high": 0.3811
+        },
+        "f1": {
+          "ci_low": 0.4721,
+          "ci_high": 0.5368
+        }
+      },
+      "runtime_seconds": 69.9
+    }
+  },
+  "grids_searched": {
+    "DecisionTree": {
+      "clf__max_depth": [
+        6,
+        10,
+        15,
+        null
+      ],
+      "clf__min_samples_split": [
+        2,
+        10
+      ]
+    },
+    "RandomForest": {
+      "clf__n_estimators": [
+        100,
+        200,
+        400
+      ],
+      "clf__max_depth": [
+        null,
+        15
+      ]
+    },
+    "LinearSVC": {
+      "clf__C": [
+        0.1,
+        1,
+        10
+      ]
+    },
+    "MLPClassifier": {
+      "clf__hidden_layer_sizes": [
+        [
+          50
+        ],
+        [
+          32,
+          16
+        ]
+      ],
+      "clf__alpha": [
+        0.0001,
+        0.001
+      ],
+      "clf__learning_rate_init": [
+        0.001,
+        0.01
+      ]
+    }
+  },
+  "compute_settings": {
+    "cv_folds": 3,
+    "bootstrap_resamples": 2000,
+    "seed": 42,
+    "scoring": "f1 (positive class)",
+    "note": "each model's grid search was run in a separate process to fit the single-CPU runtime budget; combined here"
+  },
+  "mcnemar_pairwise": {
+    "DecisionTree_vs_RandomForest": {
+      "b": 172,
+      "c": 576,
+      "n_discordant": 748,
+      "method": "chi2_continuity_corrected",
+      "statistic": 217.12433155080214,
+      "p_value": 0.0
+    },
+    "DecisionTree_vs_LinearSVC": {
+      "b": 2099,
+      "c": 567,
+      "n_discordant": 2666,
+      "method": "chi2_continuity_corrected",
+      "statistic": 879.2051762940736,
+      "p_value": 0.0
+    },
+    "DecisionTree_vs_MLPClassifier": {
+      "b": 136,
+      "c": 610,
+      "n_discordant": 746,
+      "method": "chi2_continuity_corrected",
+      "statistic": 299.9048257372654,
+      "p_value": 0.0
+    },
+    "RandomForest_vs_LinearSVC": {
+      "b": 2456,
+      "c": 520,
+      "n_discordant": 2976,
+      "method": "chi2_continuity_corrected",
+      "statistic": 1258.140120967742,
+      "p_value": 0.0
+    },
+    "RandomForest_vs_MLPClassifier": {
+      "b": 50,
+      "c": 120,
+      "n_discordant": 170,
+      "method": "chi2_continuity_corrected",
+      "statistic": 28.00588235294118,
+      "p_value": 1.209472386687338e-07
+    },
+    "LinearSVC_vs_MLPClassifier": {
+      "b": 463,
+      "c": 2469,
+      "n_discordant": 2932,
+      "method": "chi2_continuity_corrected",
+      "statistic": 1371.0862892223738,
+      "p_value": 0.0
+    }
+  },
+  "decision_tree_structure": {
+    "n_leaves": 4855,
+    "depth": 63
+  }
+}

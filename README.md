@@ -1,4 +1,4 @@
-# HR Analytics ML — Chapter 3 aligned pipeline 
+# HR Analytics ML — Chapter 3 aligned pipeline (v2)
 
 Real, executed analysis code for the four datasets used in the thesis,
 implementing Chapter 3's (روش پژوهش) exact specification — including its

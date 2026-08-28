@@ -1,0 +1,107 @@
+{
+  "n": 320,
+  "cronbach_alpha": {
+    "GRS": 0.7846,
+    "GTD": 0.8026,
+    "GPA": 0.8626,
+    "GCM": 0.7962,
+    "GEE": 0.7975,
+    "FEP": 0.6043
+  },
+  "alpha_interpretation": {
+    "GRS": "acceptable (>=0.70)",
+    "GTD": "acceptable (>=0.70)",
+    "GPA": "acceptable (>=0.70)",
+    "GCM": "acceptable (>=0.70)",
+    "GEE": "acceptable (>=0.70)",
+    "FEP": "questionable (<0.70)"
+  },
+  "descriptives": {
+    "GRS_score": {
+      "mean": 3.44,
+      "std": 0.89,
+      "min": 1.0,
+      "max": 5.0
+    },
+    "GTD_score": {
+      "mean": 3.47,
+      "std": 0.84,
+      "min": 1.0,
+      "max": 5.0
+    },
+    "GPA_score": {
+      "mean": 3.46,
+      "std": 0.87,
+      "min": 1.0,
+      "max": 5.0
+    },
+    "GCM_score": {
+      "mean": 3.45,
+      "std": 0.88,
+      "min": 1.0,
+      "max": 5.0
+    },
+    "GEE_score": {
+      "mean": 3.43,
+      "std": 0.87,
+      "min": 1.0,
+      "max": 5.0
+    },
+    "FEP_score": {
+      "mean": 3.54,
+      "std": 0.73,
+      "min": 1.0,
+      "max": 5.0
+    }
+  },
+  "correlation_matrix": {
+    "GRS_score": {
+      "GRS_score": 1.0,
+      "GTD_score": 0.772,
+      "GPA_score": 0.756,
+      "GCM_score": 0.692,
+      "GEE_score": 0.717,
+      "FEP_score": 0.646
+    },
+    "GTD_score": {
+      "GRS_score": 0.772,
+      "GTD_score": 1.0,
+      "GPA_score": 0.786,
+      "GCM_score": 0.736,
+      "GEE_score": 0.733,
+      "FEP_score": 0.645
+    },
+    "GPA_score": {
+      "GRS_score": 0.756,
+      "GTD_score": 0.786,
+      "GPA_score": 1.0,
+      "GCM_score": 0.817,
+      "GEE_score": 0.775,
+      "FEP_score": 0.611
+    },
+    "GCM_score": {
+      "GRS_score": 0.692,
+      "GTD_score": 0.736,
+      "GPA_score": 0.817,
+      "GCM_score": 1.0,
+      "GEE_score": 0.741,
+      "FEP_score": 0.646
+    },
+    "GEE_score": {
+      "GRS_score": 0.717,
+      "GTD_score": 0.733,
+      "GPA_score": 0.775,
+      "GCM_score": 0.741,
+      "GEE_score": 1.0,
+      "FEP_score": 0.59
+    },
+    "FEP_score": {
+      "GRS_score": 0.646,
+      "GTD_score": 0.645,
+      "GPA_score": 0.611,
+      "GCM_score": 0.646,
+      "GEE_score": 0.59,
+      "FEP_score": 1.0
+    }
+  }
+}

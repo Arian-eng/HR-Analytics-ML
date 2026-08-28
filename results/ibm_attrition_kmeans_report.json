@@ -1,0 +1,70 @@
+{
+  "by_k": [
+    {
+      "k": 2,
+      "sse": 29253.11,
+      "silhouette": 0.1529,
+      "davies_bouldin": 2.3825
+    },
+    {
+      "k": 3,
+      "sse": 27407.52,
+      "silhouette": 0.132,
+      "davies_bouldin": 2.2923
+    },
+    {
+      "k": 4,
+      "sse": 25979.56,
+      "silhouette": 0.0962,
+      "davies_bouldin": 2.5809
+    },
+    {
+      "k": 5,
+      "sse": 24915.1,
+      "silhouette": 0.103,
+      "davies_bouldin": 2.4181
+    },
+    {
+      "k": 6,
+      "sse": 24089.73,
+      "silhouette": 0.0779,
+      "davies_bouldin": 2.6591
+    },
+    {
+      "k": 7,
+      "sse": 23671.7,
+      "silhouette": 0.0791,
+      "davies_bouldin": 2.6667
+    }
+  ],
+  "best_k": 2,
+  "selection_rule": "max silhouette (2<=k<=7); SSE and Davies-Bouldin reported as supplementary criteria",
+  "dataset": "ibm_attrition",
+  "n_used": 1470,
+  "cluster_input_vars": [
+    "Age",
+    "DailyRate",
+    "DistanceFromHome",
+    "Education",
+    "EnvironmentSatisfaction",
+    "HourlyRate",
+    "JobInvolvement",
+    "JobLevel",
+    "JobSatisfaction",
+    "MonthlyIncome",
+    "MonthlyRate",
+    "NumCompaniesWorked",
+    "PercentSalaryHike",
+    "PerformanceRating",
+    "RelationshipSatisfaction",
+    "StockOptionLevel",
+    "TotalWorkingYears",
+    "TrainingTimesLastYear",
+    "WorkLifeBalance",
+    "YearsAtCompany",
+    "YearsInCurrentRole",
+    "YearsSinceLastPromotion",
+    "YearsWithCurrManager"
+  ],
+  "runtime_seconds": 1.1
+}

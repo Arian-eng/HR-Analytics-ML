@@ -1,0 +1,273 @@
+{
+  "n_total": 320,
+  "n_train": 256,
+  "n_test": 64,
+  "base_predictors": [
+    "GRS_score",
+    "GTD_score",
+    "GPA_score",
+    "GCM_score"
+  ],
+  "gee_predictors": [
+    "GRS_score",
+    "GTD_score",
+    "GPA_score",
+    "GCM_score",
+    "GEE_score"
+  ],
+  "target": "FEP_score",
+  "model_results": {
+    "RandomForestRegressor": {
+      "base": {
+        "r2": 0.4374,
+        "rmse": 0.487,
+        "mae": 0.3855,
+        "best_params": {
+          "max_depth": 5,
+          "max_features": "sqrt",
+          "n_estimators": 200
+        },
+        "cv_rmse": 0.5682
+      },
+      "gee_plus": {
+        "r2": 0.4197,
+        "rmse": 0.4946,
+        "mae": 0.3898,
+        "best_params": {
+          "max_depth": 5,
+          "max_features": "sqrt",
+          "n_estimators": 100
+        },
+        "cv_rmse": 0.5632
+      }
+    },
+    "DecisionTreeRegressor": {
+      "base": {
+        "r2": 0.4361,
+        "rmse": 0.4876,
+        "mae": 0.3719,
+        "best_params": {
+          "max_depth": 4,
+          "min_samples_leaf": 5
+        },
+        "cv_rmse": 0.6019
+      },
+      "gee_plus": {
+        "r2": 0.4295,
+        "rmse": 0.4904,
+        "mae": 0.3804,
+        "best_params": {
+          "max_depth": 4,
+          "min_samples_leaf": 5
+        },
+        "cv_rmse": 0.6116
+      }
+    },
+    "LinearSVR": {
+      "base": {
+        "r2": 0.4287,
+        "rmse": 0.4908,
+        "mae": 0.3831,
+        "best_params": {
+          "C": 1,
+          "epsilon": 0.2
+        },
+        "cv_rmse": 0.5317
+      },
+      "gee_plus": {
+        "r2": 0.4058,
+        "rmse": 0.5005,
+        "mae": 0.3884,
+        "best_params": {
+          "C": 1,
+          "epsilon": 0.0
+        },
+        "cv_rmse": 0.535
+      }
+    },
+    "MLPRegressor": {
+      "base": {
+        "r2": 0.235,
+        "rmse": 0.5679,
+        "mae": 0.4487,
+        "best_params": {
+          "alpha": 0.0001,
+          "hidden_layer_sizes": [
+            32,
+            16
+          ],
+          "learning_rate_init": 0.001
+        },
+        "cv_rmse": 0.5685
+      },
+      "gee_plus": {
+        "r2": 0.3707,
+        "rmse": 0.5151,
+        "mae": 0.4098,
+        "best_params": {
+          "alpha": 0.01,
+          "hidden_layer_sizes": [
+            16,
+            8
+          ],
+          "learning_rate_init": 0.001
+        },
+        "cv_rmse": 0.5651
+      }
+    }
+  },
+  "bootstrap_base_vs_gee_4000resamples": {
+    "RandomForestRegressor": {
+      "r2": {
+        "mean_diff_gee_minus_base": -0.018,
+        "ci_low": -0.0682,
+        "ci_high": 0.0285,
+        "ci_excludes_zero": false
+      },
+      "rmse": {
+        "mean_diff_gee_minus_base": 0.0074,
+        "ci_low": -0.0106,
+        "ci_high": 0.0247,
+        "ci_excludes_zero": false
+      },
+      "mae": {
+        "mean_diff_gee_minus_base": 0.0043,
+        "ci_low": -0.0091,
+        "ci_high": 0.0179,
+        "ci_excludes_zero": false
+      }
+    },
+    "DecisionTreeRegressor": {
+      "r2": {
+        "mean_diff_gee_minus_base": -0.0073,
+        "ci_low": -0.0686,
+        "ci_high": 0.0547,
+        "ci_excludes_zero": false
+      },
+      "rmse": {
+        "mean_diff_gee_minus_base": 0.0031,
+        "ci_low": -0.0213,
+        "ci_high": 0.028,
+        "ci_excludes_zero": false
+      },
+      "mae": {
+        "mean_diff_gee_minus_base": 0.0086,
+        "ci_low": -0.0213,
+        "ci_high": 0.0391,
+        "ci_excludes_zero": false
+      }
+    },
+    "LinearSVR": {
+      "r2": {
+        "mean_diff_gee_minus_base": -0.0263,
+        "ci_low": -0.0812,
+        "ci_high": 0.011,
+        "ci_excludes_zero": false
+      },
+      "rmse": {
+        "mean_diff_gee_minus_base": 0.0096,
+        "ci_low": -0.0056,
+        "ci_high": 0.0245,
+        "ci_excludes_zero": false
+      },
+      "mae": {
+        "mean_diff_gee_minus_base": 0.0053,
+        "ci_low": -0.0074,
+        "ci_high": 0.0177,
+        "ci_excludes_zero": false
+      }
+    },
+    "MLPRegressor": {
+      "r2": {
+        "mean_diff_gee_minus_base": 0.1387,
+        "ci_low": -0.0071,
+        "ci_high": 0.2828,
+        "ci_excludes_zero": false
+      },
+      "rmse": {
+        "mean_diff_gee_minus_base": -0.0527,
+        "ci_low": -0.1049,
+        "ci_high": 0.0025,
+        "ci_excludes_zero": false
+      },
+      "mae": {
+        "mean_diff_gee_minus_base": -0.0391,
+        "ci_low": -0.089,
+        "ci_high": 0.0127,
+        "ci_excludes_zero": false
+      }
+    }
+  },
+  "compute_settings": {
+    "cv_folds": 5,
+    "cv_scoring": "RMSE (KFold, not stratified)",
+    "bootstrap_resamples": 4000,
+    "seed": 42
+  },
+  "decision_tree_structure": {
+    "n_leaves": 11,
+    "depth": 4
+  },
+  "kmeans": {
+    "by_k": [
+      {
+        "k": 2,
+        "sse": 770.65,
+        "silhouette": 0.4363,
+        "davies_bouldin": 0.8611
+      },
+      {
+        "k": 3,
+        "sse": 559.78,
+        "silhouette": 0.3646,
+        "davies_bouldin": 0.9514
+      },
+      {
+        "k": 4,
+        "sse": 446.55,
+        "silhouette": 0.2952,
+        "davies_bouldin": 1.0536
+      },
+      {
+        "k": 5,
+        "sse": 401.16,
+        "silhouette": 0.2477,
+        "davies_bouldin": 1.2396
+      },
+      {
+        "k": 6,
+        "sse": 367.96,
+        "silhouette": 0.2366,
+        "davies_bouldin": 1.278
+      },
+      {
+        "k": 7,
+        "sse": 342.89,
+        "silhouette": 0.2203,
+        "davies_bouldin": 1.3715
+      }
+    ],
+    "best_k": 2,
+    "selection_rule": "max silhouette (2<=k<=7); SSE and Davies-Bouldin reported as supplementary criteria",
+    "dataset": "ghrm",
+    "cluster_input_vars": [
+      "GRS_score",
+      "GTD_score",
+      "GPA_score",
+      "GCM_score",
+      "GEE_score"
+    ],
+    "fep_by_cluster": {
+      "0": {
+        "mean": 3.851,
+        "std": 0.547,
+        "count": 198
+      },
+      "1": {
+        "mean": 3.041,
+        "std": 0.704,
+        "count": 122
+      }
+    }
+  }
+}
