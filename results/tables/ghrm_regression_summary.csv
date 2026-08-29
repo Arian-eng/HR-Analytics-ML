@@ -1,0 +1,9 @@
+model,specification,r2,rmse,mae,cv_rmse
+Random Forest Regressor,Base,0.4374,0.4870,0.3855,0.5682
+Random Forest Regressor,GEE+,0.4197,0.4946,0.3898,0.5632
+Decision Tree Regressor,Base,0.4361,0.4876,0.3719,0.6019
+Decision Tree Regressor,GEE+,0.4295,0.4904,0.3804,0.6116
+LinearSVR,Base,0.4287,0.4908,0.3831,0.5317
+LinearSVR,GEE+,0.4058,0.5005,0.3884,0.5350
+MLPRegressor,Base,0.2350,0.5679,0.4487,0.5685
+MLPRegressor,GEE+,0.3707,0.5151,0.4098,0.5651
