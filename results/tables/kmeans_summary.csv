@@ -1,0 +1,5 @@
+dataset,selected_k,sse,silhouette,davies_bouldin
+IBM Attrition,2,29253.11,0.1529,2.3825
+Job Change,3,11219.41,0.5773,0.6639
+Employee Promotion,5,191896.70,0.2565,1.2695
+GHRM,2,770.65,0.4363,0.8611
