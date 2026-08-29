@@ -12,9 +12,10 @@ The repository is organized so that a reviewer can trace an analytical statement
 4. [`docs/decision_trees.md`](docs/decision_trees.md) — fitted tree structures and interpretation.
 5. [`results/PATTERNS_AND_FINDINGS.md`](results/PATTERNS_AND_FINDINGS.md) — table of patterns obtained from the analyses.
 6. [`docs/conclusion.md`](docs/conclusion.md) — evidence-based conclusion and limitations.
-7. [`docs/thesis_mapping.md`](docs/thesis_mapping.md) — thesis-to-code/result/figure mapping.
-8. [`validation/validation_report.md`](validation/validation_report.md) — independent cross-check against the existing Chapter 4 text.
-9. `results/*.json` and `src/*.py` — machine-readable outputs and implementation details.
+7. [`docs/DEFENSE_QA.md`](docs/DEFENSE_QA.md) — concise answers to reviewer-sensitive questions about sample size, imbalance, tree complexity, GEE, reliability and dataset scope.
+8. [`docs/thesis_mapping.md`](docs/thesis_mapping.md) — thesis-to-code/result/figure mapping.
+9. [`validation/validation_report.md`](validation/validation_report.md) — independent cross-check against the existing Chapter 4 text.
+10. `results/*.json` and `src/*.py` — machine-readable outputs and implementation details.
 
 ## The four datasets
 
@@ -26,6 +27,8 @@ The repository is organized so that a reviewer can trace an analytical statement
 | 4 | `train_LZdllcl.csv` | General HR benchmark | 54,808 | is_promoted |
 
 Only dataset 1 directly measures the Green HRM constructs used in the thesis. Datasets 2–4 are general-purpose HR benchmarks. They are modeled independently, and any connection to Green HRM is limited to methodological or interpretive discussion rather than direct measurement.
+
+The expected local data layout and filenames are documented in [`data/README.md`](data/README.md). The four datasets are not merged record-by-record.
 
 ## What each script does
 
@@ -39,13 +42,13 @@ Only dataset 1 directly measures the Green HRM constructs used in the thesis. Da
 
 The committed `results/*.json` files are the authoritative numerical outputs of the executed analysis. Reviewer-friendly tables are also provided under `results/tables/` and in `results/MODEL_RESULTS.md`.
 
-The final analysis archive contains 27 PNG artifacts covering the Chapter 4 charts, confusion matrices, decision trees, K-Means criteria/PCA views, GHRM correlations, Base-vs-GEE comparison and the GEE bootstrap summary. Their filenames, byte sizes and SHA-256 digests are recorded in `figures/MANIFEST.md`; `figures/README.md` explains what each one is intended to show and what can, and cannot, be inferred from it.
+Five directly viewable SVG summary figures are committed under `figures/`. The final analysis archive also contains 27 original PNG artifacts covering the Chapter 4 charts, confusion matrices, decision trees, K-Means criteria/PCA views, GHRM correlations, Base-vs-GEE comparison and the GEE bootstrap summary. Their filenames, byte sizes and SHA-256 digests are recorded in `figures/MANIFEST.md`; `figures/README.md` explains what each one is intended to show and what can, and cannot, be inferred from it.
 
 ## Reproducibility
 
 ```bash
 pip install -r requirements.txt
-# place the four CSV files under data/ using the exact filenames in the table above
+# place the four CSV files under data/ using the exact filenames documented in data/README.md
 python src/run_ghrm.py
 python src/run_ibm.py
 python src/run_jobchange.py
@@ -72,7 +75,8 @@ Detailed interpretation is kept in `results/PATTERNS_AND_FINDINGS.md` and `docs/
 
 ```text
 HR-Analytics-ML/
-├── data/                  # raw CSVs are not committed
+├── data/
+│   └── README.md          # expected raw filenames; raw CSVs are not committed
 ├── src/                   # analysis scripts and shared utilities
 ├── results/
 │   ├── *.json             # authoritative machine-readable outputs
@@ -80,12 +84,15 @@ HR-Analytics-ML/
 │   ├── PATTERNS_AND_FINDINGS.md
 │   └── tables/            # compact CSV summary tables
 ├── figures/
+│   ├── summary_*.svg      # directly viewable numerical summary figures
 │   ├── README.md          # figure-by-figure scientific explanation
 │   └── MANIFEST.md        # expected PNG names, sizes and SHA-256 hashes
 ├── docs/
 │   ├── formulas.md
 │   ├── decision_trees.md
+│   ├── DEFENSE_QA.md
 │   ├── thesis_mapping.md
+│   ├── FINAL_AUDIT.md
 │   └── conclusion.md
 ├── validation/
 │   └── validation_report.md
