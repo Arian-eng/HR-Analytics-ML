@@ -1,104 +1,150 @@
-# HR Analytics ML — Chapter 3 aligned pipeline (v2)
+# HR Analytics ML — Thesis Evidence Repository
 
-This repository contains the executed analysis code and published outputs for the four datasets used in the thesis. The implementation follows the documented 80/20 split, limited hyperparameter search, 3-fold stratified F1 tuning for classification, 5-fold RMSE tuning for GHRM regression, and numeric-only K-Means inputs for the three general HR datasets.
+This repository contains the executed analysis code, numerical outputs, tables, and **27 original PNG figures** used to document the thesis analyses. It is organized for reviewer traceability: **scope → method → code → result → table → figure → interpretation → limitation**.
 
-The repository is organized so that a reviewer can trace an analytical statement from the method to the numerical output and then to its visual interpretation.
+> **Reviewer: start here → [`START_HERE.md`](START_HERE.md)**
+>
+> That page provides the shortest path to every important piece of evidence without searching the repository manually.
 
-## Reviewer quick path
+## Direct access
 
-1. [`docs/formulas.md`](docs/formulas.md) — equations and metric definitions.
-2. [`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md) — readable model-result tables.
-3. [`figures/README.md`](figures/README.md) — explanation of every chart, confusion matrix, K-Means plot and decision-tree figure.
-4. [`docs/decision_trees.md`](docs/decision_trees.md) — fitted tree structures and interpretation.
-5. [`results/PATTERNS_AND_FINDINGS.md`](results/PATTERNS_AND_FINDINGS.md) — table of patterns obtained from the analyses.
-6. [`docs/conclusion.md`](docs/conclusion.md) — evidence-based conclusion and limitations.
-7. [`docs/DEFENSE_QA.md`](docs/DEFENSE_QA.md) — concise answers to reviewer-sensitive questions about sample size, imbalance, tree complexity, GEE, reliability and dataset scope.
-8. [`docs/thesis_mapping.md`](docs/thesis_mapping.md) — thesis-to-code/result/figure mapping.
-9. [`validation/validation_report.md`](validation/validation_report.md) — independent cross-check against the existing Chapter 4 text.
-10. `results/*.json` and `src/*.py` — machine-readable outputs and implementation details.
+| Need | Open this |
+|---|---|
+| Fast reviewer dashboard | **[`START_HERE.md`](START_HERE.md)** |
+| Main numerical results | **[`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md)** |
+| All result tables + JSON outputs | **[`results/README.md`](results/README.md)** |
+| All 27 PNG figures + interpretation | **[`figures/README.md`](figures/README.md)** |
+| One explanation file per figure | **[`figures/descriptions/`](figures/descriptions/)** |
+| Exact figure integrity hashes | **[`figures/MANIFEST.md`](figures/MANIFEST.md)** |
+| Source-code execution map | **[`src/README.md`](src/README.md)** |
+| Equations and metric definitions | **[`docs/formulas.md`](docs/formulas.md)** |
+| Decision-tree depth/leaves | **[`docs/decision_trees.md`](docs/decision_trees.md)** |
+| Thesis → code → result → figure mapping | **[`docs/thesis_mapping.md`](docs/thesis_mapping.md)** |
+| Defense-sensitive Q&A | **[`docs/DEFENSE_QA.md`](docs/DEFENSE_QA.md)** |
+| Validation vs thesis text | **[`validation/validation_report.md`](validation/validation_report.md)** |
+| Final limitations/audit | **[`docs/FINAL_AUDIT.md`](docs/FINAL_AUDIT.md)** |
 
-## The four datasets
+## Dataset roles
 
-| # | File | Role | n | Target |
-|---|---|---|---:|---|
-| 1 | `HRM_DATASETS.csv` | **Primary — direct GHRM measure** | 320 | FEP (continuous) |
-| 2 | `WA_Fn-UseC_-HR-Employee-Attrition__3_.csv` | General HR benchmark | 1,470 | Attrition |
-| 3 | `aug_train.csv` | General HR benchmark | 19,158 | target |
-| 4 | `train_LZdllcl.csv` | General HR benchmark | 54,808 | is_promoted |
+| # | Dataset | n | Role | Target |
+|---|---|---:|---|---|
+| 1 | `HRM_DATASETS.csv` | 320 | **Primary — direct Green HRM measurement** | FEP |
+| 2 | IBM HR Analytics Attrition | 1,470 | General HR benchmark / methodological validation | Attrition |
+| 3 | Job Change (`aug_train.csv`) | 19,158 | General HR benchmark / methodological validation | target |
+| 4 | Employee Promotion (`train_LZdllcl.csv`) | 54,808 | General HR benchmark / methodological validation | is_promoted |
 
-Only dataset 1 directly measures the Green HRM constructs used in the thesis. Datasets 2–4 are general-purpose HR benchmarks. They are modeled independently, and any connection to Green HRM is limited to methodological or interpretive discussion rather than direct measurement.
+Only the 320-record GHRM survey directly contains the Green HRM constructs GRS, GTD, GPA, GCM, GEE and FEP. The three public HR datasets are analyzed independently as general HR benchmarks; they are **not** treated as direct Green HRM measurements and are not merged record-by-record with the GHRM survey.
 
-The expected local data layout and filenames are documented in [`data/README.md`](data/README.md). The four datasets are not merged record-by-record.
+Expected raw-data filenames and local placement are documented in [`data/README.md`](data/README.md).
 
-## What each script does
+## Analysis design
 
-- **`src/generate_chapter4_charts.py`** generates the nine descriptive and summary figures referenced in Chapter 4: IBM age and income distributions, target/status distributions, train/test class balance, missing-value summaries, and cross-dataset K-Means/F1 comparisons.
-- **`src/run_ghrm_reliability.py`** calculates Cronbach's alpha, construct descriptives and the construct-level correlation matrix. Five constructs have alpha above 0.70; FEP is 0.6043 and is retained as a limitation.
-- **`src/run_ghrm.py`** runs the GHRM survey regression with a fixed 256/64 split, Base and GEE+ specifications, four regressors, 5-fold RMSE tuning, held-out R²/RMSE/MAE, 4,000-resample paired bootstrap comparisons, and K-Means on the five standardized GHRM practice scores.
-- **`src/run_ibm.py` and `src/run_jobchange.py`** run Decision Tree, Random Forest, LinearSVC and MLP classification with 3-fold stratified F1 tuning, held-out metrics with bootstrap intervals, confusion matrices, McNemar pairwise tests, decision-tree plots, and numeric-only K-Means.
-- **`src/run_promotion.py`** applies the same classification/clustering logic to the 54,808-row Promotion dataset. Its staged helper scripts separate the larger computations while preserving the same analysis design.
+- Fixed random seed: **42**.
+- Train/test split: **80/20** for all four analyses.
+- Classification: Decision Tree, Random Forest, LinearSVC and MLP; limited hyperparameter search with **3-fold stratified CV using positive-class F1**.
+- GHRM regression: Random Forest, Decision Tree, LinearSVR and MLP; **5-fold CV using RMSE** in the committed final pipeline.
+- GHRM specifications: Base = GRS + GTD + GPA + GCM; GEE+ adds GEE.
+- K-Means: candidates k=2..7; standardized inputs; selected by maximum Silhouette with SSE and Davies-Bouldin reported as supporting diagnostics.
+- Reliability: Cronbach's alpha for GRS, GTD, GPA, GCM, GEE and FEP.
+- Uncertainty: bootstrap intervals; classification comparisons also include McNemar tests.
 
-## Published outputs
+For exact script responsibilities, see [`src/README.md`](src/README.md). For equations, see [`docs/formulas.md`](docs/formulas.md).
 
-The committed `results/*.json` files are the authoritative numerical outputs of the executed analysis. Reviewer-friendly tables are also provided under `results/tables/` and in `results/MODEL_RESULTS.md`.
+## Published evidence
 
-Five directly viewable SVG summary figures are committed under `figures/`. The final analysis archive also contains 27 original PNG artifacts covering the Chapter 4 charts, confusion matrices, decision trees, K-Means criteria/PCA views, GHRM correlations, Base-vs-GEE comparison and the GEE bootstrap summary. Their filenames, byte sizes and SHA-256 digests are recorded in `figures/MANIFEST.md`; `figures/README.md` explains what each one is intended to show and what can, and cannot, be inferred from it.
+### Numerical outputs
+
+The committed `results/*.json` files are the machine-readable numerical source of truth for this repository. Reviewer-readable summaries are provided in [`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md) and compact CSV tables under [`results/tables/`](results/tables/).
+
+### Figures
+
+All **27 original PNG artifacts are committed under [`figures/`](figures/)**, including:
+
+- Chapter 4 descriptive charts;
+- confusion matrices;
+- decision-tree plots;
+- K-Means criteria plots;
+- PCA cluster visualizations;
+- GHRM correlation heatmap;
+- Base-vs-GEE comparison;
+- GEE effect / bootstrap summary.
+
+Every PNG has a reviewer-facing explanation under [`figures/descriptions/`](figures/descriptions/). The consolidated clickable index is [`figures/README.md`](figures/README.md), and exact filenames, byte sizes and SHA-256 hashes are in [`figures/MANIFEST.md`](figures/MANIFEST.md).
+
+## Main findings in brief
+
+| Analysis | Main committed result |
+|---|---|
+| IBM Attrition | Best held-out F1: **MLP = 0.5000**; RF illustrates why high Accuracy can hide very low positive recall. |
+| Job Change | Best held-out F1: **RF = 0.6042**; selected K-Means k=3, Silhouette=0.5773. |
+| Employee Promotion | Best held-out F1: **MLP = 0.5054**; Decision Tree depth=63, leaves=4,855, reported as an overfitting/interpretability risk. |
+| GHRM regression | Best Base held-out R²: **RF = 0.4374**. MLP has the largest positive GEE+ point change, but its paired 95% bootstrap interval includes zero. |
+| GHRM clustering | k=2, Silhouette=0.4363, DB=0.8611; cluster mean FEP values 3.851 and 3.041. |
+| Reliability | GRS/GTD/GPA/GCM/GEE alpha >0.70; **FEP alpha=0.6043**, explicitly treated as a limitation. |
+
+Detailed interpretation is in [`results/PATTERNS_AND_FINDINGS.md`](results/PATTERNS_AND_FINDINGS.md) and [`docs/conclusion.md`](docs/conclusion.md).
 
 ## Reproducibility
 
 ```bash
 pip install -r requirements.txt
-# place the four CSV files under data/ using the exact filenames documented in data/README.md
+# place the four CSV files under data/ using data/README.md
 python src/run_ghrm.py
 python src/run_ibm.py
 python src/run_jobchange.py
 python src/run_promotion.py
 ```
 
-All random seeds used by the current pipeline are fixed at 42. Paths are resolved relative to the repository root; no machine-specific `/home/...` path is required.
+Paths are repository-relative; machine-specific `/home/...` paths are not required. A GitHub Actions integrity workflow performs data-free checks on syntax and published result structure.
 
-The GitHub Actions integrity workflow performs data-free checks on source syntax, published JSON structure, the fixed GHRM 320/256/64 sample sizes, and repository portability. The raw datasets are intentionally not committed.
+The raw datasets are intentionally not committed. The exact original package snapshot was not captured, so this repository does **not** claim bit-for-bit reproduction across arbitrary future dependency versions. It does provide inspectable code, documented inputs, committed numerical outputs, tables, figures and validation evidence.
 
-`requirements.txt` uses compatible version ranges. The exact package snapshot of the original execution environment was not captured, so the repository does not claim bit-for-bit reproduction across arbitrary future library versions. The committed JSON outputs are the reference results for this repository.
+## Important interpretation boundaries
 
-## Main findings in brief
+The repository intentionally does **not** claim that:
 
-- IBM Attrition: MLP has the highest held-out F1 in the committed run (0.5000); Random Forest demonstrates why high accuracy can be misleading when positive-class recall is low.
-- Job Change: Random Forest has the highest F1 (0.6042); the selected K-Means solution has k=3 and Silhouette=0.5773.
-- Employee Promotion: MLP has the highest F1 (0.5054); the unrestricted Decision Tree reaches depth 63 and 4,855 leaves, which is reported as an overfitting risk.
-- GHRM: the best Base held-out R² is 0.4374. MLP shows the largest positive point change after GEE is added, but its paired 95% bootstrap interval includes zero. GHRM K-Means selects two clusters with mean FEP values 3.851 and 3.041.
-- Reliability: GRS, GTD, GPA, GCM and GEE have alpha above 0.70; FEP has alpha=0.6043 and is treated as a limitation.
+- the three public benchmark datasets directly measure Green HRM;
+- correlation, clustering or predictive association establishes causality;
+- Accuracy alone is sufficient for imbalanced classification;
+- adding GEE significantly improves every GHRM model;
+- the Promotion Decision Tree is preferable despite its extreme complexity;
+- every result is identical to the thesis text where [`validation/validation_report.md`](validation/validation_report.md) explicitly records a difference.
 
-Detailed interpretation is kept in `results/PATTERNS_AND_FINDINGS.md` and `docs/conclusion.md` rather than being inferred from a single metric.
-
-## Project structure
+## Repository map
 
 ```text
 HR-Analytics-ML/
+├── START_HERE.md           # reviewer evidence dashboard
+├── README.md               # scope and top-level navigation
 ├── data/
-│   └── README.md          # expected raw filenames; raw CSVs are not committed
-├── src/                   # analysis scripts and shared utilities
+│   └── README.md           # expected raw filenames and roles
+├── src/
+│   ├── README.md           # execution/code index
+│   └── *.py                # analysis pipelines
 ├── results/
-│   ├── *.json             # authoritative machine-readable outputs
-│   ├── MODEL_RESULTS.md   # readable performance tables
+│   ├── README.md           # results index
+│   ├── *.json              # authoritative machine-readable outputs
+│   ├── MODEL_RESULTS.md
 │   ├── PATTERNS_AND_FINDINGS.md
-│   └── tables/            # compact CSV summary tables
+│   └── tables/*.csv
 ├── figures/
-│   ├── summary_*.svg      # directly viewable numerical summary figures
-│   ├── README.md          # figure-by-figure scientific explanation
-│   └── MANIFEST.md        # expected PNG names, sizes and SHA-256 hashes
+│   ├── 27 original PNGs
+│   ├── README.md           # clickable figure index
+│   ├── descriptions/       # one explanation per PNG
+│   ├── MANIFEST.md         # filename/size/SHA-256 integrity
+│   └── SUMMARY_FIGURES.md
 ├── docs/
+│   ├── README.md           # documentation index
 │   ├── formulas.md
+│   ├── analysis_flow.md
 │   ├── decision_trees.md
-│   ├── DEFENSE_QA.md
 │   ├── thesis_mapping.md
-│   ├── FINAL_AUDIT.md
-│   └── conclusion.md
+│   ├── DEFENSE_QA.md
+│   ├── conclusion.md
+│   └── FINAL_AUDIT.md
 ├── validation/
 │   └── validation_report.md
-├── KEY_FINDINGS.md
 ├── requirements.txt
 ├── tests/
-├── .github/workflows/
-└── README.md
+└── .github/workflows/
 ```
