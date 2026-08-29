@@ -6,13 +6,14 @@ This file is a reviewer-facing checklist of what is actually present in the repo
 
 The repository now exposes the analysis in the following order:
 
-1. **Data role and scope** — `README.md` and `docs/thesis_mapping.md` identify the four datasets and separate the direct GHRM survey from the three general HR benchmark datasets.
-2. **Method** — `src/` contains the executable pipelines; `docs/formulas.md` documents the metrics and statistical criteria used.
-3. **Machine-readable results** — `results/*.json` are the authoritative published numerical outputs.
-4. **Tables** — `results/tables/` provides compact reviewer-readable summaries of model results, K-Means selection, reliability, tree structure, and discovered patterns.
-5. **Figures** — `figures/README.md` explains the intended role of every final figure; `figures/MANIFEST.md` records the exact binary identity of the 27 original PNG artifacts from the final analysis archive; `figures/summary_*.svg` provides directly viewable summary plots generated from the committed result numbers.
-6. **Interpretation** — `results/PATTERNS_AND_FINDINGS.md`, `docs/decision_trees.md`, and `docs/conclusion.md` distinguish descriptive patterns, predictive findings, uncertainty, and limitations.
-7. **Validation** — `validation/validation_report.md` documents the cross-check against the thesis and explicitly reports both matching and non-matching results instead of hiding differences.
+1. **Reviewer dashboard** — `START_HERE.md` provides the shortest route to all major evidence.
+2. **Data role and scope** — `README.md` and `docs/thesis_mapping.md` identify the four datasets and separate the direct GHRM survey from the three general HR benchmark datasets.
+3. **Method** — `src/` contains the executable pipelines; `src/README.md` indexes the scripts; `docs/formulas.md` documents the metrics and statistical criteria used.
+4. **Machine-readable results** — `results/*.json` are the authoritative published numerical outputs.
+5. **Tables** — `results/tables/` provides compact reviewer-readable summaries of model results, K-Means selection, reliability, tree structure and discovered patterns; `results/README.md` is the direct index.
+6. **Figures** — all 27 original PNG artifacts are committed under `figures/`; `figures/README.md` provides direct links and scientific interpretation; `figures/descriptions/` provides one explanation per PNG; `figures/MANIFEST.md` records exact filenames, sizes and SHA-256 identities.
+7. **Interpretation** — `results/PATTERNS_AND_FINDINGS.md`, `docs/decision_trees.md`, and `docs/conclusion.md` distinguish descriptive patterns, predictive findings, uncertainty and limitations.
+8. **Validation** — `validation/validation_report.md` documents the cross-check against the thesis and explicitly reports both matching and non-matching results instead of hiding differences.
 
 ## 2. Numerical integrity
 
@@ -36,7 +37,7 @@ For IBM Attrition, Job Change and Employee Promotion the repository reports, for
 - Accuracy, Precision, Recall and F1,
 - 95% bootstrap confidence intervals,
 - pairwise McNemar comparisons,
-- confusion-matrix figure references,
+- confusion matrices,
 - decision-tree structure information where applicable.
 
 ### GHRM regression
@@ -64,13 +65,22 @@ The GHRM reliability report contains Cronbach's alpha for all six constructs and
 
 ## 7. Figure status
 
-The repository contains directly rendered SVG summary figures based on the committed JSON values. The final analysis archive also contains 27 original PNG artifacts (descriptive charts, confusion matrices, decision trees, K-Means criteria and PCA plots). Their expected filenames, sizes and SHA-256 values are recorded in `figures/MANIFEST.md` so their binary identity is auditable.
+All **27 original PNG artifacts are committed in the repository under `figures/`**. These include descriptive Chapter 4 charts, confusion matrices, decision trees, K-Means criteria plots, PCA visualizations, the GHRM correlation heatmap, Base-vs-GEE comparison and the GEE effect / bootstrap summary.
 
-The numerical conclusions in this repository do not depend on reverse-reading values from image files; they come from the committed JSON outputs.
+For every PNG:
+
+- the image itself is directly accessible in `figures/`;
+- a reviewer-facing explanation is available in `figures/descriptions/`;
+- `figures/README.md` provides a consolidated clickable index with key interpretation and limitations;
+- `figures/MANIFEST.md` records filename, byte size and SHA-256 identity.
+
+The numerical conclusions do not depend on reverse-reading values from image files; they come from the committed JSON outputs.
 
 ## 8. Reproducibility / portability
 
 Machine-specific `/home/claude/repo2` paths were removed. Scripts now resolve project paths relative to the repository root. Dependency ranges are documented in `requirements.txt`, and a lightweight GitHub Actions integrity check validates syntax and the published result structure without requiring the raw datasets to be committed.
+
+The raw CSV files themselves are not committed. Their expected names and roles are documented in `data/README.md`. The exact original package snapshot was not captured, so the repository does not claim bit-for-bit reproducibility across arbitrary future dependency versions.
 
 ## 9. Statements that should NOT be made in the defense
 
@@ -89,8 +99,9 @@ The strongest repository-supported conclusions are:
 
 - the analysis pipeline is explicit and inspectable;
 - the 80/20 split and fixed random seed are documented;
-- the K-Means results are fully reported with three quality criteria;
-- model comparisons include metrics that are appropriate for imbalanced classes;
+- all 27 original figures are directly accessible and individually explained;
+- K-Means results are fully reported with three quality criteria;
+- model comparisons include metrics appropriate for imbalanced classes;
 - uncertainty is reported with bootstrap intervals and McNemar tests;
 - GHRM results are separated from benchmark HR results;
 - reliability, tree complexity and limitations are visible rather than omitted;
