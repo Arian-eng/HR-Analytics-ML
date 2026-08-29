@@ -15,16 +15,20 @@ Descriptive stats below are cross-checked against Chapter 4 Table 4-4 in
 the validation report.
 """
 import json
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-RESULTS = "/home/claude/repo2/results"
-FIGURES = "/home/claude/repo2/figures"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+RESULTS = PROJECT_ROOT / "results"
+FIGURES = PROJECT_ROOT / "figures"
+RESULTS.mkdir(parents=True, exist_ok=True)
+FIGURES.mkdir(parents=True, exist_ok=True)
 
-df = pd.read_csv("/home/claude/repo2/data/HRM_DATASETS.csv")
+df = pd.read_csv(PROJECT_ROOT / "data" / "HRM_DATASETS.csv")
 df = df.rename(columns={"GDT3": "GTD3"})
 
 CONSTRUCTS = {

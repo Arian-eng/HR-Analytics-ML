@@ -1,5 +1,6 @@
 import sys, time, json, os
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
@@ -11,7 +12,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, make_scorer
 from ch3_utils import build_preprocessor, bootstrap_classification_ci, RNG_SEED, RESULTS
 
-df = pd.read_csv("/home/claude/repo2/data/train_LZdllcl.csv")
+df = pd.read_csv(PROJECT_ROOT / "data" / "train_LZdllcl.csv")
 numeric_cols = ["no_of_trainings", "age", "previous_year_rating", "length_of_service",
                  "KPIs_met >80%", "awards_won?", "avg_training_score"]
 categorical_cols = ["department", "region", "education", "gender", "recruitment_channel"]

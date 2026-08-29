@@ -4,11 +4,12 @@ grid search (3-fold Stratified CV, F1 scoring) for DT/RF/LinearSVC/MLP,
 standardized numeric features only (SSE/Silhouette/Davies-Bouldin, k=2..7).
 """
 import sys
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import pandas as pd
 from ch3_utils import run_classification_suite, run_kmeans_numeric_only
 
-df = pd.read_csv("/home/claude/repo2/data/WA_Fn-UseC_-HR-Employee-Attrition__3_.csv")
+df = pd.read_csv(PROJECT_ROOT / "data" / "WA_Fn-UseC_-HR-Employee-Attrition__3_.csv")
 df["Attrition_bin"] = (df["Attrition"] == "Yes").astype(int)
 drop_cols = {"Attrition", "Attrition_bin", "EmployeeCount", "EmployeeNumber", "Over18", "StandardHours"}
 numeric_cols = [c for c in df.select_dtypes(include="number").columns if c not in drop_cols]

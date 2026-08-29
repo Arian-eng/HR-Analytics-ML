@@ -21,6 +21,9 @@ sequence; run it with `python run_promotion.py` to execute all steps.
 """
 import subprocess
 import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 STEPS = [
     ["_promotion_step1_per_model.py", "DecisionTree"],
@@ -34,4 +37,4 @@ STEPS = [
 if __name__ == "__main__":
     for step in STEPS:
         print(f"\n{'='*70}\nRunning: {' '.join(step)}\n{'='*70}")
-        subprocess.run([sys.executable] + step, check=True, cwd="/home/claude/repo2/src")
+        subprocess.run([sys.executable] + step, check=True, cwd=PROJECT_ROOT / "src")

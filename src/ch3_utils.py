@@ -16,6 +16,7 @@ against the thesis's own Chapter 4 text:
 """
 import json
 import time
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -41,8 +42,12 @@ from sklearn.metrics import (
 )
 from scipy import stats as scipy_stats
 
-RESULTS = "/home/claude/repo2/results"
-FIGURES = "/home/claude/repo2/figures"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA = PROJECT_ROOT / "data"
+RESULTS = PROJECT_ROOT / "results"
+FIGURES = PROJECT_ROOT / "figures"
+RESULTS.mkdir(parents=True, exist_ok=True)
+FIGURES.mkdir(parents=True, exist_ok=True)
 RNG_SEED = 42
 
 

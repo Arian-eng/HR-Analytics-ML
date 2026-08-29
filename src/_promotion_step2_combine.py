@@ -1,5 +1,6 @@
 import sys, json, time
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")

@@ -5,11 +5,12 @@ pairwise tests, and K-Means on standardized numeric features only
 (SSE/Silhouette/Davies-Bouldin, k=2..7).
 """
 import sys
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import pandas as pd
 from ch3_utils import run_classification_suite, run_kmeans_numeric_only
 
-df = pd.read_csv("/home/claude/repo2/data/aug_train.csv")
+df = pd.read_csv(PROJECT_ROOT / "data" / "aug_train.csv")
 df = df.dropna(subset=["target"]).copy()
 df["target"] = df["target"].astype(int)
 

@@ -1,5 +1,8 @@
-numpy
-pandas
-scikit-learn
-scipy
-matplotlib
+# Compatible dependency ranges for the published pipeline.
+# Exact package versions from the original execution environment were not captured;
+# these ranges avoid known API incompatibilities while keeping that limitation explicit.
+numpy>=1.26,<3
+pandas>=2.0,<3
+scikit-learn>=1.3,<2
+scipy>=1.11,<2
+matplotlib>=3.7,<4

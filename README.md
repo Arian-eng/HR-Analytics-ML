@@ -87,6 +87,12 @@ python src/run_promotion.py
 ```
 All random seeds are fixed at 42 throughout.
 
+## Portability and repository checks
+
+All scripts resolve `data/`, `results/`, and `figures/` relative to the repository root; no machine-specific absolute path is required. A lightweight GitHub Actions workflow compiles the source and validates the published JSON/PNG artifact structure without rerunning the thesis models (the raw datasets are intentionally not committed).
+
+`requirements.txt` uses compatible version ranges rather than pretending to know the exact package versions of the original execution environment; that original environment snapshot was not captured. The committed JSON result files remain the authoritative published outputs of this repository.
+
 ## Chapter 5 (discussion/conclusion)
 
 Chapter 5 has no numbered figures of its own — it is a text discussion,

@@ -6,7 +6,8 @@ criteria, correlation heatmap) covered the modeling results but not these.
 All built from the same real data/results already in this repo.
 """
 import sys, json
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -14,14 +15,16 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
-FIGURES = "/home/claude/repo2/figures"
-RESULTS = "/home/claude/repo2/results"
+FIGURES = PROJECT_ROOT / "figures"
+RESULTS = PROJECT_ROOT / "results"
+FIGURES.mkdir(parents=True, exist_ok=True)
+RESULTS.mkdir(parents=True, exist_ok=True)
 RNG_SEED = 42
 
 # ============================================================
 # 1-4: IBM age histogram
 # ============================================================
-ibm = pd.read_csv("/home/claude/repo2/data/WA_Fn-UseC_-HR-Employee-Attrition__3_.csv")
+ibm = pd.read_csv(PROJECT_ROOT / "data" / "WA_Fn-UseC_-HR-Employee-Attrition__3_.csv")
 fig, ax = plt.subplots(figsize=(6, 4))
 ax.hist(ibm["Age"], bins=20, color="#2b6cb0", edgecolor="white")
 ax.set_xlabel("Age"); ax.set_ylabel("Count")
@@ -41,7 +44,7 @@ plt.tight_layout(); plt.savefig(f"{FIGURES}/chart2_ibm_income_boxplot.png", dpi=
 # ============================================================
 # 3-4: Job Change target distribution
 # ============================================================
-jc = pd.read_csv("/home/claude/repo2/data/aug_train.csv")
+jc = pd.read_csv(PROJECT_ROOT / "data" / "aug_train.csv")
 jc = jc.dropna(subset=["target"]).copy()
 counts = jc["target"].value_counts().sort_index()
 fig, ax = plt.subplots(figsize=(5, 4))
@@ -55,7 +58,7 @@ plt.tight_layout(); plt.savefig(f"{FIGURES}/chart3_jobchange_target_distribution
 # ============================================================
 # 4-4: Promotion status distribution
 # ============================================================
-promo = pd.read_csv("/home/claude/repo2/data/train_LZdllcl.csv")
+promo = pd.read_csv(PROJECT_ROOT / "data" / "train_LZdllcl.csv")
 counts = promo["is_promoted"].value_counts().sort_index()
 fig, ax = plt.subplots(figsize=(5, 4))
 bars = ax.bar(["0 (not promoted)", "1 (promoted)"], counts.values, color=["#2b6cb0", "#38a169"])
@@ -163,7 +166,7 @@ for ds in ["ibm_attrition", "job_change", "promotion"]:
     with open(f"{RESULTS}/{ds}_classification_report.json") as f:
         d = json.load(f)
     f1_matrix.append([d["models"][m]["f1"] for m in model_names])
-f1_matrix = np.array(f1_matrix)  # shape (3 datasets, 4 models)
+f1_matrix = np.array(f1_matrix)
 
 fig, ax = plt.subplots(figsize=(9, 5))
 x = np.arange(len(ds_labels)); width = 0.2

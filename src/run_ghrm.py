@@ -1,5 +1,6 @@
 import sys, json, time
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -16,7 +17,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error, make_scorer
 from ch3_utils import kmeans_three_criteria, plot_kmeans_criteria, RESULTS, FIGURES, RNG_SEED
 
-df = pd.read_csv("/home/claude/repo2/data/HRM_DATASETS.csv")
+df = pd.read_csv(PROJECT_ROOT / "data" / "HRM_DATASETS.csv")
 df = df.rename(columns={"GDT3": "GTD3"})
 CONSTRUCTS = {
     "GRS": ["GRS1", "GRS2", "GRS3", "GRS4"], "GTD": ["GTD1", "GTD2", "GTD3", "GTD4", "GTD5"],

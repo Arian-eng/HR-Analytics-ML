@@ -1,5 +1,6 @@
 import sys, json, time
-sys.path.insert(0, "/home/claude/repo2/src")
+from pathlib import Path
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
@@ -8,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from ch3_utils import build_preprocessor, run_kmeans_numeric_only, RNG_SEED, RESULTS, FIGURES
 
-df = pd.read_csv("/home/claude/repo2/data/train_LZdllcl.csv")
+df = pd.read_csv(PROJECT_ROOT / "data" / "train_LZdllcl.csv")
 numeric_cols = ["no_of_trainings", "age", "previous_year_rating", "length_of_service",
                  "KPIs_met >80%", "awards_won?", "avg_training_score"]
 categorical_cols = ["department", "region", "education", "gender", "recruitment_channel"]
