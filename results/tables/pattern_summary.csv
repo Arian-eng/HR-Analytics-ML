@@ -1,0 +1,11 @@
+pattern_id,scope,evidence,interpretation
+P1,IBM Attrition,"RF accuracy=0.8435; recall=0.1064; F1=0.1786","Accuracy can hide poor minority-class detection"
+P2,Job Change,"RF F1=0.6042; DT recall=0.7853","Best model depends on the metric and dataset"
+P3,Employee Promotion,"MLP F1=0.5054; LinearSVC recall=0.8383; precision=0.2387","Precision-recall trade-off is substantial under class imbalance"
+P4,Employee Promotion,"Decision Tree depth=63; leaves=4855","Unrestricted tree shows overfitting/complexity risk"
+P5,K-Means,"Silhouette IBM=0.1529; Job Change=0.5773; Promotion=0.2565; GHRM=0.4363","Cluster separation varies strongly across datasets"
+P6,GHRM clustering,"k=2; FEP means=3.851 and 3.041","Two respondent segments have different average FEP"
+P7,GHRM regression,"Base RF R2=0.4374","Base GHRM constructs provide meaningful but incomplete FEP prediction"
+P8,GHRM GEE+,"MLP mean delta R2=0.1387; 95% CI=-0.0071 to 0.2828","Largest GEE+ point improvement is not statistically reliable"
+P9,GHRM correlations,"FEP r: GRS=0.646; GTD=0.645; GPA=0.611; GCM=0.646; GEE=0.590","All construct-FEP associations are positive and observational"
+P10,GHRM reliability,"FEP alpha=0.6043; other constructs >0.70","FEP internal consistency is a limitation"
