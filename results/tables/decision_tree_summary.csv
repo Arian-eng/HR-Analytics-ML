@@ -1,0 +1,5 @@
+analysis,task,depth,n_leaves,heldout_metric,heldout_value
+IBM Attrition,classification,6,38,F1,0.4127
+Job Change,classification,6,46,F1,0.5758
+Employee Promotion,classification,63,4855,F1,0.4306
+GHRM Base,regression,4,11,R2,0.4361
