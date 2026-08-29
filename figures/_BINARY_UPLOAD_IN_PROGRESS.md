@@ -1,1 +1,0 @@
-Binary figure upload is in progress through the Git data API. This marker will be removed after all 27 PNG artifacts are committed and verified against `figures/MANIFEST.md`.
