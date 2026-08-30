@@ -54,7 +54,7 @@ For exact script responsibilities, see [`src/README.md`](src/README.md). For equ
 
 ### Numerical outputs
 
-The committed `results/*.json` files are the machine-readable numerical source of truth for this repository. Reviewer-readable summaries are provided in [`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md) and compact CSV tables under [`results/tables/`](results/tables/).
+The committed `results/*.json` files are the machine-readable numerical source of truth for this repository. Reviewer-readable summaries are provided in [`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md) and compact CSV tables under [`results/tables/`](results/tables/`).
 
 ### Figures
 
@@ -148,3 +148,9 @@ HR-Analytics-ML/
 ├── tests/
 └── .github/workflows/
 ```
+
+## Acknowledgements
+
+This project was developed as part of the Master's thesis titled **"Using Machine Learning in Analyzing Green Human Resource Management (GHRM) Practices to Discover Hidden Patterns and Predict Performance Indicators: A Study Based on Public HR Analytics Data"** by [**Arian Pourassad**](https://github.com/Arian-eng), under the supervision of thesis advisor **M. Khalilzadeh, Ph.D.** and consulting advisor **M. Salehi Shahrabi, Ph.D.**
+
+The thesis was completed for the **M.Sc. degree in Industrial Engineering** at the **Faculty of Engineering, Department of Industrial Engineering, Science and Research Branch, Islamic Azad University**, Summer 2026.
