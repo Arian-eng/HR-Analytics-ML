@@ -54,7 +54,7 @@ For exact script responsibilities, see [`src/README.md`](src/README.md). For equ
 
 ### Numerical outputs
 
-The committed `results/*.json` files are the machine-readable numerical source of truth for this repository. Reviewer-readable summaries are provided in [`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md) and compact CSV tables under [`results/tables/`](results/tables/`).
+The committed `results/*.json` files are the machine-readable numerical source of truth for this repository. Reviewer-readable summaries are provided in [`results/MODEL_RESULTS.md`](results/MODEL_RESULTS.md) and compact CSV tables under [`results/tables/`](results/tables/).
 
 ### Figures
 
