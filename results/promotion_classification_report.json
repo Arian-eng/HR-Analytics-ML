@@ -145,8 +145,7 @@
     "RandomForest": {
       "clf__n_estimators": [
         100,
-        200,
-        400
+        200
       ],
       "clf__max_depth": [
         null,
@@ -185,7 +184,8 @@
     "bootstrap_resamples": 2000,
     "seed": 42,
     "scoring": "f1 (positive class)",
-    "note": "each model's grid search was run in a separate process to fit the single-CPU runtime budget; combined here"
+    "note": "each model's grid search was run in a separate process to fit the single-CPU runtime budget; combined here",
+    "grid_metadata_note": "Promotion grid metadata corrected from the per-model training source: RandomForest searches n_estimators=[100, 200], not the shared [100, 200, 400] grid previously copied by the combine script. This is a source-based metadata correction, not a new training run; historical partial outputs did not record their grids. Model metrics are unchanged. Future runs record the grid in each partial output and combine only those recorded grids."
   },
   "mcnemar_pairwise": {
     "DecisionTree_vs_RandomForest": {
@@ -194,7 +194,7 @@
       "n_discordant": 748,
       "method": "chi2_continuity_corrected",
       "statistic": 217.12433155080214,
-      "p_value": 0.0
+      "p_value": 0
     },
     "DecisionTree_vs_LinearSVC": {
       "b": 2099,
@@ -202,7 +202,7 @@
       "n_discordant": 2666,
       "method": "chi2_continuity_corrected",
       "statistic": 879.2051762940736,
-      "p_value": 0.0
+      "p_value": 0
     },
     "DecisionTree_vs_MLPClassifier": {
       "b": 136,
@@ -210,7 +210,7 @@
       "n_discordant": 746,
       "method": "chi2_continuity_corrected",
       "statistic": 299.9048257372654,
-      "p_value": 0.0
+      "p_value": 0
     },
     "RandomForest_vs_LinearSVC": {
       "b": 2456,
@@ -218,7 +218,7 @@
       "n_discordant": 2976,
       "method": "chi2_continuity_corrected",
       "statistic": 1258.140120967742,
-      "p_value": 0.0
+      "p_value": 0
     },
     "RandomForest_vs_MLPClassifier": {
       "b": 50,
@@ -226,7 +226,7 @@
       "n_discordant": 170,
       "method": "chi2_continuity_corrected",
       "statistic": 28.00588235294118,
-      "p_value": 1.209472386687338e-07
+      "p_value": 1.209472386687338e-7
     },
     "LinearSVC_vs_MLPClassifier": {
       "b": 463,
@@ -234,7 +234,7 @@
       "n_discordant": 2932,
       "method": "chi2_continuity_corrected",
       "statistic": 1371.0862892223738,
-      "p_value": 0.0
+      "p_value": 0
     }
   },
   "decision_tree_structure": {
