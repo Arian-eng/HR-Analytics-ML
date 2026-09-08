@@ -49,6 +49,7 @@ best_pipe = gs.best_estimator_
 y_pred = best_pipe.predict(X_test)
 
 m = {
+    "grid_searched": gs.param_grid,
     "best_params": {k.replace("clf__", ""): v for k, v in gs.best_params_.items()},
     "cv_best_f1": round(float(gs.best_score_), 4),
     "accuracy": round(float(accuracy_score(y_test, y_pred)), 4),
