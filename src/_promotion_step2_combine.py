@@ -6,15 +6,23 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from ch3_utils import mcnemar_test, RESULTS, FIGURES, GRIDS_CLASSIFICATION
+from ch3_utils import mcnemar_test, RESULTS, FIGURES
 
 names = ["DecisionTree", "RandomForest", "LinearSVC", "MLPClassifier"]
 models = {}
+grids_searched = {}
 preds = {}
 y_test_ref = None
 for name in names:
     with open(f"{RESULTS}/promotion_{name}_partial.json") as f:
         models[name] = json.load(f)
+    if "grid_searched" not in models[name]:
+        raise ValueError(
+            f"Missing grid metadata for {name}; rerun "
+            f"_promotion_step1_per_model.py {name} before combining. "
+            "The historical search grid cannot be inferred from current defaults."
+        )
+    grids_searched[name] = models[name]["grid_searched"]
     yt = np.load(f"{RESULTS}/promotion_{name}_ytest.npy")
     yp = np.load(f"{RESULTS}/promotion_{name}_ypred.npy")
     preds[name] = yp
@@ -25,7 +33,7 @@ for name in names:
 
 results = {
     "dataset": "promotion", "n_total": 54808, "n_train": 43846, "n_test": 10962,
-    "target": "is_promoted", "models": models, "grids_searched": GRIDS_CLASSIFICATION,
+    "target": "is_promoted", "models": models, "grids_searched": grids_searched,
     "compute_settings": {"cv_folds": 3, "bootstrap_resamples": 2000, "seed": 42, "scoring": "f1 (positive class)",
                           "note": "each model's grid search was run in a separate process to fit the single-CPU runtime budget; combined here"},
 }
