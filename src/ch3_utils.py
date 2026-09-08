@@ -74,7 +74,7 @@ def mcnemar_test(y_true, pred_a, pred_b):
         p = min(2 * scipy_stats.binom.cdf(k, n_discordant, 0.5), 1.0)
         return {"b": b, "c": c, "n_discordant": n_discordant, "method": "exact_binomial", "statistic": None, "p_value": float(p)}
     stat = (abs(b - c) - 1) ** 2 / n_discordant
-    p = float(1 - scipy_stats.chi2.cdf(stat, df=1))
+    p = float(scipy_stats.chi2.sf(stat, df=1))
     return {"b": b, "c": c, "n_discordant": n_discordant, "method": "chi2_continuity_corrected", "statistic": float(stat), "p_value": p}
 
 
@@ -253,6 +253,11 @@ def run_classification_suite(df, target_col, numeric_cols, categorical_cols, dat
         for j in range(i + 1, len(names)):
             a, b = names[i], names[j]
             mcnemar_results[f"{a}_vs_{b}"] = mcnemar_test(y_test_arr, preds[a], preds[b])
+    ordered = sorted(mcnemar_results, key=lambda k: mcnemar_results[k]["p_value"])
+    running = 0.0
+    for rank, key in enumerate(ordered):
+        running = max(running, (len(ordered)-rank)*mcnemar_results[key]["p_value"])
+        mcnemar_results[key]["p_holm"] = min(1.0, running)
     results["mcnemar_pairwise"] = mcnemar_results
 
     results["runtime_seconds"] = round(time.time() - t0, 1)

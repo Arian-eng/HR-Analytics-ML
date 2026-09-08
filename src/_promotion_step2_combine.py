@@ -53,6 +53,11 @@ for i in range(len(names)):
     for j in range(i + 1, len(names)):
         a, b = names[i], names[j]
         mcnemar_results[f"{a}_vs_{b}"] = mcnemar_test(y_test_ref, preds[a], preds[b])
+ordered = sorted(mcnemar_results, key=lambda k: mcnemar_results[k]["p_value"])
+running = 0.0
+for rank, key in enumerate(ordered):
+    running = max(running, (len(ordered)-rank)*mcnemar_results[key]["p_value"])
+    mcnemar_results[key]["p_holm"] = min(1.0, running)
 results["mcnemar_pairwise"] = mcnemar_results
 
 with open(f"{RESULTS}/promotion_classification_report.json", "w") as f:

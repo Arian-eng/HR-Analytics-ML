@@ -51,7 +51,7 @@ The three public HR benchmark datasets are **not** presented as direct measureme
 
 | Dataset | Best held-out F1 in committed run | Model |
 |---|---:|---|
-| IBM Attrition | 0.5000 | MLP |
+| IBM Attrition | 0.5783 | MLP |
 | Job Change | 0.6042 | Random Forest |
 | Employee Promotion | 0.5054 | MLP |
 
@@ -75,7 +75,7 @@ All **27 original PNG artifacts are committed in `figures/`**. Each PNG has a ma
 
 ## 6. Reproducibility boundary
 
-The analysis scripts are committed and use repository-relative paths with fixed random seed 42. The raw CSV files are not committed; their exact expected filenames and roles are documented in [`data/README.md`](data/README.md). The repository therefore supports inspection of the executed pipeline and published outputs, but does not claim bit-for-bit reproduction on arbitrary future library versions because the original exact package snapshot was not captured.
+The analysis scripts are committed and use repository-relative paths with fixed random seed 42. The four author-supplied raw CSV files are now committed; their exact expected filenames and roles are documented in [`data/README.md`](data/README.md). The repository therefore supports inspection of the executed pipeline and published outputs, but does not claim bit-for-bit reproduction on arbitrary future library versions because the original exact package snapshot was not captured.
 
 ## 7. Claims intentionally avoided
 

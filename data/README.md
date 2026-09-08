@@ -1,6 +1,10 @@
+# Raw datasets
+
+The four author-supplied CSV files are committed in this directory without content changes. Expected names are `aug_train.csv`, `HRM_DATASETS.csv`, `train_LZdllcl.csv`, and `WA_Fn-UseC_-HR-Employee-Attrition__3_.csv`. Provenance hashes and dimensions are in `validation/defense_provenance.json`.
+
 # Data directory
 
-The raw CSV files are intentionally not committed. To reproduce the analyses, place the four source files in this directory using the filenames expected by the scripts:
+The four raw CSV files are committed. The scripts expect the following filenames:
 
 | File | Role | Rows used | Target |
 |---|---|---:|---|

@@ -62,18 +62,18 @@ def tune_and_fit(predictors, label):
     fitted, preds, best_params_all, cv_scores = {}, {}, {}, {}
     for name, (est, grid) in GRIDS.items():
         if name in NEEDS_SCALING:
-            scaler = StandardScaler().fit(Xtr)
-            Xtr_use, Xte_use = scaler.transform(Xtr), scaler.transform(Xte)
+            estimator = Pipeline([("scale", StandardScaler()), ("reg", est)])
+            search_grid = {"reg__" + key: values for key, values in grid.items()}
         else:
-            Xtr_use, Xte_use = Xtr, Xte
+            estimator, search_grid = est, grid
         t0 = time.time()
-        gs = GridSearchCV(est, grid, scoring=rmse_scorer, cv=cv5, n_jobs=1, refit=True)
-        gs.fit(Xtr_use, ytr)
+        gs = GridSearchCV(estimator, search_grid, scoring=rmse_scorer, cv=cv5, n_jobs=1, refit=True)
+        gs.fit(Xtr, ytr)
         best = gs.best_estimator_
-        yp = best.predict(Xte_use)
+        yp = best.predict(Xte)
         fitted[name] = best
         preds[name] = yp
-        best_params_all[name] = gs.best_params_
+        best_params_all[name] = {key.removeprefix("reg__"): value for key, value in gs.best_params_.items()}
         cv_scores[name] = round(float(-gs.best_score_), 4)  # back to positive RMSE
         print(f"  [{label}] {name}: best_params={gs.best_params_} cv_rmse={cv_scores[name]:.4f} runtime={time.time()-t0:.1f}s")
     return fitted, preds, yte, best_params_all, cv_scores

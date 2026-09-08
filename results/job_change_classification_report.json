@@ -179,7 +179,8 @@
     "cv_folds": 3,
     "bootstrap_resamples": 2000,
     "seed": 42,
-    "scoring": "f1 (positive class)"
+    "scoring": "f1 (positive class)",
+    "holm_family": "six pairwise McNemar tests within each dataset"
   },
   "decision_tree_structure": {
     "n_leaves": 46,
@@ -192,7 +193,8 @@
       "n_discordant": 409,
       "method": "chi2_continuity_corrected",
       "statistic": 93.92665036674816,
-      "p_value": 0.0
+      "p_value": 3.2743564591663905e-22,
+      "p_holm": 1.9646138754998343e-21
     },
     "DecisionTree_vs_LinearSVC": {
       "b": 199,
@@ -200,7 +202,8 @@
       "n_discordant": 521,
       "method": "chi2_continuity_corrected",
       "statistic": 28.56813819577735,
-      "p_value": 9.045847315647393e-08
+      "p_value": 9.045847310822863e-08,
+      "p_holm": 2.713754193246859e-07
     },
     "DecisionTree_vs_MLPClassifier": {
       "b": 311,
@@ -208,7 +211,8 @@
       "n_discordant": 903,
       "method": "chi2_continuity_corrected",
       "statistic": 86.82170542635659,
-      "p_value": 0.0
+      "p_value": 1.1875897397738802e-20,
+      "p_holm": 5.937948698869401e-20
     },
     "RandomForest_vs_LinearSVC": {
       "b": 200,
@@ -216,7 +220,8 @@
       "n_discordant": 326,
       "method": "chi2_continuity_corrected",
       "statistic": 16.346625766871167,
-      "p_value": 5.274999588056328e-05
+      "p_value": 5.274999588055853e-05,
+      "p_holm": 0.00010549999176111707
     },
     "RandomForest_vs_MLPClassifier": {
       "b": 241,
@@ -224,7 +229,8 @@
       "n_discordant": 566,
       "method": "chi2_continuity_corrected",
       "statistic": 12.171378091872791,
-      "p_value": 0.00048528438945916186
+      "p_value": 0.00048528438945914353,
+      "p_holm": 0.00048528438945914353
     },
     "LinearSVC_vs_MLPClassifier": {
       "b": 248,
@@ -232,8 +238,9 @@
       "n_discordant": 654,
       "method": "chi2_continuity_corrected",
       "statistic": 37.68960244648318,
-      "p_value": 8.294550601917194e-10
+      "p_value": 8.294550056266935e-10,
+      "p_holm": 3.317820022506774e-09
     }
   },
-  "runtime_seconds": 248.5
+  "runtime_seconds": 154.3
 }

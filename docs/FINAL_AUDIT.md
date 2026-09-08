@@ -80,7 +80,7 @@ The numerical conclusions do not depend on reverse-reading values from image fil
 
 Machine-specific `/home/claude/repo2` paths were removed. Scripts now resolve project paths relative to the repository root. Dependency ranges are documented in `requirements.txt`, and a lightweight GitHub Actions integrity check validates syntax and the published result structure without requiring the raw datasets to be committed.
 
-The raw CSV files themselves are not committed. Their expected names and roles are documented in `data/README.md`. The exact original package snapshot was not captured, so the repository does not claim bit-for-bit reproducibility across arbitrary future dependency versions.
+The four raw CSV files are committed; the revised execution environment is pinned in requirements-reproduction.txt. Their expected names and roles are documented in `data/README.md`. The exact original package snapshot was not captured, so the repository does not claim bit-for-bit reproducibility across arbitrary future dependency versions.
 
 ## 9. Statements that should NOT be made in the defense
 

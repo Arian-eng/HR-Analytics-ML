@@ -6,6 +6,18 @@
   "target": "is_promoted",
   "models": {
     "DecisionTree": {
+      "grid_searched": {
+        "clf__max_depth": [
+          6,
+          10,
+          15,
+          null
+        ],
+        "clf__min_samples_split": [
+          2,
+          10
+        ]
+      },
       "best_params": {
         "max_depth": null,
         "min_samples_split": 2
@@ -33,9 +45,19 @@
           "ci_high": 0.4573
         }
       },
-      "runtime_seconds": 29.2
+      "runtime_seconds": 15.8
     },
     "RandomForest": {
+      "grid_searched": {
+        "clf__n_estimators": [
+          100,
+          200
+        ],
+        "clf__max_depth": [
+          null,
+          15
+        ]
+      },
       "best_params": {
         "max_depth": null,
         "n_estimators": 200
@@ -63,9 +85,16 @@
           "ci_high": 0.4728
         }
       },
-      "runtime_seconds": 273.4
+      "runtime_seconds": 182.8
     },
     "LinearSVC": {
+      "grid_searched": {
+        "clf__C": [
+          0.1,
+          1,
+          10
+        ]
+      },
       "best_params": {
         "C": 0.1
       },
@@ -92,9 +121,28 @@
           "ci_high": 0.39
         }
       },
-      "runtime_seconds": 20.6
+      "runtime_seconds": 9.4
     },
     "MLPClassifier": {
+      "grid_searched": {
+        "clf__hidden_layer_sizes": [
+          [
+            50
+          ],
+          [
+            32,
+            16
+          ]
+        ],
+        "clf__alpha": [
+          0.0001,
+          0.001
+        ],
+        "clf__learning_rate_init": [
+          0.001,
+          0.01
+        ]
+      },
       "best_params": {
         "alpha": 0.0001,
         "hidden_layer_sizes": [
@@ -126,7 +174,7 @@
           "ci_high": 0.5368
         }
       },
-      "runtime_seconds": 69.9
+      "runtime_seconds": 46.3
     }
   },
   "grids_searched": {
@@ -185,7 +233,7 @@
     "seed": 42,
     "scoring": "f1 (positive class)",
     "note": "each model's grid search was run in a separate process to fit the single-CPU runtime budget; combined here",
-    "grid_metadata_note": "Promotion grid metadata corrected from the per-model training source: RandomForest searches n_estimators=[100, 200], not the shared [100, 200, 400] grid previously copied by the combine script. This is a source-based metadata correction, not a new training run; historical partial outputs did not record their grids. Model metrics are unchanged. Future runs record the grid in each partial output and combine only those recorded grids."
+    "holm_family": "six pairwise McNemar tests within each dataset"
   },
   "mcnemar_pairwise": {
     "DecisionTree_vs_RandomForest": {
@@ -194,7 +242,8 @@
       "n_discordant": 748,
       "method": "chi2_continuity_corrected",
       "statistic": 217.12433155080214,
-      "p_value": 0
+      "p_value": 3.834057197371686e-49,
+      "p_holm": 7.668114394743372e-49
     },
     "DecisionTree_vs_LinearSVC": {
       "b": 2099,
@@ -202,7 +251,8 @@
       "n_discordant": 2666,
       "method": "chi2_continuity_corrected",
       "statistic": 879.2051762940736,
-      "p_value": 0
+      "p_value": 3.254049198543556e-193,
+      "p_holm": 1.3016196794174224e-192
     },
     "DecisionTree_vs_MLPClassifier": {
       "b": 136,
@@ -210,7 +260,8 @@
       "n_discordant": 746,
       "method": "chi2_continuity_corrected",
       "statistic": 299.9048257372654,
-      "p_value": 0
+      "p_value": 3.4554661846217615e-67,
+      "p_holm": 1.0366398553865284e-66
     },
     "RandomForest_vs_LinearSVC": {
       "b": 2456,
@@ -218,7 +269,8 @@
       "n_discordant": 2976,
       "method": "chi2_continuity_corrected",
       "statistic": 1258.140120967742,
-      "p_value": 0
+      "p_value": 1.4127816728084242e-275,
+      "p_holm": 7.063908364042121e-275
     },
     "RandomForest_vs_MLPClassifier": {
       "b": 50,
@@ -226,7 +278,8 @@
       "n_discordant": 170,
       "method": "chi2_continuity_corrected",
       "statistic": 28.00588235294118,
-      "p_value": 1.209472386687338e-7
+      "p_value": 1.2094723872157418e-07,
+      "p_holm": 1.2094723872157418e-07
     },
     "LinearSVC_vs_MLPClassifier": {
       "b": 463,
@@ -234,7 +287,8 @@
       "n_discordant": 2932,
       "method": "chi2_continuity_corrected",
       "statistic": 1371.0862892223738,
-      "p_value": 0
+      "p_value": 4.031685805704467e-300,
+      "p_holm": 2.4190114834226805e-299
     }
   },
   "decision_tree_structure": {

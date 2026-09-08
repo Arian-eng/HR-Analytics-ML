@@ -12,7 +12,7 @@ The GHRM analysis does not rely on the 320 records as if they were a large-scale
 
 ## Why report F1 instead of only accuracy for the three classification datasets?
 
-The target classes are imbalanced, especially for Employee Promotion. Accuracy can therefore be high even when the positive class is poorly detected. Precision, Recall and F1 are reported together, and the confusion matrices are part of the visual evidence layer. IBM Random Forest is a concrete example: Accuracy=0.8435 but Recall=0.1064 and F1=0.1786.
+The target classes are imbalanced, especially for Employee Promotion. Accuracy can therefore be high even when the positive class is poorly detected. Precision, Recall and F1 are reported together, and the confusion matrices are part of the visual evidence layer. IBM Random Forest is a concrete example: Accuracy=0.8469 but Recall=0.1064 and F1=0.1818.
 
 ## Why is the Promotion Decision Tree so large?
 
@@ -34,9 +34,9 @@ They identify descriptive segmentation under the documented feature sets and sta
 
 No blanket claim is made. `validation/validation_report.md` explicitly separates matching from non-matching outputs. The committed JSON files are the numerical source of truth for the current repository execution. Differences should be discussed rather than hidden.
 
-## Why are the raw CSV files not committed?
+## Where are the raw CSV files?
 
-The repository keeps the analysis code, result files and validation artifacts public while leaving the raw datasets outside version control. Reproduction instructions specify the required filenames and directory. The code resolves paths relative to the repository root.
+All four author-supplied files are now in `data/`. Exact names and provenance hashes are documented there and in `validation/defense_provenance.json`.
 
 ## What is the strongest defensible summary of the repository?
 

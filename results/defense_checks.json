@@ -1,0 +1,236 @@
+{
+  "purpose": "Post-hoc sensitivity and baseline checks, not new confirmatory hypotheses",
+  "split_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "ghrm_rows": [
+    {
+      "seed": 42,
+      "model": "Mean",
+      "r2": -0.012386001737116459,
+      "rmse": 0.6533400186209632,
+      "mae": 0.5035400390625
+    },
+    {
+      "seed": 42,
+      "model": "OLS",
+      "r2": 0.4341533284894453,
+      "rmse": 0.4884448980012776,
+      "mae": 0.38378765582862057
+    },
+    {
+      "seed": 42,
+      "model": "RandomForest",
+      "r2": 0.4374143403671441,
+      "rmse": 0.4870353941378925,
+      "mae": 0.38552562564370774
+    },
+    {
+      "seed": 43,
+      "model": "Mean",
+      "r2": -0.02908753118252516,
+      "rmse": 0.8654839906936307,
+      "mae": 0.635589599609375
+    },
+    {
+      "seed": 43,
+      "model": "OLS",
+      "r2": 0.5825207343328958,
+      "rmse": 0.5512522007229064,
+      "mae": 0.4285878411666909
+    },
+    {
+      "seed": 43,
+      "model": "RandomForest",
+      "r2": 0.6131227926036216,
+      "rmse": 0.5306637882491102,
+      "mae": 0.4205687235328593
+    },
+    {
+      "seed": 44,
+      "model": "Mean",
+      "r2": -0.02034694388777547,
+      "rmse": 0.7883684486272999,
+      "mae": 0.58013916015625
+    },
+    {
+      "seed": 44,
+      "model": "OLS",
+      "r2": 0.40286859288252175,
+      "rmse": 0.6031012909762941,
+      "mae": 0.4471834298182773
+    },
+    {
+      "seed": 44,
+      "model": "RandomForest",
+      "r2": 0.3631862911831092,
+      "rmse": 0.6228184982106856,
+      "mae": 0.4608447645248418
+    },
+    {
+      "seed": 45,
+      "model": "Mean",
+      "r2": -0.0004440980278421769,
+      "rmse": 0.6489109011767452,
+      "mae": 0.51983642578125
+    },
+    {
+      "seed": 45,
+      "model": "OLS",
+      "r2": 0.48633354379142757,
+      "rmse": 0.4649746324417605,
+      "mae": 0.37188343049130806
+    },
+    {
+      "seed": 45,
+      "model": "RandomForest",
+      "r2": 0.41896723957500126,
+      "rmse": 0.4945258142900063,
+      "mae": 0.40432714615454546
+    },
+    {
+      "seed": 46,
+      "model": "Mean",
+      "r2": -0.028786307053941806,
+      "rmse": 0.6480263015213031,
+      "mae": 0.5325927734375
+    },
+    {
+      "seed": 46,
+      "model": "OLS",
+      "r2": 0.466996493035278,
+      "rmse": 0.46643923954881455,
+      "mae": 0.368953313474507
+    },
+    {
+      "seed": 46,
+      "model": "RandomForest",
+      "r2": 0.4433015722115008,
+      "rmse": 0.4766943919976101,
+      "mae": 0.38735023114840195
+    }
+  ],
+  "classification_dummy": [
+    {
+      "dataset": "IBM",
+      "strategy": "most_frequent",
+      "accuracy": 0.8401360544217688,
+      "f1": 0.0
+    },
+    {
+      "dataset": "IBM",
+      "strategy": "stratified",
+      "accuracy": 0.7142857142857143,
+      "f1": 0.125
+    },
+    {
+      "dataset": "Job Change",
+      "strategy": "most_frequent",
+      "accuracy": 0.7507828810020877,
+      "f1": 0.0
+    },
+    {
+      "dataset": "Job Change",
+      "strategy": "stratified",
+      "accuracy": 0.6323068893528184,
+      "f1": 0.26268969126111985
+    },
+    {
+      "dataset": "Promotion",
+      "strategy": "most_frequent",
+      "accuracy": 0.9147965699689837,
+      "f1": 0.0
+    },
+    {
+      "dataset": "Promotion",
+      "strategy": "stratified",
+      "accuracy": 0.8455573800401387,
+      "f1": 0.07536865101037685
+    }
+  ],
+  "mcnemar_holm": {
+    "ibm_attrition": {
+      "DecisionTree_vs_RandomForest": {
+        "p_raw": 0.0008905854024854938,
+        "p_holm": 0.003562341609941975
+      },
+      "DecisionTree_vs_LinearSVC": {
+        "p_raw": 1.0,
+        "p_holm": 1.0
+      },
+      "DecisionTree_vs_MLPClassifier": {
+        "p_raw": 2.4371311495263773e-06,
+        "p_holm": 1.2185655747631887e-05
+      },
+      "RandomForest_vs_LinearSVC": {
+        "p_raw": 0.0025386867381503547,
+        "p_holm": 0.007616060214451064
+      },
+      "RandomForest_vs_MLPClassifier": {
+        "p_raw": 0.11161176829829161,
+        "p_holm": 0.22322353659658323
+      },
+      "LinearSVC_vs_MLPClassifier": {
+        "p_raw": 2.8824241627725926e-07,
+        "p_holm": 1.7294544976635556e-06
+      }
+    },
+    "job_change": {
+      "DecisionTree_vs_RandomForest": {
+        "p_raw": 3.2743564591663905e-22,
+        "p_holm": 1.9646138754998343e-21
+      },
+      "DecisionTree_vs_LinearSVC": {
+        "p_raw": 9.045847310822863e-08,
+        "p_holm": 2.713754193246859e-07
+      },
+      "DecisionTree_vs_MLPClassifier": {
+        "p_raw": 1.1875897397738802e-20,
+        "p_holm": 5.937948698869401e-20
+      },
+      "RandomForest_vs_LinearSVC": {
+        "p_raw": 5.274999588055853e-05,
+        "p_holm": 0.00010549999176111707
+      },
+      "RandomForest_vs_MLPClassifier": {
+        "p_raw": 0.00048528438945914353,
+        "p_holm": 0.00048528438945914353
+      },
+      "LinearSVC_vs_MLPClassifier": {
+        "p_raw": 8.294550056266935e-10,
+        "p_holm": 3.317820022506774e-09
+      }
+    },
+    "promotion": {
+      "DecisionTree_vs_RandomForest": {
+        "p_raw": 3.834057197371686e-49,
+        "p_holm": 7.668114394743372e-49
+      },
+      "DecisionTree_vs_LinearSVC": {
+        "p_raw": 3.254049198543556e-193,
+        "p_holm": 1.3016196794174224e-192
+      },
+      "DecisionTree_vs_MLPClassifier": {
+        "p_raw": 3.4554661846217615e-67,
+        "p_holm": 1.0366398553865284e-66
+      },
+      "RandomForest_vs_LinearSVC": {
+        "p_raw": 1.4127816728084242e-275,
+        "p_holm": 7.063908364042121e-275
+      },
+      "RandomForest_vs_MLPClassifier": {
+        "p_raw": 1.2094723872157418e-07,
+        "p_holm": 1.2094723872157418e-07
+      },
+      "LinearSVC_vs_MLPClassifier": {
+        "p_raw": 4.031685805704467e-300,
+        "p_holm": 2.4190114834226805e-299
+      }
+    }
+  },
+  "caution": "Repeated holdouts overlap; these descriptive ranges are not independent-sample confidence intervals."
+}

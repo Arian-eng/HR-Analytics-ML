@@ -72,7 +72,7 @@
           "C": 1,
           "epsilon": 0.2
         },
-        "cv_rmse": 0.5317
+        "cv_rmse": 0.532
       },
       "gee_plus": {
         "r2": 0.4058,
@@ -82,37 +82,37 @@
           "C": 1,
           "epsilon": 0.0
         },
-        "cv_rmse": 0.535
+        "cv_rmse": 0.5346
       }
     },
     "MLPRegressor": {
       "base": {
-        "r2": 0.235,
-        "rmse": 0.5679,
-        "mae": 0.4487,
+        "r2": 0.2349,
+        "rmse": 0.568,
+        "mae": 0.4488,
         "best_params": {
-          "alpha": 0.0001,
+          "alpha": 0.001,
           "hidden_layer_sizes": [
             32,
             16
           ],
           "learning_rate_init": 0.001
         },
-        "cv_rmse": 0.5685
+        "cv_rmse": 0.5632
       },
       "gee_plus": {
-        "r2": 0.3707,
-        "rmse": 0.5151,
-        "mae": 0.4098,
+        "r2": 0.3697,
+        "rmse": 0.5155,
+        "mae": 0.41,
         "best_params": {
-          "alpha": 0.01,
+          "alpha": 0.001,
           "hidden_layer_sizes": [
             16,
             8
           ],
           "learning_rate_init": 0.001
         },
-        "cv_rmse": 0.5651
+        "cv_rmse": 0.5625
       }
     }
   },
@@ -179,21 +179,21 @@
     },
     "MLPRegressor": {
       "r2": {
-        "mean_diff_gee_minus_base": 0.1387,
-        "ci_low": -0.0071,
-        "ci_high": 0.2828,
+        "mean_diff_gee_minus_base": 0.1377,
+        "ci_low": -0.0093,
+        "ci_high": 0.2817,
         "ci_excludes_zero": false
       },
       "rmse": {
-        "mean_diff_gee_minus_base": -0.0527,
-        "ci_low": -0.1049,
-        "ci_high": 0.0025,
+        "mean_diff_gee_minus_base": -0.0523,
+        "ci_low": -0.105,
+        "ci_high": 0.003,
         "ci_excludes_zero": false
       },
       "mae": {
-        "mean_diff_gee_minus_base": -0.0391,
-        "ci_low": -0.089,
-        "ci_high": 0.0127,
+        "mean_diff_gee_minus_base": -0.039,
+        "ci_low": -0.0891,
+        "ci_high": 0.0131,
         "ci_excludes_zero": false
       }
     }

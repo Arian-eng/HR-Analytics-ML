@@ -6,9 +6,9 @@ The repository supports two related but distinct analytical purposes: direct ana
 
 The 320-record GHRM dataset is the only dataset in the repository that directly measures the thesis constructs GRS, GTD, GPA, GCM, GEE and FEP.
 
-The Base models using GRS, GTD, GPA and GCM achieve held-out R² values of 0.4374 (Random Forest), 0.4361 (Decision Tree), 0.4287 (LinearSVR) and 0.2350 (MLP). These results indicate that the four practice constructs contain useful predictive information for FEP, while also leaving a substantial part of the outcome variance unexplained.
+The Base models using GRS, GTD, GPA and GCM achieve held-out R² values of 0.4374 (Random Forest), 0.4361 (Decision Tree), 0.4287 (LinearSVR) and 0.2349 (MLP). These results indicate that the four practice constructs contain useful predictive information for FEP, while also leaving a substantial part of the outcome variance unexplained.
 
-Adding GEE changes model performance differently. Random Forest, Decision Tree and LinearSVR show small decreases in held-out R². MLP improves from 0.2350 to 0.3707, but the paired bootstrap interval for the R² difference is [-0.0071, 0.2828]. Because this interval includes zero, the repository does not treat the MLP improvement as statistically reliable evidence that GEE universally improves prediction.
+Adding GEE changes model performance differently. Random Forest, Decision Tree and LinearSVR show small decreases in held-out R². MLP improves from 0.2349 to 0.3697, but the paired bootstrap interval for the R² difference is [-0.0093, 0.2817]. Because this interval includes zero, the repository does not treat the MLP improvement as statistically reliable evidence that GEE universally improves prediction.
 
 The GHRM K-Means analysis selects two clusters. The groups contain 198 and 122 respondents and have mean FEP values of 3.851 and 3.041. This indicates a meaningful segmentation pattern in the standardized GHRM construct space, but the clustering result is descriptive rather than causal.
 
@@ -18,9 +18,9 @@ The reliability analysis is generally supportive for the GHRM practice construct
 
 IBM Attrition, Job Change and Employee Promotion do not directly measure Green HRM. They are used to test classification, validation and clustering procedures on larger public HR datasets.
 
-The classification results show that model ranking depends on the dataset. MLP produces the highest held-out F1 on IBM Attrition (0.5000) and Employee Promotion (0.5054), while Random Forest is highest on Job Change (0.6042). This variability argues against selecting one algorithm as universally superior.
+The classification results show that model ranking depends on the dataset. MLP produces the highest held-out F1 on IBM Attrition (0.5783) and Employee Promotion (0.5054), while Random Forest is highest on Job Change (0.6042). This variability argues against selecting one algorithm as universally superior.
 
-The benchmark datasets also show why accuracy must be interpreted carefully under class imbalance. For example, IBM Random Forest achieves Accuracy=0.8435 but Recall=0.1064 for the positive class. In Promotion, Random Forest has Accuracy=0.9350 and Precision=0.8323 but Recall=0.2976. These cases demonstrate that a model can classify the majority class well while missing many positive cases.
+The benchmark datasets also show why accuracy must be interpreted carefully under class imbalance. For example, IBM Random Forest achieves Accuracy=0.8469 but Recall=0.1064 for the positive class. In Promotion, Random Forest has Accuracy=0.9350 and Precision=0.8323 but Recall=0.2976. These cases demonstrate that a model can classify the majority class well while missing many positive cases.
 
 K-Means produces different levels of separation across the benchmarks. Job Change has the clearest selected structure (k=3, Silhouette=0.5773), while IBM has weak separation (k=2, Silhouette=0.1529). Promotion selects k=5 with Silhouette=0.2565. The clustering outputs should therefore not all be described with the same level of confidence.
 

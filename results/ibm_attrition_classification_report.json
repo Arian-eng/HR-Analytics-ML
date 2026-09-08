@@ -36,30 +36,30 @@
     },
     "RandomForest": {
       "best_params": {
-        "max_depth": 15,
-        "n_estimators": 100
+        "max_depth": null,
+        "n_estimators": 400
       },
-      "cv_best_f1": 0.2814,
-      "accuracy": 0.8435,
-      "precision": 0.5556,
+      "cv_best_f1": 0.2917,
+      "accuracy": 0.8469,
+      "precision": 0.625,
       "recall": 0.1064,
-      "f1": 0.1786,
+      "f1": 0.1818,
       "bootstrap_95ci": {
         "accuracy": {
-          "ci_low": 0.8027,
-          "ci_high": 0.881
+          "ci_low": 0.8061,
+          "ci_high": 0.8844
         },
         "precision": {
-          "ci_low": 0.2222,
-          "ci_high": 0.875
+          "ci_low": 0.25,
+          "ci_high": 1.0
         },
         "recall": {
           "ci_low": 0.0263,
           "ci_high": 0.2045
         },
         "f1": {
-          "ci_low": 0.0465,
-          "ci_high": 0.3188
+          "ci_low": 0.0476,
+          "ci_high": 0.3243
         }
       }
     },
@@ -93,32 +93,33 @@
     },
     "MLPClassifier": {
       "best_params": {
-        "alpha": 0.0001,
+        "alpha": 0.001,
         "hidden_layer_sizes": [
           50
-        ]
+        ],
+        "learning_rate_init": 0.01
       },
-      "cv_best_f1": 0.151,
-      "accuracy": 0.8776,
-      "precision": 0.72,
-      "recall": 0.383,
-      "f1": 0.5,
+      "cv_best_f1": 0.5459,
+      "accuracy": 0.881,
+      "precision": 0.6667,
+      "recall": 0.5106,
+      "f1": 0.5783,
       "bootstrap_95ci": {
         "accuracy": {
-          "ci_low": 0.8401,
-          "ci_high": 0.9116
+          "ci_low": 0.8435,
+          "ci_high": 0.915
         },
         "precision": {
-          "ci_low": 0.5517,
-          "ci_high": 0.8889
+          "ci_low": 0.5128,
+          "ci_high": 0.8125
         },
         "recall": {
-          "ci_low": 0.25,
-          "ci_high": 0.5283
+          "ci_low": 0.3653,
+          "ci_high": 0.6512
         },
         "f1": {
-          "ci_low": 0.3529,
-          "ci_high": 0.6353
+          "ci_low": 0.4444,
+          "ci_high": 0.6931
         }
       }
     }
@@ -139,7 +140,8 @@
     "RandomForest": {
       "clf__n_estimators": [
         100,
-        200
+        200,
+        400
       ],
       "clf__max_depth": [
         null,
@@ -166,6 +168,10 @@
       "clf__alpha": [
         0.0001,
         0.001
+      ],
+      "clf__learning_rate_init": [
+        0.001,
+        0.01
       ]
     }
   },
@@ -173,7 +179,8 @@
     "cv_folds": 3,
     "bootstrap_resamples": 2000,
     "seed": 42,
-    "scoring": "f1 (positive class)"
+    "scoring": "f1 (positive class)",
+    "holm_family": "six pairwise McNemar tests within each dataset"
   },
   "decision_tree_structure": {
     "n_leaves": 38,
@@ -181,12 +188,13 @@
   },
   "mcnemar_pairwise": {
     "DecisionTree_vs_RandomForest": {
-      "b": 22,
+      "b": 21,
       "c": 50,
-      "n_discordant": 72,
+      "n_discordant": 71,
       "method": "chi2_continuity_corrected",
-      "statistic": 10.125,
-      "p_value": 0.0014627165866811787
+      "statistic": 11.04225352112676,
+      "p_value": 0.0008905854024854938,
+      "p_holm": 0.003562341609941975
     },
     "DecisionTree_vs_LinearSVC": {
       "b": 31,
@@ -194,40 +202,45 @@
       "n_discordant": 63,
       "method": "chi2_continuity_corrected",
       "statistic": 0.0,
-      "p_value": 1.0
+      "p_value": 1.0,
+      "p_holm": 1.0
     },
     "DecisionTree_vs_MLPClassifier": {
       "b": 13,
-      "c": 51,
-      "n_discordant": 64,
+      "c": 52,
+      "n_discordant": 65,
       "method": "chi2_continuity_corrected",
-      "statistic": 21.390625,
-      "p_value": 3.745984011094272e-06
+      "statistic": 22.215384615384615,
+      "p_value": 2.4371311495263773e-06,
+      "p_holm": 1.2185655747631887e-05
     },
     "RandomForest_vs_LinearSVC": {
-      "b": 53,
+      "b": 54,
       "c": 26,
-      "n_discordant": 79,
+      "n_discordant": 80,
       "method": "chi2_continuity_corrected",
-      "statistic": 8.556962025316455,
-      "p_value": 0.003442033333573624
+      "statistic": 9.1125,
+      "p_value": 0.0025386867381503547,
+      "p_holm": 0.007616060214451064
     },
     "RandomForest_vs_MLPClassifier": {
-      "b": 6,
-      "c": 16,
-      "n_discordant": 22,
-      "method": "exact_binomial",
-      "statistic": null,
-      "p_value": 0.052478790283203125
+      "b": 11,
+      "c": 21,
+      "n_discordant": 32,
+      "method": "chi2_continuity_corrected",
+      "statistic": 2.53125,
+      "p_value": 0.11161176829829161,
+      "p_holm": 0.22322353659658323
     },
     "LinearSVC_vs_MLPClassifier": {
-      "b": 12,
-      "c": 49,
-      "n_discordant": 61,
+      "b": 7,
+      "c": 45,
+      "n_discordant": 52,
       "method": "chi2_continuity_corrected",
-      "statistic": 21.24590163934426,
-      "p_value": 4.039732062310897e-06
+      "statistic": 26.326923076923077,
+      "p_value": 2.8824241627725926e-07,
+      "p_holm": 1.7294544976635556e-06
     }
   },
-  "runtime_seconds": 38.0
+  "runtime_seconds": 29.3
 }

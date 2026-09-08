@@ -6,6 +6,10 @@ This repository contains the executed analysis code, numerical outputs, tables, 
 >
 > That page provides the shortest path to every important piece of evidence without searching the repository manually.
 
+## Pre-defense reproducibility revision
+
+The current numerical outputs include the executed IBM correction and GHRM scaling-inside-CV correction. See [`validation/defense_revision.md`](validation/defense_revision.md) for the audit, pinned environment, baseline comparisons and sensitivity results.
+
 ## Direct access
 
 | Need | Open this |
@@ -75,7 +79,7 @@ Every PNG has a reviewer-facing explanation under [`figures/descriptions/`](figu
 
 | Analysis | Main committed result |
 |---|---|
-| IBM Attrition | Best held-out F1: **MLP = 0.5000**; RF illustrates why high Accuracy can hide very low positive recall. |
+| IBM Attrition | Best held-out F1: **MLP = 0.5783**; RF illustrates why high Accuracy can hide very low positive recall. |
 | Job Change | Best held-out F1: **RF = 0.6042**; selected K-Means k=3, Silhouette=0.5773. |
 | Employee Promotion | Best held-out F1: **MLP = 0.5054**; Decision Tree depth=63, leaves=4,855, reported as an overfitting/interpretability risk. |
 | GHRM regression | Best Base held-out R²: **RF = 0.4374**. MLP has the largest positive GEE+ point change, but its paired 95% bootstrap interval includes zero. |
@@ -97,7 +101,7 @@ python src/run_promotion.py
 
 Paths are repository-relative; machine-specific `/home/...` paths are not required. A GitHub Actions integrity workflow performs data-free checks on syntax and published result structure.
 
-The raw datasets are intentionally not committed. The exact original package snapshot was not captured, so this repository does **not** claim bit-for-bit reproduction across arbitrary future dependency versions. It does provide inspectable code, documented inputs, committed numerical outputs, tables, figures and validation evidence.
+The four raw datasets are committed unchanged; the revised execution environment is recorded in requirements-reproduction.txt. The exact original package snapshot was not captured, so this repository does **not** claim bit-for-bit reproduction across arbitrary future dependency versions. It does provide inspectable code, documented inputs, committed numerical outputs, tables, figures and validation evidence.
 
 ## Important interpretation boundaries
 
